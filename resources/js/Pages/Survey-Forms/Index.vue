@@ -54,14 +54,16 @@ export default {
       ],
     
       form: this.$inertia.form({
-        id: null,
-        email_address: null,
+        email: null,
         name: null,
+        client_type: null,
+        sex: null,
+        age_group: null,
         cc1: null,
         cc2: null,
         cc3: null,
         responsiveness: null,
-        resoponsiveness_attr_number: null,
+        responsiveness_attr_number: null,
         reliability: null,
         reliability_attr_number: null,
         access_and_facilities: null,
@@ -154,7 +156,7 @@ export default {
                 data-aos="zoom-out-up" 
                 data-aos-duration="1000" 
                 data-aos-delay="500" 
-                class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ml-10 mr-10 mx-auto my-auto mb-5"
+                class="bg-white border border-gray-200 rounded-lg shadow d dark:border-gray-700 ml-10 mr-10 mx-auto my-auto mb-5"
                 style="margin-left: 250px; margin-right: 250px;" >
                 <a href="#">
                     <img class="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" />
@@ -164,100 +166,99 @@ export default {
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Information Communication Technology</h5>
                     </a>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
+                    <div>
+                        <div class="mb-5">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Email
+                                <span class="text-red-800">*</span>
+                            </label>
+                            <input v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
+                        </div>
 
-                        <div>
-                            <div class="mb-5">
-                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Email
-                                    <span class="text-red-800">*</span>
-                                </label>
-                                <input v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
-                            </div>
+                        <div class="mb-5">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Name
+                                (<span class="text-blue-500">Optional</span>)
+                            </label>
+                            <input v-model="form.name" type="text" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="e.g. Juan Dela Cruz" required />
+                        </div>
 
-                            <div class="mb-5">
-                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Name
-                                    (<span class="text-blue-500">Optional</span>)
-                                </label>
-                                <input v-model="form.name" type="text" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="e.g. Juan Dela Cruz" required />
-                            </div>
-
-                            <div class="mb-5 grid grid-cols-3 gap-4">
-                                <div class="col-span-1">
-                                    <label for="client_types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Client Types
-                                        <span class="text-red-800">*</span>
-                                        </label>
-                                        <select v-model="form.client_type" id="client_types" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option>Select Client Types..</option>
-                                            <option>Internal Employees</option>
-                                            <option>General Public</option>
-                                            <option>Government Employees</option>
-                                            <option>Business/Organization</option>
-                                        </select>
-                                </div>
-
-                                <div class="col-span-1">
-                                    <label for="sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Sex
+                        <div class="mb-5 grid grid-cols-3 gap-4">
+                            <div class="col-span-1">
+                                <label for="client_types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Client Types
                                     <span class="text-red-800">*</span>
                                     </label>
-                                    <select v-model="form.sex" id="sex" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option>Select Sex.. </option>
-                                        <option>Male</option>
-                                        <option>Female</option>
+                                    <select v-model="form.client_type" id="client_types" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option>Select Client Types..</option>
+                                        <option>Internal Employees</option>
+                                        <option>General Public</option>
+                                        <option>Government Employees</option>
+                                        <option>Business/Organization</option>
                                     </select>
-                                </div>
-
-                                <div class="col-span-1">
-                                    <label for="age_group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Age Group
-                                        <span class="text-red-800">*</span>
-                                        </label>
-                                        <select v-model="form.age_group" id="age_group" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option>Select Age Group..</option>
-                                            <option>15-19</option>
-                                            <option>20-29</option>
-                                            <option>30-39</option>
-                                            <option>40-49</option>
-                                            <option>50-59</option>
-                                            <option>60-69</option>
-                                            <option>70-79</option>
-                                            <option>80+</option>
-                                        </select>
-                                </div>
-
                             </div>
 
-                            <div class="border border-w-2 p-3 mb-5">
-                                <div>
-                                    Other Informations
-                                    (<span class="text-blue-500">Optional</span>)
-                                </div>
-                                <div class="grid grid-cols-4 gap-4">
-
-                                    <div class="flex items-center ps-4   rounded ">
-                                        <input v-model="form.digital_literacy" id="bordered-checkbox-1" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="bordered-checkbox-1" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Digital Literacy</label>
-                                    </div>
-                                    <div class="flex items-center ps-4  rounded">
-                                        <input v-model="form.pwd" id="bordered-checkbox-2" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Person with Disability</label>
-                                    </div>
-                                    <div class="flex items-center ps-4  rounded ">
-                                        <input  v-model="form.pregnant" id="bordered-checkbox-3" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="bordered-checkbox-3" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pregnant Woman</label>
-                                    </div>
-                                    <div class="flex items-center ps-4   rounded ">
-                                        <input  v-model="form.senior_citizen" id="bordered-checkbox-4" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="bordered-checkbox-4" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
-                                    </div>
-
-                                </div>
+                            <div class="col-span-1">
+                                <label for="sex" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Sex
+                                <span class="text-red-800">*</span>
+                                </label>
+                                <select v-model="form.sex" id="sex" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    <option>Select Sex.. </option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
                             </div>
 
+                            <div class="col-span-1">
+                                <label for="age_group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Age Group
+                                    <span class="text-red-800">*</span>
+                                    </label>
+                                    <select v-model="form.age_group" id="age_group" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <option>Select Age Group..</option>
+                                        <option>15-19</option>
+                                        <option>20-29</option>
+                                        <option>30-39</option>
+                                        <option>40-49</option>
+                                        <option>50-59</option>
+                                        <option>60-69</option>
+                                        <option>70-79</option>
+                                        <option>80+</option>
+                                    </select>
+                            </div>
 
                         </div>
+
+                        <div class="border border-w-2 p-3 mb-5">
+                            <div>
+                                Other Informations
+                                (<span class="text-blue-500">Optional</span>)
+                            </div>
+                            <div class="grid grid-cols-4 gap-4">
+
+                                <div class="flex items-center ps-4   rounded ">
+                                    <input v-model="form.digital_literacy" id="bordered-checkbox-1" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="bordered-checkbox-1" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Digital Literacy</label>
+                                </div>
+                                <div class="flex items-center ps-4  rounded">
+                                    <input v-model="form.pwd" id="bordered-checkbox-2" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Person with Disability</label>
+                                </div>
+                                <div class="flex items-center ps-4  rounded ">
+                                    <input  v-model="form.pregnant" id="bordered-checkbox-3" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="bordered-checkbox-3" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pregnant Woman</label>
+                                </div>
+                                <div class="flex items-center ps-4   rounded ">
+                                    <input  v-model="form.senior_citizen" id="bordered-checkbox-4" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="bordered-checkbox-4" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
             </v-card >
            
@@ -265,7 +266,7 @@ export default {
                 data-aos="zoom-out-up" 
                 data-aos-duration="1000" 
                 data-aos-delay="500" 
-                class="mb-5"  style="margin-left: 250px; margin-right: 250px;"
+                class="mb-5"   style="margin-left: 250px; margin-right: 250px;"
             >
                 <!-- CC1 -->
                 <div>
@@ -273,30 +274,30 @@ export default {
                         CC1. Which of the following best describes your awareness of a CC?
                     </v-card-title>
                     <div v-for="(option, index) in cc1_options" :key="index">
-                        <v-checkbox style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc1" :label="option.label" :value="option.value"></v-checkbox>
+                        <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc1" :label="option.label" :value="option.value"></v-checkbox>
                     </div>
   
                 </div>
 
                 <!-- CC2 -->
                 <div >
-                    <v-card-title class=" m-5 font-black mb-10">
+                    <v-card-title class=" m-5 mb-10">
                             CC2. If aware of CC (anwered 1-3 in CC1), would say that the CC of this was...?
                     </v-card-title>
             
                     <div v-for="(option, index) in cc2_options" :key="index">
-                        <v-checkbox style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc2" :label="option.label" :value="option.value"></v-checkbox>
+                        <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc2" :label="option.label" :value="option.value"></v-checkbox>
                     </div>
                 </div>
     
 
              <!-- CC3 -->
                 <div>
-                    <v-card-title class=" m-5 font-black mb-10">
+                    <v-card-title class=" m-5 mb-10">
                         CC3. If aware of CC (anwered 1-3 in CC1), how much did the CC help you in your transaction?
                     </v-card-title>
-                    <div v-for="(option, index) in cc3_options" :key="index">
-                        <v-checkbox style="margin-top:-50px; margin-left:7%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>
+                    <div v-for="(option, index) in cc3_options" :key="index" style="color:!unimportant">
+                        <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>
                     </div>     
                 </div> 
             </v-card>
@@ -318,15 +319,15 @@ export default {
                         border="1"
                     >
                         <v-card-title class="text-4xl mt-5 mb-3">
-                                Responsiveness
+                            Responsiveness
                         </v-card-title>
                         <v-card-content>
                             <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.responsiveness"  v-for="option in options" :key="option.value" >
-                                    <v-btn class="bg-secondary mr-2" :value="option.value"  >
-                                        <v-icon :color="form.responsiveness === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                        <label >{{ option.label }}</label>
-                                    </v-btn>
+                                  <v-btn-toggle   v-model="form.responsiveness"  v-for="option in options" :key="option.value" >
+                                        <v-btn class="mr-2 bg-secondary " :value="option.value" >
+                                            <v-icon :color="form.responsiveness === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
+                                            <label >{{ option.label }}</label>
+                                        </v-btn>
                                 </v-btn-toggle>
                             </div> 
 
@@ -334,16 +335,16 @@ export default {
                                 <v-card-title>How important is this attibute?</v-card-title>
                                 <v-card-content>
                                     <div class="ml-2 mb-3">
-                                    <v-btn-toggle v-model="form.responsiveness_attr_number" mandatory>
-                                        <v-btn
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                            class=" mr-2"
+                                    <v-btn-toggle  v-model="form.responsiveness_attr_number"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>
+                                        <v-btn                      
+                                            class=" mr-2 border border-solid"
+                                            :value="option.value"                        
                                             :color="form.responsiveness_attr_number === option.value ? option.color : 'secondary'"
-                                            style="border-radius:40%"
-                                    
+                                            style="border-radius:40%;"                         
                                         >
-                                        <label >{{ option.label }}</label>
+                                         <v-chip>
+                                             <label >{{ option.label }}</label>
+                                         </v-chip>
                                         </v-btn>
 
                                     </v-btn-toggle>
@@ -375,16 +376,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.reliability_attr_number" mandatory>
-                                      <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                <v-btn-toggle 
+                                    v-model="form.reliability_attr_number"
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                >
+                                      <v-btn      
+                                        :value="option.value"                               
                                         class=" mr-2"
                                          :color="form.reliability_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                        <v-chip>
+                                            <label >{{ option.label }}</label>
+                                        </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -415,16 +422,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.access_and_facilities_attr_number" mandatory>
+                                <v-btn-toggle 
+                                    v-model="form.access_and_facilities_attr_number" 
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                >
                                       <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                        :value="option.value"
                                         class=" mr-2"
                                          :color="form.access_and_facilities_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                         <v-chip>
+                                             <label >{{ option.label }}</label>
+                                         </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -457,16 +470,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.communication_attr_number" mandatory>
+                                <v-btn-toggle 
+                                    v-model="form.communication_attr_number" 
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                >
                                       <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                        :value="option.value"
                                         class=" mr-2"
                                          :color="form.communication_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                         <v-chip>
+                                             <label >{{ option.label }}</label>
+                                         </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -499,16 +518,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.integrity_attr_number" mandatory>
+                                <v-btn-toggle 
+                                    v-model="form.integrity_attr_number" 
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                >
                                       <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                        :value="option.value"
                                         class=" mr-2"
                                          :color="form.integrity_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                     <v-chip>
+                                        <label >{{ option.label }}</label>
+                                    </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -541,16 +566,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.assurance_attr_number" mandatory>
+                                <v-btn-toggle 
+                                    v-model="form.assurance_attr_number" 
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                >
                                       <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                        :value="option.value"
                                         class=" mr-2"
                                          :color="form.assurance_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                   <v-chip>
+                                        <label >{{ option.label }}</label>
+                                    </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -583,16 +614,22 @@ export default {
                             <v-card-title>How important is this attibute?</v-card-title>
                             <v-card-content>
                                 <div class="ml-2 mb-3">
-                                <v-btn-toggle v-model="form.outcome_attr_number" mandatory>
+                                <v-btn-toggle 
+                                    v-model="form.outcome_attr_number" 
+                                    mandatory
+                                    v-for="option in attribute_numbers "
+                                    :key="option.value"
+                                    >
                                       <v-btn
-                                        v-for="option in attribute_numbers "
-                                        :key="option.value"
+                                        :value="option.value"
                                         class=" mr-2"
                                          :color="form.outcome_attr_number === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                    
                                     >
-                                    <label >{{ option.label }}</label>
+                                    <v-chip>
+                                        <label >{{ option.label }}</label>
+                                    </v-chip>
                                     </v-btn>
 
                                 </v-btn-toggle>
@@ -615,16 +652,22 @@ export default {
                 <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others?</div>
                 <v-card class="text-center">
                     <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center " style="margin-right: 50px ; margin-left: 50px">
-                        <v-btn-toggle v-model="form.responsiveness_attr_number" mandatory class="border border-solid">
+                        <v-btn-toggle 
+                            v-model="form.other_attr_rate" 
+                            mandatory 
+                            v-for="option in recommendation_numbers "
+                            :key="option.value"
+                        >
                             <v-btn
-                                v-for="option in recommendation_numbers "
-                                :key="option.value"
+                                :value="option.value"
                                 class=" mr-2"
-                                :color="form.responsiveness_attr_number === option.value ? option.color : 'secondary'"
+                                :color="form.other_attr_rate === option.value ? option.color : 'secondary'"
                                 style="border-radius:40%"
                         
                             >
-                            <label >{{ option.label }}</label>
+                                <v-chip>
+                                    <label >{{ option.label }}</label>
+                                </v-chip>
                             </v-btn>
 
                         </v-btn-toggle>
