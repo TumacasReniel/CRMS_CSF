@@ -20,8 +20,7 @@ const Lighttheme = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
-    blue_grey: '#263238',
-    hover: '#FFFFFFF',
+    
   }
 };
 
