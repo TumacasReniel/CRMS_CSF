@@ -21,7 +21,8 @@ return new class extends Migration
             $table->boolean('digital_literacy')->default(0);
             $table->boolean('pwd')->default(0);
             $table->boolean('pregnant')->default(0);
-            $table->foreignId('pstc_id');
+            $table->boolean('senior_citizen')->default(0);
+            $table->foreignId('pstc_id')->nullable();
             $table->foreign('pstc_id')
                 ->references('id')
                 ->on('users')

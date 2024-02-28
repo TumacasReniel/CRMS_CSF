@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DimensionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,9 +28,12 @@ Route::get('/', function () {
 
 Route::get('/survey_form', function () {
     return Inertia::render('Survey-Forms/Index');
-})->name('survey_form');                   
+})->name('survey_form');   
+
+
 
 Route::post('/csf_submission', [CustomerController::class, 'store']);
+Route::get('/form/csf', [DimensionController::class, 'index'])->name('csf_form');
 
 Route::middleware([
     'auth:sanctum',

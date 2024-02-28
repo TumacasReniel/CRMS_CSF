@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\Dimension;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\CcRating;
+use Illuminate\Http\Request;
 
-class DimensionController extends Controller
+class CcRatingController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $dimensions = Dimension::all();
-        return Inertia::render('Survey-Forms/Index', [
-            'dimensions' => $dimensions,
-        ]);
+        //
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -38,7 +34,7 @@ class DimensionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Dimension $dimension)
+    public function show(CcRating $ccRating)
     {
         //
     }
@@ -46,7 +42,7 @@ class DimensionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Dimension $dimension)
+    public function edit(CcRating $ccRating)
     {
         //
     }
@@ -54,7 +50,7 @@ class DimensionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Dimension $dimension)
+    public function update(Request $request, CcRating $ccRating)
     {
         //
     }
@@ -62,7 +58,7 @@ class DimensionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Dimension $dimension)
+    public function destroy(CcRating $ccRating)
     {
         //
     }

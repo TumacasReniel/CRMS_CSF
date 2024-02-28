@@ -5,18 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class CcRating extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'customer_id',
         'name',
-        'email',
-        'client_type',
-        'sex',
-        'age_group',
-        'digital_literacy',
-        'pwd',
-        'pregnant',
-        'senior_citizen',
+        'answer',
     ];
 }

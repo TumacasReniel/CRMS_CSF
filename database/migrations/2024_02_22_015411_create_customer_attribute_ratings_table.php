@@ -22,9 +22,8 @@ return new class extends Migration
             $table->foreign('dimension_id')
                 ->references('id')
                 ->on('users');
-            $table->string('rate_score_title');
             $table->integer('rate_score');
-            $table->integer('attribute_rate_score');    
+            $table->integer('importance_rate_score');    
             $table->timestamps();
         });
     }

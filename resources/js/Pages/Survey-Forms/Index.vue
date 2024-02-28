@@ -1,10 +1,11 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import SignaturePad from 'signature_pad';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 export default {
+  props: [ 'dimensions' ],
   data() {
     return {
       cc1_options: [
@@ -27,11 +28,11 @@ export default {
         { label: "4. N/A", value: '4' },
       ],
       options: [
-        { label: 'Very Satisfied', value: 'very-satisfied', icon: 'mdi-emoticon-cool', color: '#FFEB3B' },
-        { label: 'Satisfied', value: 'satisfied', icon: 'mdi-emoticon-happy', color: '#FFC107' },
-        { label: 'Neither', value: 'neither', icon: 'mdi-emoticon-neutral', color: '#263238' },
-        { label: 'Dissatisfied', value: 'dissatisfied', icon: 'mdi-emoticon-sad', color: '#F44336' },
-        { label: 'Very Dissatisfied', value: 'very-dissatisfied', icon: 'mdi-emoticon-devil', color: '#6200EA' },
+        { label: 'Very Satisfied', value: '5', icon: 'mdi-emoticon-cool', color: '#FFEB3B' },
+        { label: 'Satisfied', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
+        { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
+        { label: 'Dissatisfied', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
+        { label: 'Very Dissatisfied', value: '1', icon: 'mdi-emoticon-devil', color: '#6200EA' },
       ],
       attribute_numbers: [
         { label: '5', value: '5' },
@@ -59,46 +60,57 @@ export default {
         client_type: null,
         sex: null,
         age_group: null,
+        digital_literacy: 0,
+        pwd: 0,
+        pregnant: 0,
+        senior_citizen: 0,
         cc1: null,
         cc2: null,
         cc3: null,
-        responsiveness: null,
-        responsiveness_attr_number: null,
-        reliability: null,
-        reliability_attr_number: null,
-        access_and_facilities: null,
-        access_and_facilities_attr_number: null,
-        communication: null,
-        communication_attr_number: null,
-        integrity: null,
-        integrity_attr_number: null,
-        assurance: null,
-        assurance_attr_number: null,
-        outcome: null,
-        outcome_attr_number: null,
         recommend_rate: null,
         comment:null,
         other_attr_indication: null,
         signature: null,
+        signaturePad: null,
+        canvas: null,
+        dimension_form : {
+            id: [],
+            name: [],
+            rate_score: [],
+            importance_rate_score: [],
+        },
       }),
-       signaturePad: null,
-       canvas: null,
     };
+  
   },
+
   methods: {
+    getDimension(index, id , name) {
+        this.form.dimension_form.id[index] = id;
+        this.form.dimension_form.name[index] = name;
+        return null;
+    },
+  
     saveCSF: async function () {
-      this.form.signature = this.signaturePad;  
-      await this.form.post('/csf_submission',);
+        console.log(this.form, 900);
+        this.form.signature = this.signaturePad;  
+        await this.form.post('/csf_submission');
     },
     clearSignature: function () {
         new SignaturePad(this.signaturePad);
-    }
-
+    },
+    reset() {
+      this.form = mapValues(this.form, () => null)
+    },
+    
   },
+
+
   setup() {
     const signaturePad = ref(null);
         onMounted(() => {
             AOS.init();
+
             signaturePad.value = new SignaturePad(signaturePad.value);
             // Set canvas dimensions
             const canvas = signaturePad.value;
@@ -192,8 +204,8 @@ export default {
                                                 Client Types
                                             <span class="text-red-800">*</span>
                                             </label>
-                                            <select v-model="form.client_type" id="client_types" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option>Select Client Types..</option>
+                                            <select v-model="form.client_type" id="client_types"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                <option selected>Select Client Types..</option>
                                                 <option>Internal Employees</option>
                                                 <option>General Public</option>
                                                 <option>Government Employees</option>
@@ -206,7 +218,7 @@ export default {
                                             Sex
                                         <span class="text-red-800">*</span>
                                         </label>
-                                        <select v-model="form.sex" id="sex" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        <select v-model="form.sex" id="sex"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                             <option>Select Sex.. </option>
                                             <option>Male</option>
                                             <option>Female</option>
@@ -218,7 +230,7 @@ export default {
                                                 Age Group
                                             <span class="text-red-800">*</span>
                                             </label>
-                                            <select v-model="form.age_group" id="age_group" placeholder="Select Client Types" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <select v-model="form.age_group" id="age_group" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 <option>Select Age Group..</option>
                                                 <option>15-19</option>
                                                 <option>20-29</option>
@@ -314,346 +326,57 @@ export default {
                             HOW WOULD YOU RATE OUR INFORMATION COMMUNICATION TECHNOLOGY SERVICES?
                         </v-card-title>
                         <div>
-                            <v-card
-                                data-aos="fade-left" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="text-center"
-                                border="1"
-                            >
-                                <v-card-title class="text-4xl mt-5 mb-3">
-                                    Responsiveness
-                                </v-card-title>
-                                <v-card-content>
-                                    <div class="ml-2 mb-3">
-                                        <v-btn-toggle class="mb-5"  v-model="form.responsiveness"  v-for="option in options" :key="option.value" >
+                            <v-list v-for="(dimension, index) in dimensions" :key="dimension.id">        
+                                <v-card
+                                    data-aos="fade-left" 
+                                    data-aos-duration="1000" 
+                                    data-aos-delay="500" 
+                                    class="text-center"
+                                    border="1"
+                                >
+                                    <v-card-title class="text-4xl mt-5 mb-3 text-uppercase">
+                                        {{ dimension.name }}
+                                    </v-card-title>
+                                    <v-card-content>
+                                        <div class="ml-2 mb-3">
+                                           
+
+                                            <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]"  v-for="option in options" :key="option.value" >     
                                                 <v-btn class="mr-2 bg-secondary " :value="option.value" >
-                                                    <v-icon :color="form.responsiveness === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
+                                                    <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
                                                     <label >{{ option.label }}</label>
-                                                </v-btn>
-                                        </v-btn-toggle>
-                                    </div> 
+                                                </v-btn>      
+                                                <input type="hidden" :value="getDimension(index, dimension.id ,dimension.name)">          
+                                                                        
+                                            </v-btn-toggle>                          
+                                        </div> 
 
-                                    <v-card>
-                                        <v-card-title>How important is this attibute?</v-card-title>
-                                        <v-card-content>
-                                            <div class="ml-2 mb-3">
-                                                <v-btn-toggle  v-model="form.responsiveness_attr_number"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>
-                                                    <v-btn                      
-                                                        class=" mr-2"
-                                                        :value="option.value"                        
-                                                        color="secondary"
-                                                        style="border-radius:40%;"                         
-                                                    >
-                                                    <v-chip >
-                                                        <label >{{ option.label }}</label>
-                                                    </v-chip>
-                                                    </v-btn>
+                                        <v-card>
+                                            <v-card-title>How important is this attibute?</v-card-title>
+                                            <v-card-content>
+                                                <div class="ml-2 mb-3">
+                                                    <v-btn-toggle  v-model="form.dimension_form.importance_rate_score[index]"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>
+                                                        <v-btn                      
+                                                            class=" mr-2"
+                                                            :value="option.value"                        
+                                                            color="secondary"
+                                                            style="border-radius:40%;"                         
+                                                        >
+                                                        <v-chip >
+                                                            <label >{{ option.label }}</label>
+                                                        </v-chip>
+                                                        </v-btn>
 
-                                                </v-btn-toggle>
-                                            </div>
-                                        </v-card-content>
+                                                    </v-btn-toggle>
+                                                </div>
+                                            </v-card-content>
 
-                                    </v-card>
-                                </v-card-content>
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-right" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Reliability</v-card-title>
-
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle class="mb-5" v-model="form.reliability"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.reliability === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            class="mb-5"
-                                            v-model="form.reliability_attr_number"
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn      
-                                                :value="option.value"                               
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                                <v-chip>
-                                                    <label >{{ option.label }}</label>
-                                                </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
+                                        </v-card>
                                     </v-card-content>
+                                </v-card>                     
+                            </v-list >
 
-                                </v-card>
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-left" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Access && Facilities</v-card-title>
 
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle 
-                                        class="mb-5"
-                                        v-model="form.access_and_facilities"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.access_and_facilities === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            v-model="form.access_and_facilities_attr_number" 
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                                <v-chip>
-                                                    <label >{{ option.label }}</label>
-                                                </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
-                                    </v-card-content>
-
-                                </v-card>
-
-                                
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-right" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Communication</v-card-title>
-
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle
-                                    class="mb-5"
-                                        v-model="form.communication"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.communication === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            v-model="form.communication_attr_number" 
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                                <v-chip>
-                                                    <label >{{ option.label }}</label>
-                                                </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
-                                    </v-card-content>
-
-                                </v-card>
-
-                                
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-left" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Integrity</v-card-title>
-
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle 
-                                        class="mb-5"
-                                        v-model="form.integrity"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.integrity === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            v-model="form.integrity_attr_number" 
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                            <v-chip>
-                                                <label >{{ option.label }}</label>
-                                            </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
-                                    </v-card-content>
-
-                                </v-card>
-
-                                
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-right" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Assurance</v-card-title>
-
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle 
-                                        class="mb-5"
-                                        v-model="form.assurance"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.assurance === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            v-model="form.assurance_attr_number" 
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                        <v-chip>
-                                                <label >{{ option.label }}</label>
-                                            </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
-                                    </v-card-content>
-
-                                </v-card>
-
-                                
-                            </v-card>
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
-                            <v-card
-                                class="text-center bg-none"
-                                data-aos="fade-left" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                            >
-                                <v-card-title justify="center" class="mt-10 mb-2">Outcome</v-card-title>
-
-                                <div class="ml-2 mb-3">
-                                    <v-btn-toggle 
-                                        class="mb-5"
-                                        v-model="form.outcome"  v-for="option in options" :key="option.value" >
-                                        <v-btn class="bg-secondary mr-2" :value="option.value" >
-                                            <v-icon :color="form.outcome === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                            <label >{{ option.label }}</label>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </div> 
-
-                                <v-card>
-                                    <v-card-title>How important is this attibute?</v-card-title>
-                                    <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                        <v-btn-toggle 
-                                            v-model="form.outcome_attr_number" 
-                                            mandatory
-                                            v-for="option in attribute_numbers "
-                                            :key="option.value"
-                                            >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2"
-                                                color="secondary"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                            <v-chip>
-                                                <label >{{ option.label }}</label>
-                                            </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>
-                                        </div>
-                                    </v-card-content>
-
-                                </v-card>
-
-                                
-                            </v-card>
                             <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
                         
                         </div>
