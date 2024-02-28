@@ -5,7 +5,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 export default {
-  props: [ 'dimensions' ],
+  props: [ 'dimensions', 'cc_questions' ],
   data() {
     return {
       cc1_options: [
@@ -67,9 +67,10 @@ export default {
         cc1: null,
         cc2: null,
         cc3: null,
-        recommend_rate: null,
+        recommend_rate_score: 10,
         comment:null,
-        other_attr_indication: null,
+        is_complaint: 0,
+        indication: null,
         signature: null,
         signaturePad: null,
         canvas: null,
@@ -79,6 +80,11 @@ export default {
             rate_score: [],
             importance_rate_score: [],
         },
+        cc_form: {
+            id: [],
+            title: [],
+            answer: [],
+        }
       }),
     };
   
@@ -90,9 +96,23 @@ export default {
         this.form.dimension_form.name[index] = name;
         return null;
     },
+    getCC(index, id , title ) {
+        this.form.cc_form.id[index] = id;
+        this.form.cc_form.title[index] = title;
+        if(id == 1){
+            this.form.cc_form.answer[index] = this.form.cc1;
+        }
+        else if(id == 2){
+            this.form.cc_form.answer[index] = this.form.cc2;
+        }
+        else if(id == 3){
+            this.form.cc_form.answer[index] = this.form.cc3;
+        }
+        return null;
+    },
   
     saveCSF: async function () {
-        console.log(this.form, 900);
+        // console.log(this.form, 900);
         this.form.signature = this.signaturePad;  
         await this.form.post('/csf_submission');
     },
@@ -283,8 +303,31 @@ export default {
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000"
                     >
-                        <!-- CC1 -->
-                        <div>
+
+                        <div v-for="(cc_question, index) in cc_questions" :key="index" class="mb-10" >
+                            <v-card-title class=" m-5 font-black mb-10">
+                               {{ cc_question.title }}. {{ cc_question.question }}
+                            </v-card-title>
+
+                            <div v-if="index == 0" v-for="(option, index) in cc1_options" :key="index">
+                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc1" :label="option.label" :value="option.value"></v-checkbox>                      
+                            </div>
+
+                            <div v-if="index == 1" v-for="(option, index) in cc2_options" :key="index">
+                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc2" :label="option.label" :value="option.value"></v-checkbox>                        
+                            </div>
+
+                            <div v-if="index == 2" v-for="(option, index) in cc3_options" :key="index">
+                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>                        
+                            </div>
+
+                              <input v-if="form.cc1" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title)"> 
+                               <input v-else-if="form.cc2" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
+                                <input v-else-if="form.cc3" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
+        
+                        </div>
+
+                        <!-- <div>
                             <v-card-title class=" m-5 font-black mb-10">
                                 CC1. Which of the following best describes your awareness of a CC?
                             </v-card-title>
@@ -293,11 +336,9 @@ export default {
                             </div>
         
                         </div>
-
-                        <!-- CC2 -->
                         <div >
                             <v-card-title class=" m-5 mb-10">
-                                    CC2. If aware of CC (anwered 1-3 in CC1), would say that the CC of this was...?
+                                CC2. If aware of CC (anwered 1-3 in CC1), would say that the CC of this was...?
                             </v-card-title>
                     
                             <div v-for="(option, index) in cc2_options" :key="index">
@@ -305,8 +346,6 @@ export default {
                             </div>
                         </div>
             
-
-                    <!-- CC3 -->
                         <div>
                             <v-card-title class=" m-5 mb-10">
                                 CC3. If aware of CC (anwered 1-3 in CC1), how much did the CC help you in your transaction?
@@ -314,7 +353,7 @@ export default {
                             <div v-for="(option, index) in cc3_options" :key="index" style="color:!unimportant">
                                 <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>
                             </div>     
-                        </div> 
+                        </div>  -->
                     </v-card>
                 
                     <v-card 
@@ -391,7 +430,7 @@ export default {
                         <v-card class="text-center">
                             <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center " style="margin-right: 50px ; margin-left: 50px">
                                 <v-btn-toggle 
-                                    v-model="form.recommend_rate" 
+                                    v-model="form.recommend_rate_score" 
                                     mandatory 
                                     v-for="option in recommendation_numbers "
                                     :key="option.value"
@@ -399,7 +438,7 @@ export default {
                                     <v-btn
                                         :value="option.value"
                                         class=" mr-2"
-                                        :color="form.recommennd_rate === option.value ? option.color : 'secondary'"
+                                        :color="form.recommend_rate_score === option.value ? option.color : 'secondary'"
                                         style="border-radius:40%"
                                 
                                     >
@@ -443,7 +482,7 @@ export default {
                             )</div>
                             <v-container fluid>
                                 <v-textarea
-                                    v-model="form.other_attr_indication"
+                                    v-model="form.indication"
                                     placeholder="Input here"
                                 ></v-textarea>
                                 

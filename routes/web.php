@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\DimensionController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\SurveyFormController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,14 +25,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/survey_form', function () {
-    return Inertia::render('Survey-Forms/Index');
-})->name('survey_form');   
-
-
-
-Route::post('/csf_submission', [CustomerController::class, 'store']);
-Route::get('/form/csf', [DimensionController::class, 'index'])->name('csf_form');
+Route::get('/form/csf', [SurveyFormController::class, 'index'])->name('csf_form');
+Route::post('/csf_submission', [SurveyFormController::class, 'store']);
 
 Route::middleware([
     'auth:sanctum',

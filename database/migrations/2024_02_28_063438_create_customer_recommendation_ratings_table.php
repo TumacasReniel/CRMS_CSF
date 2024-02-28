@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_attribute_ratings', function (Blueprint $table) {
+        Schema::create('customer_recommendation_ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id');
             $table->foreign('customer_id')
                 ->references('id')
-                ->on('customers');
-            $table->foreignId('dimension_id');
-            $table->foreign('dimension_id')
-                ->references('id')
-                ->on('users');
-            $table->integer('rate_score');
-            $table->integer('importance_rate_score');    
+                ->on('users')
+                ->onDelete('cascade');
+            $table->boolean('recommend_rate_score');
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_attribute_ratings');
+        Schema::dropIfExists('customer_recommendation_ratings');
     }
 };

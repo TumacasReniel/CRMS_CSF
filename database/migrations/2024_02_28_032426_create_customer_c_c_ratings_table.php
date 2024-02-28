@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('customer_c_c_ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id');
             $table->foreign('customer_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-            $table->string('comment')->nullable();
-            $table->boolean('is_complaint');
+                    ->references('id')
+                    ->on('customers');
+            $table->foreignId('cc_id');
+            $table->foreign('cc_id')
+                    ->references('id')
+                    ->on('cc_questions');   
+            $table->string('answer');
             $table->timestamps();
         });
     }
@@ -29,7 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
-        
+        Schema::dropIfExists('customer_c_c_ratings');
     }
 };

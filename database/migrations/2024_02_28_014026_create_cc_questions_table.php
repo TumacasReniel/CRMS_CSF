@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cc_ratings', function (Blueprint $table) {
+        Schema::create('cc_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreign('customer_id')
-            ->references('id')
-            ->on('users');
-            $table->string('name');    
-            $table->string('answer');
+            $table->string('title');    
+            $table->string('question');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cc_ratings');
+        Schema::dropIfExists('cc_questions');
     }
 };
