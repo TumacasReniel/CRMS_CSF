@@ -13,6 +13,7 @@ const Lighttheme = {
     secondary: '#607D8B',
     indigo: '#3D5AFE',
     dark_indigo: '#1A237E',
+    blue_grey: '#263238',
     yellow:'#FDD835',
     light: '#CFD8DC',
     red:'#F44336',
@@ -43,5 +44,6 @@ export default createVuetify({
       flat: true,
       elevation: 10,
     },
+
   },
 });

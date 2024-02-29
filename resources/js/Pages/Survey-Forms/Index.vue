@@ -3,9 +3,11 @@ import { ref, onMounted, watch } from 'vue';
 import SignaturePad from 'signature_pad';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Swal from 'sweetalert2'
 
 export default {
-  props: [ 'dimensions', 'cc_questions' ],
+  props: [ 'dimensions', 'cc_questions', 'error', 'message' ],
+
   data() {
     return {
       cc1_options: [
@@ -67,9 +69,9 @@ export default {
         cc1: null,
         cc2: null,
         cc3: null,
-        recommend_rate_score: 10,
+        recommend_rate_score: null,
         comment:null,
-        is_complaint: 0,
+        is_complaint: false,
         indication: null,
         signature: null,
         signaturePad: null,
@@ -86,21 +88,30 @@ export default {
             answer: [],
         }
       }),
+    
+      errors: {},
+      formSubmitted: false,
     };
+
+    
   
   },
-
+  
   methods: {
-    getDimension(index, id , name) {
+    getDimension(index, id , name, rate_score) {
         this.form.dimension_form.id[index] = id;
         this.form.dimension_form.name[index] = name;
+        this.form.dimension_form.rate_score[index] = rate_score;
+        // if(rate_score =< 3) {
+        //     this.is_complaint = true;
+        // };
         return null;
     },
     getCC(index, id , title ) {
         this.form.cc_form.id[index] = id;
         this.form.cc_form.title[index] = title;
         if(id == 1){
-            this.form.cc_form.answer[index] = this.form.cc1;
+            this.form.cc_form.answer[index] = this.form.cc1;        
         }
         else if(id == 2){
             this.form.cc_form.answer[index] = this.form.cc2;
@@ -112,15 +123,43 @@ export default {
     },
   
     saveCSF: async function () {
-        // console.log(this.form, 900);
-        this.form.signature = this.signaturePad;  
-        await this.form.post('/csf_submission');
+        this.formSubmitted = true;
+        try {
+             
+           this.form.signature = this.signaturePad;  
+           await this.form.post('/csf_submission');
+            
+            // if (this.error) {
+            //     Swal.fire({
+            //         title: "Error",
+            //         icon: "error",
+            //         text: this.message,
+            //     });
+            // } else {
+            //     Swal.fire({
+            //         title: "Success",
+            //         icon: "success",
+            //         text:this.message,
+            //     });
+            // }
+             
+        } catch (error) {
+            if (this.error) {
+               Swal.fire({
+                    title: "error",
+                    icon: "error",
+                    text: this.message,
+                });
+            }
+        }
+        
     },
+
     clearSignature: function () {
         new SignaturePad(this.signaturePad);
     },
     reset() {
-      this.form = mapValues(this.form, () => null)
+        this.form = mapValues(this.form, () => null)
     },
     
   },
@@ -162,6 +201,7 @@ export default {
         </div>
     </nav>
 
+
     <v-card
         data-aos="fade-up" 
         data-aos-duration="2000" 
@@ -169,8 +209,8 @@ export default {
     >
         <v-row justify="center" class="py-3 bg-gray-200">
             <v-form class="max-w" @submit.prevent="saveCSF">
-                <div class="py-20 bg-gray-200 mx-auto">
-                    <v-card class="mb-5 mx-auto" width="1000">
+                <div class="py-20 bg-gray-200 ">
+                    <v-card class="mb-5" width="1000">
                     <v-card-title class="text-center m-5 font-black">
                             <img
                                 data-aos="zoom-in" 
@@ -208,6 +248,7 @@ export default {
                                         <span class="text-red-800">*</span>
                                     </label>
                                     <input v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
+                                    <div class="text-red-800" v-if="form.errors.email && !form.email">{{ form.errors.email }}</div>
                                 </div>
 
                                 <div class="mb-5">
@@ -216,6 +257,7 @@ export default {
                                         (<span class="text-blue-500">Optional</span>)
                                     </label>
                                     <input v-model="form.name" type="text" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="e.g. Juan Dela Cruz" required />
+                                    <div v-if="errors.name">{{ errors.name }}</div>
                                 </div>
 
                                 <div class="mb-5 grid grid-cols-3 gap-4">
@@ -225,12 +267,13 @@ export default {
                                             <span class="text-red-800">*</span>
                                             </label>
                                             <select v-model="form.client_type" id="client_types"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option selected>Select Client Types..</option>
+                                                <option disabled selected value="">Select Client Types..</option>
                                                 <option>Internal Employees</option>
                                                 <option>General Public</option>
                                                 <option>Government Employees</option>
                                                 <option>Business/Organization</option>
                                             </select>
+                                            <div class="text-red-800" v-if="form.errors.client_type && !form.client_type">{{ form.errors.client_type }}</div>
                                     </div>
 
                                     <div class="col-span-1">
@@ -238,11 +281,12 @@ export default {
                                             Sex
                                         <span class="text-red-800">*</span>
                                         </label>
-                                        <select v-model="form.sex" id="sex"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            <option>Select Sex.. </option>
+                                        <select  v-model="form.sex" id="sex" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                            <option disabled selected value="">Select Sex.. </option>
                                             <option>Male</option>
                                             <option>Female</option>
                                         </select>
+                                         <div  class="text-red-800" v-if="form.errors.sex && !form.sex">{{ form.errors.sex }}</div>
                                     </div>
 
                                     <div class="col-span-1">
@@ -251,7 +295,7 @@ export default {
                                             <span class="text-red-800">*</span>
                                             </label>
                                             <select v-model="form.age_group" id="age_group" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                <option>Select Age Group..</option>
+                                                <option disabled selected value="">Select Age Group..</option>
                                                 <option>15-19</option>
                                                 <option>20-29</option>
                                                 <option>30-39</option>
@@ -260,7 +304,8 @@ export default {
                                                 <option>60-69</option>
                                                 <option>70-79</option>
                                                 <option>80+</option>
-                                            </select>
+                                            </select>                                   
+                                           <div  class="text-red-800" v-if="form.errors.age_group && !form.age_group">{{ form.errors.age_group }}</div>
                                     </div>
 
                                 </div>
@@ -288,7 +333,7 @@ export default {
                                             <input  v-model="form.senior_citizen" id="bordered-checkbox-4" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="bordered-checkbox-4" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
                                         </div>
-
+    
                                     </div>
                                 </div>
 
@@ -296,6 +341,7 @@ export default {
                             </div>
                         </div>
                     </v-card >
+                  
                 
                     <v-card 
                         data-aos="zoom-out-up" 
@@ -321,43 +367,17 @@ export default {
                                 <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>                        
                             </div>
 
-                              <input v-if="form.cc1" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title)"> 
-                               <input v-else-if="form.cc2" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
-                                <input v-else-if="form.cc3" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
-        
+                            <input v-if="form.cc1" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title)"> 
+                            <input v-else-if="form.cc2" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
+                            <input v-else-if="form.cc3" type="hidden" :value="getCC(index, cc_question.id ,cc_question.title )"> 
+                            
+                            <div class="text-red-800 m-5" style="margin-left:80px" v-if="formSubmitted && !form.cc_form.answer[index]  ">{{ 'This selection is required' }}</div>
                         </div>
 
-                        <!-- <div>
-                            <v-card-title class=" m-5 font-black mb-10">
-                                CC1. Which of the following best describes your awareness of a CC?
-                            </v-card-title>
-                            <div v-for="(option, index) in cc1_options" :key="index">
-                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc1" :label="option.label" :value="option.value"></v-checkbox>
-                            </div>
-        
-                        </div>
-                        <div >
-                            <v-card-title class=" m-5 mb-10">
-                                CC2. If aware of CC (anwered 1-3 in CC1), would say that the CC of this was...?
-                            </v-card-title>
-                    
-                            <div v-for="(option, index) in cc2_options" :key="index">
-                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" v-model="form.cc2" :label="option.label" :value="option.value"></v-checkbox>
-                            </div>
-                        </div>
-            
-                        <div>
-                            <v-card-title class=" m-5 mb-10">
-                                CC3. If aware of CC (anwered 1-3 in CC1), how much did the CC help you in your transaction?
-                            </v-card-title>
-                            <div v-for="(option, index) in cc3_options" :key="index" style="color:!unimportant">
-                                <v-checkbox color="primary" style="margin-top:-50px; margin-left:7%" v-model="form.cc3" :label="option.label" :value="option.value"></v-checkbox>
-                            </div>     
-                        </div>  -->
                     </v-card>
-                
+                  
                     <v-card 
-                        data-aos="zoom-out-up" 
+                        data-aos="fade-left" 
                         data-aos-duration="1000" 
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000">
@@ -377,19 +397,18 @@ export default {
                                         {{ dimension.name }}
                                     </v-card-title>
                                     <v-card-content>
-                                        <div class="ml-2 mb-3">
-                                           
-
-                                            <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]"  v-for="option in options" :key="option.value" >     
-                                                <v-btn class="mr-2 bg-secondary " :value="option.value" >
-                                                    <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
-                                                    <label >{{ option.label }}</label>
-                                                </v-btn>      
-                                                <input type="hidden" :value="getDimension(index, dimension.id ,dimension.name)">          
-                                                                        
-                                            </v-btn-toggle>                          
-                                        </div> 
-
+                                       <div class="ml-2 mb-3">
+                                            <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]" v-for="option in options" :key="option.value"
+                                            :rules="[() => formSubmitted ? !!form.dimension_form.rate_score[index] || 'This selection is required' : true]"
+                                            >     
+                                            <v-btn class="mr-2 bg-secondary" :value="option.value">
+                                                <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
+                                                <label>{{ option.label }}</label>
+                                            </v-btn>      
+                                            <input type="hidden" :value="getDimension(index, dimension.id, dimension.name, form.dimension_form.rate_score[index] )">   
+                                            </v-btn-toggle> 
+                                            <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
+                                        </div>
                                         <v-card>
                                             <v-card-title>How important is this attibute?</v-card-title>
                                             <v-card-content>
@@ -407,10 +426,12 @@ export default {
                                                         </v-btn>
 
                                                     </v-btn-toggle>
+                                                    <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.importance_rate_score[index]">{{ 'This selection is required' }}</div>
                                                 </div>
                                             </v-card-content>
 
                                         </v-card>
+
                                     </v-card-content>
                                 </v-card>                     
                             </v-list >
@@ -426,7 +447,7 @@ export default {
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000"
                     >
-                        <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others?</div>
+                        <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others? <span class="text-red-800">*</span></div>
                         <v-card class="text-center">
                             <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center " style="margin-right: 50px ; margin-left: 50px">
                                 <v-btn-toggle 
@@ -437,8 +458,8 @@ export default {
                                 >
                                     <v-btn
                                         :value="option.value"
-                                        class=" mr-2"
-                                        :color="form.recommend_rate_score === option.value ? option.color : 'secondary'"
+                                        class=" mr-2 "
+                                        :color="form.recommend_rate_score === option.value ? 'secondary' : 'secondary'"
                                         style="border-radius:40%"
                                 
                                     >
@@ -448,6 +469,9 @@ export default {
                                     </v-btn>
 
                                 </v-btn-toggle>
+
+                            <div class="text-red-800" v-if="formSubmitted && !form.recommend_rate_score">{{ 'This selection is required' }}</div>
+                                 
                             </div>
                     </v-card>
                     </v-card>
@@ -458,17 +482,21 @@ export default {
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000"
                     >
-                        <div class="p-3 mt-0 font-bold text-lg">Please write your comment/suggestions below. (
-                            <span class="text-blue-400">Optional</span>
-                            )</div>
-                            <v-container fluid>
-                                <v-textarea
-                                    color="secondary"
-                                    v-model="form.comment"
-                                    placeholder="Input here"
-                                ></v-textarea>
-                                
-                            </v-container>
+                        <div class="p-3 mt-0 font-bold text-lg">Please write your comment/suggestions below. 
+                           <span class="text-blue-400">(Optional)</span>
+                        </div>
+                        <v-container fluid>
+                            <v-textarea
+                                v-if="form.is_complaint == true"
+                                v-model="form.comment"
+                                placeholder="Input here"
+                            ></v-textarea>     
+                            <v-textarea
+                                v-else-if="form.is_complaint == false"
+                                v-model="form.comment"
+                                placeholder="Input here"
+                            ></v-textarea>                         
+                        </v-container>
                     </v-card>
 
                     <v-card 
@@ -513,12 +541,11 @@ export default {
                         data-aos="zoom-out-up" 
                         data-aos-duration="1000" 
                         data-aos-delay="500" 
-                        class="mb-5 mx-auto" width="1000" 
+                        class="mb-10 mx-auto" width="1000" 
                     >
-                        <div
-                        
+                        <div     
                             style="margin-left: 280px; margin-right: 280px;" class="mt-5 mb-5 text-center">
-                            <v-btn color="success" type="submit" class="mr-2" append-icon="mdi-send">Submit</v-btn>
+                            <v-btn color="success" type="submit" class="mr-2" append-icon="mdi-send" :disabled="form.processing">Submit</v-btn>
                             <a href="/" class="btn bg-secondary">
                                 <v-btn class="bg-secondary">Back</v-btn>
                             </a>
