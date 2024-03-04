@@ -200,8 +200,7 @@ export default {
             </a>
         </div>
     </nav>
-
-
+    
     <v-card
         data-aos="fade-up" 
         data-aos-duration="2000" 
@@ -381,37 +380,38 @@ export default {
                         data-aos-duration="1000" 
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000">
-                        <v-card-title class="text-lg text-white bg-blue_grey p-3">
+                        <v-card-title class="text-lg text-white bg-blue_grey p-3 ">
                             HOW WOULD YOU RATE OUR INFORMATION COMMUNICATION TECHNOLOGY SERVICES?
                         </v-card-title>
                         <div>
-                            <v-list v-for="(dimension, index) in dimensions" :key="dimension.id">        
+    
                                 <v-card
                                     data-aos="fade-left" 
                                     data-aos-duration="1000" 
                                     data-aos-delay="500" 
-                                    class="text-center"
+                                    class="text-center over-flowhidden scroll-none mb-1"
                                     border="1"
+                                    v-for="(dimension, index) in dimensions" :key="dimension.id"
                                 >
                                     <v-card-title class="text-4xl mt-5 mb-3 text-uppercase">
                                         {{ dimension.name }}
                                     </v-card-title>
-                                    <v-card-content>
-                                       <div class="ml-2 mb-3">
+
+                                       <div class="ml-2">
                                             <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]" v-for="option in options" :key="option.value"
                                             :rules="[() => formSubmitted ? !!form.dimension_form.rate_score[index] || 'This selection is required' : true]"
                                             >     
-                                            <v-btn class="mr-2 bg-secondary" :value="option.value">
-                                                <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'blue'" size="40">{{ option.icon }}</v-icon><br>
+                                            <v-btn rounded class="mr-2 bg-gray-200" :value="option.value" color="secondary" >
+                                                <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'gray'" size="40">{{ option.icon }}</v-icon><br>
                                                 <label>{{ option.label }}</label>
                                             </v-btn>      
                                             <input type="hidden" :value="getDimension(index, dimension.id, dimension.name, form.dimension_form.rate_score[index] )">   
                                             </v-btn-toggle> 
                                             <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
                                         </div>
-                                        <v-card>
-                                            <v-card-title>How important is this attibute?</v-card-title>
-                                            <v-card-content>
+                                        <div class="overflow-hidden">
+                                            <div>How important is this attibute?</div>
+                                            <div>
                                                 <div class="ml-2 mb-3">
                                                     <v-btn-toggle  v-model="form.dimension_form.importance_rate_score[index]"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>
                                                         <v-btn                      
@@ -428,16 +428,15 @@ export default {
                                                     </v-btn-toggle>
                                                     <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.importance_rate_score[index]">{{ 'This selection is required' }}</div>
                                                 </div>
-                                            </v-card-content>
+                                            </div>
 
-                                        </v-card>
+                                        </div>
 
-                                    </v-card-content>
                                 </v-card>                     
-                            </v-list >
 
 
-                            <v-divider :thickness="5" color="success" class="border-opacity-100"></v-divider> 
+
+                            <v-divider></v-divider> 
                         
                         </div>
                     </v-card>
@@ -448,7 +447,7 @@ export default {
                         class="mb-5 mx-auto" width="1000"
                     >
                         <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others? <span class="text-red-800">*</span></div>
-                        <v-card class="text-center">
+
                             <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center " style="margin-right: 50px ; margin-left: 50px">
                                 <v-btn-toggle 
                                     v-model="form.recommend_rate_score" 
@@ -473,7 +472,7 @@ export default {
                             <div class="text-red-800" v-if="formSubmitted && !form.recommend_rate_score">{{ 'This selection is required' }}</div>
                                  
                             </div>
-                    </v-card>
+
                     </v-card>
 
                     <v-card 
@@ -541,7 +540,7 @@ export default {
                         data-aos="zoom-out-up" 
                         data-aos-duration="1000" 
                         data-aos-delay="500" 
-                        class="mb-10 mx-auto" width="1000" 
+                        class="mb-5 mx-auto" width="1000" 
                     >
                         <div     
                             style="margin-left: 280px; margin-right: 280px;" class="mt-5 mb-5 text-center">
@@ -557,6 +556,7 @@ export default {
             </v-form>
         </v-row>
     </v-card>
+
 </template>
 <style scoped>
 canvas {
