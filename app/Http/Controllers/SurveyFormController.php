@@ -109,12 +109,15 @@ class SurveyFormController extends Controller
             );
       
             DB::commit();
-            return to_route('survey-forms.index');
+           
+            return Inertia::render('Survey-Forms/ThankYou')
+                ->with('message', "Successfully Submitted Thank you.")
+                ->with('status', "success");
             
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return to_route('survey-forms.index');
+            return Redirect::route('csf_form')->with('error', 'Something went wrong please check.');
         }
 
         

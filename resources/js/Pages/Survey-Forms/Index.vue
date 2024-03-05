@@ -6,7 +6,7 @@ import 'aos/dist/aos.css';
 import Swal from 'sweetalert2'
 
 export default {
-  props: [ 'dimensions', 'cc_questions', 'error', 'message' ],
+  props: [ 'dimensions', 'cc_questions', 'message', 'status' ],
 
   data() {
     return {
@@ -96,16 +96,21 @@ export default {
     
   
   },
+
   
+
   methods: {
     getDimension(index, id , name, rate_score) {
         this.form.dimension_form.id[index] = id;
         this.form.dimension_form.name[index] = name;
         this.form.dimension_form.rate_score[index] = rate_score;
-        // if(rate_score =< 3) {
-        //     this.is_complaint = true;
-        // };
-        return null;
+
+          if(rate_score <= 3){
+            this.form.is_complaint = true;        
+        }
+        else{
+             this.form.is_complaint = false; 
+        }
     },
     getCC(index, id , title ) {
         this.form.cc_form.id[index] = id;
@@ -124,33 +129,32 @@ export default {
   
     saveCSF: async function () {
         this.formSubmitted = true;
-        try {
-             
+        try {         
            this.form.signature = this.signaturePad;  
-           await this.form.post('/csf_submission');
-            
-            // if (this.error) {
-            //     Swal.fire({
-            //         title: "Error",
-            //         icon: "error",
-            //         text: this.message,
-            //     });
-            // } else {
-            //     Swal.fire({
-            //         title: "Success",
-            //         icon: "success",
-            //         text:this.message,
-            //     });
-            // }
+            await this.form.post('/csf_submission',{
+                //  onSuccess: () => {
+                //     Swal.fire({
+                //         title: 'Success',
+                //         icon: 'success',
+                //         text: this.message ? this.message: "Submitted successfully , Thank you.",
+                //     })
+                //     this.form.reset();
+                //     this.form.recommend_rate_score = null;
+                //     this.signaturePad.value = new SignaturePad(signaturePad.value);
+                //  },
+
+                // onError: () => {
+                //     Swal.fire({
+                //         title: 'Failed',
+                //         icon: 'error',
+                //         text: this.error ? this.error: "Something went wrong please check",
+                //     })
+
+                //  }
+            })
+    
              
         } catch (error) {
-            if (this.error) {
-               Swal.fire({
-                    title: "error",
-                    icon: "error",
-                    text: this.message,
-                });
-            }
         }
         
     },
@@ -176,7 +180,7 @@ export default {
             canvas.width = 400;
             canvas.height = 200;
         });
-
+    
     return {
       signaturePad,
     };
@@ -201,6 +205,7 @@ export default {
         </div>
     </nav>
     
+
     <v-card
         data-aos="fade-up" 
         data-aos-duration="2000" 
@@ -409,7 +414,7 @@ export default {
                                             </v-btn-toggle> 
                                             <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
                                         </div>
-                                        <div class="overflow-hidden">
+                                        <div class="overflow-hidden mb-3">
                                             <div>How important is this attibute?</div>
                                             <div>
                                                 <div class="ml-2 mb-3">
@@ -426,15 +431,13 @@ export default {
                                                         </v-btn>
 
                                                     </v-btn-toggle>
-                                                    <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.importance_rate_score[index]">{{ 'This selection is required' }}</div>
+                                                    <div class="text-red-800" v-if="form.errors && formSubmitted && !form.dimension_form.importance_rate_score[index]">{{ 'This selection is required' }}</div>
                                                 </div>
                                             </div>
 
                                         </div>
 
                                 </v-card>                     
-
-
 
                             <v-divider></v-divider> 
                         
@@ -448,7 +451,7 @@ export default {
                     >
                         <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others? <span class="text-red-800">*</span></div>
 
-                            <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center " style="margin-right: 50px ; margin-left: 50px">
+                            <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center text-center" style="margin-right: 50px ; margin-left: 50px">
                                 <v-btn-toggle 
                                     v-model="form.recommend_rate_score" 
                                     mandatory 
@@ -458,7 +461,7 @@ export default {
                                     <v-btn
                                         :value="option.value"
                                         class=" mr-2 "
-                                        :color="form.recommend_rate_score === option.value ? 'secondary' : 'secondary'"
+                                        :color="form.recommend_rate_score === option.color ? 'secondary' : 'secondary'"
                                         style="border-radius:40%"
                                 
                                     >
@@ -467,11 +470,11 @@ export default {
                                         </v-chip>
                                     </v-btn>
 
-                                </v-btn-toggle>
-
-                            <div class="text-red-800" v-if="formSubmitted && !form.recommend_rate_score">{{ 'This selection is required' }}</div>
-                                 
+                                </v-btn-toggle>            
+                                </br>
+                                <div class="text-red-800" v-if="form.errors.recommend_rate_score && !form.recommend_rate_score">{{ 'This selection is required' }}</div>
                             </div>
+                         
 
                     </v-card>
 
@@ -482,13 +485,14 @@ export default {
                         class="mb-5 mx-auto" width="1000"
                     >
                         <div class="p-3 mt-0 font-bold text-lg">Please write your comment/suggestions below. 
-                           <span class="text-blue-400">(Optional)</span>
+                           <span  v-if="form.is_complaint == false" class="text-blue-400">(Optional)</span>
+                           <span  v-if="form.is_complaint == true" class="text-red-800">*</span>
                         </div>
                         <v-container fluid>
                             <v-textarea
                                 v-if="form.is_complaint == true"
                                 v-model="form.comment"
-                                placeholder="Input here"
+                                placeholder="Input here!"
                             ></v-textarea>     
                             <v-textarea
                                 v-else-if="form.is_complaint == false"
@@ -496,6 +500,9 @@ export default {
                                 placeholder="Input here"
                             ></v-textarea>                         
                         </v-container>
+
+                        <div class="text-red-800 p-5" v-if="formSubmitted && form.is_complaint == true">{{ 'This selection is required because you rate low to our services with the options above.' }}<br>
+                        Please input the reason/s why you have rated low.</div>
                     </v-card>
 
                     <v-card 

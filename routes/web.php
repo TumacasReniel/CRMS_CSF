@@ -28,6 +28,11 @@ Route::get('/', function () {
 Route::get('/form/csf', [SurveyFormController::class, 'index'])->name('csf_form');
 Route::post('/csf_submission', [SurveyFormController::class, 'store']);
 
+// Route::get('/csf/message', function () {
+//     return Inertia::render('Survey-Forms/ThankYou');
+// })->name('csf_message');
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

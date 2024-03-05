@@ -38,8 +38,6 @@ class SurveyFormRequest extends FormRequest
             'importance_rate_score' => 'integer|max:10',
 
             //customer cc rating validation 
-            'customer_id' => 'required|exists:customers,id',
-            'cc_id' => 'required|exists:cc_questions,id', 
             'answer' => 'nullable|integer|max:255',
 
             //customer comment validation
