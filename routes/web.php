@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SurveyFormController;
 
 /*
@@ -28,10 +29,6 @@ Route::get('/', function () {
 Route::get('/form/csf', [SurveyFormController::class, 'index'])->name('csf_form');
 Route::post('/csf_submission', [SurveyFormController::class, 'store']);
 
-// Route::get('/csf/message', function () {
-//     return Inertia::render('Survey-Forms/ThankYou');
-// })->name('csf_message');
-
 
 Route::middleware([
     'auth:sanctum',
@@ -42,9 +39,9 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/regional_offices', function () {
-        return Inertia::render('Regional-Offices/Index');
-    })->name('regional_offices');
+
+    Route::get('/csi', [ReportController::class, 'index'])->name('csi');
+    Route::post('/csi', [ReportController::class, 'generateCSI']);
 
     Route::get('/accounts', function () {
         return Inertia::render('Account/Index');

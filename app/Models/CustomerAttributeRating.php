@@ -14,5 +14,14 @@ class CustomerAttributeRating extends Model
         'rate_score',
         'importance_rate_score',
     ];
+
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'customer_id' ,'id');
+    }
+
+    public function dimension(){
+        return $this->belongsTo(Dimension::class, 'dimension_id', 'id');
+    }
+
     
 }
