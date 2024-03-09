@@ -22,9 +22,23 @@ defineProps({
     x_totals: Object,
     x_grand_total: Object,
 
+    //Importance Attribute Ratings
     importance_rate_score_totals: Object,
     x_importance_totals: Object,
     importance_ilsr_totals:Object,
+
+    //GAP
+    gap_totals: Object,
+    gap_grand_total: Number,
+    
+    //WF
+    wf_totals: Object,
+
+    //SS
+    ss_totals: Object,
+
+    //WS
+    ws_totals: Object,
   
 });
 
@@ -48,7 +62,7 @@ const generateCSIReport = async () => {
             </h2>
         </template>
 
-        <div class="py-10"  style="margin-left:100px; margin-right:100px">
+        <div class="py-10"  style="margin-left:80px; margin-right:80px">
             <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
@@ -123,7 +137,10 @@ const generateCSIReport = async () => {
                                     </td>
                                      <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in likert_scale_rating_totals[index+1]">
                                         {{ total }}
-                                    </td>                           
+                                    </td>          
+                                    <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in gap_totals[index+1]">
+                                        {{ total }}
+                                    </td>                   
                             </tr>
                             <tr class="text-center font-black p-5 m-5 border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                                 <td class="m-5 p-3">TOTAL SCORE</td>
@@ -134,6 +151,7 @@ const generateCSIReport = async () => {
                                 <td class="border-t">{{ grand_vd_total }}</td>
                                 <td class="border-t">{{ x_grand_total }}</td>
                                 <td class="border-t">{{ lsr_grand_total }}</td>
+                                <td class="border-t">{{ gap_grand_total }}</td>
                             </tr>                                               
                         </table>
 
@@ -163,7 +181,7 @@ const generateCSIReport = async () => {
                                 </tbody> -->
                                 <tr v-for="(dimension, index) in dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                                     
-                                        <td class="border-t p-5 pl-10 ">
+                                        <td class="border-t p-3 w-1/8 ">
                                             {{ index + 1 }}.{{ dimension.name }}
                                         </td>
                                         <td v-if="y_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in importance_rate_score_totals[index+1]">
@@ -172,13 +190,19 @@ const generateCSIReport = async () => {
                                         <td v-if="x_importance_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in x_importance_totals[index+1]">
                                             {{ total }}
                                         </td>
-                                        <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/4 text-center"  v-for="total in importance_ilsr_totals[index+1]">
+                                        <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in importance_ilsr_totals[index+1]">
                                             {{ total }}
-                                        </td> 
-                                        
-                                                      
-                                </tr>
-                                            
+                                        </td>  
+                                        <td v-if="wf_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in wf_totals[index+1]">
+                                            {{ total }}
+                                        </td>       
+                                        <td v-if="ss_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in ss_totals[index+1]">
+                                            {{ total }}
+                                        </td>  
+                                        <td v-if="ws_totals" class="border-t p-5 w-1/8 text-center mr-10"  v-for="total in ws_totals[index+1]">
+                                            {{ total }}
+                                        </td>                   
+                                </tr>                                           
                             </table>
                         </v-card-body>     
                     </v-card> 
