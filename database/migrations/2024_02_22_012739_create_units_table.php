@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('services_unit_id');
+            $table->foreignId('services_id');
+            $table->foreign('services_id')
+            ->references('id')
+            ->on('services');
             $table->string('unit_name');
-            $table->string('unit_url');
+            $table->string('unit_url')->nullable();
             $table->boolean('is_disabled')->default(0);
             $table->foreignId('pstc_id')->nullable();
             // $table->foreignId('hrdc_id')->nullable();

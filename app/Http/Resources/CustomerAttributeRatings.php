@@ -22,8 +22,6 @@ class CustomerAttributeRatings extends JsonResource
             'updated_at' => Carbon::parse($this->updated_at)->format("mm/dd/YY"),
             'dimension'=> $this->dimension ? new Dimension( $this->dimension) : null,
             'customer'=> $this->customer ? new Customer( $this->customer) : null,
-            // 'customer'=> $this->customer ? Customer::collection($this->customer) : [],
-            // 'dimension'=> $this->dimension ? Dimension::collection($this->dimension) : [],
 
         ];
     }

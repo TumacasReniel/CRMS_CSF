@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SurveyFormController;
+use App\Http\Controllers\ServiceUnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,12 +41,14 @@ Route::middleware([
     })->name('dashboard');
 
 
-    Route::get('/csi', [ReportController::class, 'index'])->name('csi');
-    Route::post('/csi', [ReportController::class, 'generateCSI']);
-
     Route::get('/accounts', function () {
         return Inertia::render('Account/Index');
     })->name('accounts');
+
+    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    Route::get('/csi', [ReportController::class , 'index']);
+    Route::get('/csi/generate', [ReportController::class, 'generateCSI']);
+
 
 });
 

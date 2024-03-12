@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(DimensionSeeder::class);
         $this->call(CcQuestionSeeder::class);
+        $this->call(ServicesSeeder::class);
+        $this->call(UnitSeeder::class);
     }
 
 }

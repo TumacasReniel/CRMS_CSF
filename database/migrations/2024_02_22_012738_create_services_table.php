@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services_units', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->string('services_unit_name');
-            $table->boolean('is_with_pstc')->default(0);
+            $table->string('services_name');
+            $table->string('services_url')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services_units');
+        Schema::dropIfExists('services');
     }
 };

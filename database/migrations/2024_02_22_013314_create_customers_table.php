@@ -27,6 +27,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+            $table->foreignId('unit_id')->nullable();
+            $table->foreign('unit_id')
+                ->references('id')
+                ->on('units');
             $table->timestamps();
         });
     }
