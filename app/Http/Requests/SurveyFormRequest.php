@@ -47,6 +47,8 @@ class SurveyFormRequest extends FormRequest
             //customer toher data validation
             'indication' => 'nullable|string|max:255',
             'recommend_rate_score' => 'required|max:255',
+
+            'captcha' => 'required|string',
         ];
     }
 }

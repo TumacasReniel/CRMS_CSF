@@ -16,24 +16,42 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Models\CustomerRecommendationRating;
 use App\Models\CustomerOtherAttributeIndication;
+use Illuminate\Support\Facades\Session;
+use Mews\Captcha\Facades\Captcha;
+
 
 class SurveyFormController extends Controller
 {
-    public function index()
+    public function index(Captcha $captcha)
     {
         $cc_questions = CcQuestion::all();
         $dimensions = Dimension::all();
+        
+        $captcha = Captcha::create();
 
         return Inertia::render('Survey-Forms/Index')
             ->with('cc_questions', $cc_questions)
-            ->with('dimensions', $dimensions);
+            ->with('dimensions', $dimensions)
+            ->with('captcha', $captcha);  
+
     }
 
-    public function store(SurveyFormRequest $request)
-    {
+    public function store(Request $request)
+    {      
         try{
             DB::beginTransaction();  
+            
             Validator::make($request->all(), $request->rules());
+            // Retrieve the CAPTCHA code from the session
+            $captchaCode = session('captcha_code');
+
+            //Check if the entered CAPTCHA code matches the stored CAPTCHA code
+            if ($request->captcha !== $captchaCode) {
+                dd('Incorrect captcha code');
+            }else{
+                dd('error cap');
+            };
+
             
             // Save Customer
             $customer = Customer::create([
@@ -107,6 +125,8 @@ class SurveyFormController extends Controller
                     'recommend_rate_score' =>  $request->recommend_rate_score,
                 ]
             );
+
+            
       
             DB::commit();
            

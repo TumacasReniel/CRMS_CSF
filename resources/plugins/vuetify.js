@@ -1,9 +1,12 @@
+// import 'vuetify/dist/vuetify.min.css';
+import 'vuetify/styles';
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 import "@mdi/font/css/materialdesignicons.css";
-import 'vuetify/styles'
+
+
 
 const Lighttheme = {
   variables: {},
@@ -22,7 +25,8 @@ const Lighttheme = {
     info: '#2196F3',
     success: '#4CAF50',
     warning: '#FB8C00',
-  }
+  },
+
 };
 
 export default createVuetify({

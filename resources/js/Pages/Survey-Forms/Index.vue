@@ -6,7 +6,7 @@ import 'aos/dist/aos.css';
 import Swal from 'sweetalert2'
 
 export default {
-  props: [ 'dimensions', 'cc_questions', 'message', 'status' ],
+  props: [ 'dimensions', 'cc_questions', 'message', 'status'  , 'captcha'],
 
   data() {
     return {
@@ -62,7 +62,7 @@ export default {
         client_type: null,
         sex: null,
         age_group: null,
-        digital_literacy: 0,
+        // digital_literacy: 0,
         pwd: 0,
         pregnant: 0,
         senior_citizen: 0,
@@ -74,8 +74,6 @@ export default {
         is_complaint: false,
         indication: null,
         signature: null,
-        signaturePad: null,
-        canvas: null,
         dimension_form : {
             id: [],
             name: [],
@@ -86,15 +84,36 @@ export default {
             id: [],
             title: [],
             answer: [],
-        }
+        },
+        captcha: null,
+
       }),
-    
+      signaturePad:null,
+      canvas: null,
       errors: {},
       formSubmitted: false,
+      captchaSrc: '/captcha/flat',
+
     };
 
     
   
+  },
+
+  mounted(){
+      AOS.init();
+
+        // this.signaturePad = new SignaturePad(this.signaturePad);
+        // // Set canvas dimensions
+        // this.canvas = this.signaturePad;
+        // canvas.width = 400;
+        // canvas.height = 200;
+
+        Swal.fire({
+            title: "Disclaimer",
+            icon: "warning",
+            text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
+        });
   },
 
   
@@ -129,30 +148,45 @@ export default {
   
     saveCSF: async function () {
         this.formSubmitted = true;
-        try {         
-           this.form.signature = this.signaturePad;  
-            await this.form.post('/csf_submission',{
-                //  onSuccess: () => {
-                //     Swal.fire({
-                //         title: 'Success',
-                //         icon: 'success',
-                //         text: this.message ? this.message: "Submitted successfully , Thank you.",
-                //     })
-                //     this.form.reset();
-                //     this.form.recommend_rate_score = null;
-                //     this.signaturePad.value = new SignaturePad(signaturePad.value);
-                //  },
+        try {    
+            Swal.fire({
+                title: '<img src="/captcha/flat" alt="CAPTCHA" style="display: block; margin: 0 auto; ">',
+                html: '<div style="font-weight: bold; font-size:25px">Enter Captcha Code</div> ' +
+                      '<input id="captcha-input" class="swal2-input" autofocus>',
 
-                // onError: () => {
-                //     Swal.fire({
-                //         title: 'Failed',
-                //         icon: 'error',
-                //         text: this.error ? this.error: "Something went wrong please check",
-                //     })
+                inputAttributes: {
+                    autocapitalize: "off"
+                },
+                
+                showCancelButton: true,
+                confirmButtonText: "Submit",
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return this.form.captcha = document.getElementById('captcha-input').value;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {             
+                    // this.form.signature = this.signaturePad;  
+                    this.form.post('/csf_submission',{
+                        onSuccess: () => {
+                            this.form.reset();
+                            this.form.recommend_rate_score = null;
+                            // this.form.signaturePad = new SignaturePad(this.signaturePad.value);
+                        },
 
-                //  }
-            })
+                        onError: () => {
+                            Swal.fire({
+                                title: 'Failed',
+                                icon: 'error',
+                                text: this.error ? this.error: "Something went wrong please check",
+                            })
+
+                        }
+                    })
     
+                }
+            });
+
              
         } catch (error) {
         }
@@ -169,22 +203,28 @@ export default {
   },
 
 
-  setup() {
-    const signaturePad = ref(null);
-        onMounted(() => {
-            AOS.init();
+//   setup() {
+//     const signaturePad = ref(null);
+//         onMounted(() => {
+//             AOS.init();
 
-            signaturePad.value = new SignaturePad(signaturePad.value);
-            // Set canvas dimensions
-            const canvas = signaturePad.value;
-            canvas.width = 400;
-            canvas.height = 200;
-        });
+//             signaturePad.value = new SignaturePad(signaturePad.value);
+//             // Set canvas dimensions
+//             const canvas = signaturePad.value;
+//             canvas.width = 400;
+//             canvas.height = 200;
+
+//            Swal.fire({
+//                 title: "Disclaimer",
+//                 icon: "warning",
+//                 text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
+//             });
+//         });
     
-    return {
-      signaturePad,
-    };
-  },
+//     return {
+//       signaturePad,
+//     };
+//   },
 
 };
 
@@ -200,7 +240,7 @@ export default {
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="../../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Department of Science and Technology</span>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Department of Science and Technology </span>
             </a>
         </div>
     </nav>
@@ -229,7 +269,7 @@ export default {
                     </v-card-title>
                     
                     </v-card>
-            
+                  
                     <v-card 
                         data-aos="zoom-out-up" 
                         data-aos-duration="1000" 
@@ -321,10 +361,10 @@ export default {
                                     </div>
                                     <div class="grid grid-cols-4 gap-4">
 
-                                        <div class="flex items-center ps-4   rounded ">
+                                        <!-- <div class="flex items-center ps-4   rounded ">
                                             <input v-model="form.digital_literacy" id="bordered-checkbox-1" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="bordered-checkbox-1" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Digital Literacy</label>
-                                        </div>
+                                        </div> -->
                                         <div class="flex items-center ps-4  rounded">
                                             <input v-model="form.pwd" id="bordered-checkbox-2" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Person with Disability</label>
@@ -542,7 +582,7 @@ export default {
                                 </v-row>
                             </v-container>
                     </v-card>
-            
+
                     <v-card
                         data-aos="zoom-out-up" 
                         data-aos-duration="1000" 
@@ -551,7 +591,7 @@ export default {
                     >
                         <div     
                             style="margin-left: 280px; margin-right: 280px;" class="mt-5 mb-5 text-center">
-                            <v-btn color="success" type="submit" class="mr-2" append-icon="mdi-send" :disabled="form.processing">Submit</v-btn>
+                            <v-btn color="success" type="submit" class="mr-2" prepend-icon="mdi-send" :disabled="form.processing">Submit</v-btn>
                             <a href="/" class="btn bg-secondary">
                                 <v-btn class="bg-secondary">Back</v-btn>
                             </a>

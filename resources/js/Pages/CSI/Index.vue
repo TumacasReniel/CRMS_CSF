@@ -1,9 +1,19 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import PrintReport from '@/Pages/CSI/PrintReport.vue';
-import { reactive, ref } from 'vue'
+import MonthlyContent from '@/Pages/CSI/Monthly/Content.vue';
+import Q1Content from '@/Pages/CSI/Quarterly/Contents/Q1Content.vue';
+import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
+import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
+import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
+import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
+import ByUnitQ1Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter1.vue';
+import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
+import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
+import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
+import { reactive, ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
+import Swal from 'sweetalert2'
 
 const props = defineProps({
     service: Object, 
@@ -59,40 +69,516 @@ const props = defineProps({
     customer_satisfaction_index: Number,
 
     //Net Promotion Score(NPS)
-    net_promotion_score: Number,
+    net_promoter_score: Number,
 
     //Percentage of Promoters
     percentage_promoters: Number,
 
     //Percentage of Detractors
     percentage_detractors: Number,
-  
+
+  // --- QUARTER 1 ----
+
+    //First Quarter  quality attributes totals
+    q1_vs_totals: Object,
+    q1_s_totals: Object,
+    q1_n_totals: Object,
+    q1_d_totals: Object,
+    q1_vd_totals: Object,
+    q1_grand_totals: Object,
+
+    // First Quarter raw totals
+    vs_grand_total_raw_points: Number,
+    s_grand_total_raw_points: Number,
+    ndvd_grand_total_raw_points: Number,
+    grand_total_raw_points: Number,
+    trp_totals: Object,  
+    grand_total_raw_points: Number,
+
+    //Part 1 Q1 Total scores
+    p1_total_scores: Object,
+    vs_grand_total_score: Number,
+    s_grand_total_score: Number,
+    ndvd_grand_total_score: Number,
+    grand_total_score: Number,
+
+    // Likert Scale Rating Quarterly totals
+    lsr_totals: Object,
+    lsr_grand_total: Number,
+    lsr_average: Number,
+
+    // First Quarter very satified respondent totals
+    jan_total_vs_respondents: Number, 
+    feb_total_vs_respondents: Number, 
+    mar_total_vs_respondents: Number, 
+
+    // First Quarter satified respondent totals
+    jan_total_s_respondents: Number, 
+    feb_total_s_respondents: Number, 
+    mar_total_s_respondents: Number, 
+
+    // First Quarter neither, dissasfied, very dissatisfied respondent totals
+    jan_total_ndvd_respondents: Number, 
+    feb_total_ndvd_respondents: Number, 
+    mar_total_ndvd_respondents: Number, 
+
+     // First Quarter  respondent totals
+    jan_total_respondents: Number, 
+    feb_total_respondents: Number, 
+    mar_total_respondents: Number, 
+
+
+      //First Quarter importance quality attributes totals
+    q1_vi_totals: Object,
+    q1_i_totals: Object,
+    q1_mi_totals: Object,
+    q1_si_totals: Object,
+    q1_nai_totals: Object,
+    q1_i_grand_totals: Object,
+
+    // Importance total raw points 
+    vi_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    misinai_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    i_trp_totals: Object,  
+    i_grand_total_raw_points: Number,
+
+    //Imporatance total scores
+    i_total_scores: Object,
+    vi_grand_total_score: Number,
+    i_grand_total_score: Number,
+    misinai_grand_total_score: Number,
+
+    // % promoters
+    jan_percentage_promoters: Number,
+    feb_percentage_promoters: Number,
+    mar_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+
+    // % detractors
+    jan_percentage_detractors: Number,
+    feb_percentage_detractors: Number,
+    mar_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+
+    // % net promoter score
+    jan_net_promoter_score: Number,
+    feb_net_promoter_score: Number,
+    mar_net_promoter_score: Number,
+    ave_net_promoter_score: Number,
+
+    //customer_satisfaction_rating
+    $customer_satisfaction_rating: Number,
+
+     // --- QUARTER 2 ----
+
+    //quality attributes totals
+    q2_vs_totals: Object,
+    q2_s_totals: Object,
+    q2_n_totals: Object,
+    q2_d_totals: Object,
+    q2_vd_totals: Object,
+    q2_grand_totals: Object,
+
+    // First Quarter raw totals
+    vs_grand_total_raw_points: Number,
+    s_grand_total_raw_points: Number,
+    ndvd_grand_total_raw_points: Number,
+    grand_total_raw_points: Number,
+    trp_totals: Object,  
+    grand_total_raw_points: Number,
+
+    //Part 1 Q1 Total scores
+    p1_total_scores: Object,
+    vs_grand_total_score: Number,
+    s_grand_total_score: Number,
+    ndvd_grand_total_score: Number,
+    grand_total_score: Number,
+
+    // Likert Scale Rating Quarterly totals
+    lsr_totals: Object,
+    lsr_grand_total: Number,
+    lsr_average: Number,
+
+    // very satified respondent totals
+    apr_total_vs_respondents: Number, 
+    may_total_vs_respondents: Number, 
+    jun_total_vs_respondents: Number, 
+
+    // satified respondent totals
+    apr_total_s_respondents: Number, 
+    may_total_s_respondents: Number, 
+    jun_total_s_respondents: Number, 
+
+    // neither, dissasfied, very dissatisfied respondent totals
+    apr_total_ndvd_respondents: Number, 
+    may_total_ndvd_respondents: Number, 
+    jun_total_ndvd_respondents: Number, 
+
+    // respondent totals
+    apr_total_respondents: Number, 
+    may_total_respondents: Number, 
+    jun_total_respondents: Number, 
+
+
+    //importance quality attributes totals
+    q2_vi_totals: Object,
+    q2_i_totals: Object,
+    q2_mi_totals: Object,
+    q2_si_totals: Object,
+    q2_nai_totals: Object,
+    q2_i_grand_totals: Object,
+
+    // Importance total raw points 
+    vi_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    misinai_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    i_trp_totals: Object,  
+    i_grand_total_raw_points: Number,
+
+    //Imporatance total scores
+    i_total_scores: Object,
+    vi_grand_total_score: Number,
+    i_grand_total_score: Number,
+    misinai_grand_total_score: Number,
+
+    // % promoters
+    apr_percentage_promoters: Number,
+    may_percentage_promoters: Number,
+    jun_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+
+    // % detractors
+    apr_percentage_detractors: Number,
+    may_percentage_detractors: Number,
+    jun_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+
+    // % net promoter score
+    apr_net_promoter_score: Number,
+    may_net_promoter_score: Number,
+    jun_net_promoter_score: Number,
+    ave_net_promoter_score: Number,
+
+    //customer_satisfaction_rating
+    $customer_satisfaction_rating: Number,
+
+
+     // --- QUARTER 3 ----
+
+    //quality attributes totals
+    q3_vs_totals: Object,
+    q3_s_totals: Object,
+    q3_n_totals: Object,
+    q3_d_totals: Object,
+    q3_vd_totals: Object,
+    q3_grand_totals: Object,
+
+    // First Quarter raw totals
+    vs_grand_total_raw_points: Number,
+    s_grand_total_raw_points: Number,
+    ndvd_grand_total_raw_points: Number,
+    grand_total_raw_points: Number,
+    trp_totals: Object,  
+    grand_total_raw_points: Number,
+
+    //Part 1 Q1 Total scores
+    p1_total_scores: Object,
+    vs_grand_total_score: Number,
+    s_grand_total_score: Number,
+    ndvd_grand_total_score: Number,
+    grand_total_score: Number,
+
+    // Likert Scale Rating Quarterly totals
+    lsr_totals: Object,
+    lsr_grand_total: Number,
+    lsr_average: Number,
+
+    // very satified respondent totals
+    jul_total_vs_respondents: Number, 
+    aug_total_vs_respondents: Number, 
+    sep_total_vs_respondents: Number, 
+
+    // satified respondent totals
+    jul_total_s_respondents: Number, 
+    aug_total_s_respondents: Number, 
+    sep_total_s_respondents: Number, 
+
+    // neither, dissasfied, very dissatisfied respondent totals
+    jul_total_ndvd_respondents: Number, 
+    aug_total_ndvd_respondents: Number, 
+    sep_total_ndvd_respondents: Number, 
+
+    // respondent totals
+    jul_total_respondents: Number, 
+    aug_total_respondents: Number, 
+    sep_total_respondents: Number, 
+
+
+    //importance quality attributes totals
+    q3_vi_totals: Object,
+    q3_i_totals: Object,
+    q3_mi_totals: Object,
+    q3_si_totals: Object,
+    q3_nai_totals: Object,
+    q3_i_grand_totals: Object,
+
+    // Importance total raw points 
+    vi_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    misinai_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    i_trp_totals: Object,  
+    i_grand_total_raw_points: Number,
+
+    //Imporatance total scores
+    i_total_scores: Object,
+    vi_grand_total_score: Number,
+    i_grand_total_score: Number,
+    misinai_grand_total_score: Number,
+
+    // % promoters
+    jul_percentage_promoters: Number,
+    aug_percentage_promoters: Number,
+    sep_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+
+    // % detractors
+    jul_percentage_detractors: Number,
+    aug_percentage_detractors: Number,
+    sep_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+
+    // % net promoter score
+    jul_net_promoter_score: Number,
+    aug_net_promoter_score: Number,
+    sep_net_promoter_score: Number,
+    sep_net_promoter_score: Number,
+
+    //customer_satisfaction_rating
+    $customer_satisfaction_rating: Number,
+
+      // --- QUARTER 4 ----
+
+    //quality attributes totals
+    q4_vs_totals: Object,
+    q4_s_totals: Object,
+    q4_n_totals: Object,
+    q4_d_totals: Object,
+    q4_vd_totals: Object,
+    q4_grand_totals: Object,
+
+    // First Quarter raw totals
+    vs_grand_total_raw_points: Number,
+    s_grand_total_raw_points: Number,
+    ndvd_grand_total_raw_points: Number,
+    grand_total_raw_points: Number,
+    trp_totals: Object,  
+    grand_total_raw_points: Number,
+
+    //Part 1 Q1 Total scores
+    p1_total_scores: Object,
+    vs_grand_total_score: Number,
+    s_grand_total_score: Number,
+    ndvd_grand_total_score: Number,
+    grand_total_score: Number,
+
+    // Likert Scale Rating Quarterly totals
+    lsr_totals: Object,
+    lsr_grand_total: Number,
+    lsr_average: Number,
+
+    // very satified respondent totals
+    oct_total_vs_respondents: Number, 
+    nov_total_vs_respondents: Number, 
+    dec_total_vs_respondents: Number, 
+
+    // satified respondent totals
+    oct_total_s_respondents: Number, 
+    nov_total_s_respondents: Number, 
+    dec_total_s_respondents: Number, 
+
+    // neither, dissasfied, very dissatisfied respondent totals
+    oct_total_ndvd_respondents: Number, 
+    nov_total_ndvd_respondents: Number, 
+    dec_total_ndvd_respondents: Number, 
+
+    // respondent totals
+    oct_total_respondents: Number, 
+    nov_total_respondents: Number, 
+    dec_total_respondents: Number, 
+
+
+    //importance quality attributes totals
+    q4_vi_totals: Object,
+    q4_i_totals: Object,
+    q4_mi_totals: Object,
+    q4_si_totals: Object,
+    q4_nai_totals: Object,
+    q4_i_grand_totals: Object,
+
+    // Importance total raw points 
+    vi_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    misinai_grand_total_raw_points: Number,
+    i_grand_total_raw_points: Number,
+    i_trp_totals: Object,  
+    i_grand_total_raw_points: Number,
+
+    //Imporatance total scores
+    i_total_scores: Object,
+    vi_grand_total_score: Number,
+    i_grand_total_score: Number,
+    misinai_grand_total_score: Number,
+
+    // % promoters
+    oct_percentage_promoters: Number,
+    nov_percentage_promoters: Number,
+    dec_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+
+    // % detractors
+    oct_percentage_detractors: Number,
+    nov_percentage_detractors: Number,
+    dec_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+
+    // % net promoter score
+    oct_net_promoter_score: Number,
+    nov_net_promoter_score: Number,
+    dec_net_promoter_score: Number,
+    sep_net_promoter_score: Number,
+
+    //customer_satisfaction_rating
+    $customer_satisfaction_rating: Number,
+
 });
 
-const enabled = false;
 
 const form = reactive({
   date_from: null,
   date_to: null,
   service: null,
   unit:  null,
+  csi_type: null,
+  selected_month: null,
+  selected_quarter: null,
+  comments_complaints: null,
+  analysis: null,
+  generated: false,
 })
 
+//get year
+const years = computed(() => {
+    const currentYear = new Date().getFullYear();
+    const last9Years = Array.from({ length: 9 }, (_, index) => (currentYear - index).toString());
+    return last9Years;
+});
+
+const months = [
+    'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL',
+    'MAY', 'JUNE', 'JULY', 'AUGUST',
+    'SEPEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+];
+
+const currentYear = ref(getCurrentYear());
+
+function getCurrentYear() {
+    return new Date().getFullYear().toString();
+}
+
+//get month
+const currentMonth = ref(getCurrentMonth());
+
+function getCurrentMonth() {
+    const currentDate = new Date();
+    return months[currentDate.getMonth()];
+}
+
+onMounted(() => {
+    form.selected_month = currentMonth.value;
+    form.selected_year = currentYear.value;
+    form.generated == false;
+});
+
+
 const generateCSIReport = async (service, unit) => {
+   form.generated = true;
    form.service = service;
    form.unit = unit;
-   console.log(service,990);
-    router.get('/csi/generate', form , { preserveState: true})
+  //  console.log(form,990);
+   if(form.csi_type == 'By Date'){
+      form.selected_month = "";
+   }
+   else if(form.csi_type == 'By Month'){
+        form.selected_quarter = "";
+        form.selected_month = currentMonth.value;
+        form.selected_year = currentYear.value;
+        router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
+   }
+   else if(form.csi_type == 'By Quarter'){
+        form.selected_month = "";
+        if(form.selected_quarter == 'FIRST QUARTER'){
+          router.get('/csi/generate/ByUnit/FirstQuarter', form , { preserveState: true, preserveScroll: true})
+        }
+        else if(form.selected_quarter == 'SECOND QUARTER'){
+          router.get('/csi/generate/ByUnit/SecondQuarter', form , { preserveState: true, preserveScroll: true})
+        }
+        else if(form.selected_quarter == 'THIRD QUARTER'){
+          router.get('/csi/generate/ByUnit/ThirdQuarter', form , { preserveState: true, preserveScroll: true})
+        }
+        else if(form.selected_quarter == 'FOURTH QUARTER'){
+          router.get('/csi/generate/ByUnit/FourthQuarter', form , { preserveState: true, preserveScroll: true})
+        }   
+        else{ 
+           Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: "Please select a quarter first!"           
+            });
+        }
+   }
+
+  
 };
 
 const printCSIReport = async () => {
-    // Create an instance of Printd
-      let d = new Printd();
+    //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
+    //Create an instance of Printd
+      let d = await new Printd();
       let css = ` 
-    @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
-    * {
-        font-family: 'Raleway'
-        }`;
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+        * {
+            font-family: 'Time New Roman'
+        }
+        .new-page {
+            page-break-before: always;
+        }
+        .th-color{
+            background-color: #8fd1e8;
+        }
+        .text-center{
+          text-align: center;
+        }
+        .text-right{
+          text-align:end
+        }
+        table {
+          border-collapse: collapse;
+          width: 100%; /* Optional: Set a width for the table */
+        }
+
+        tr, th, td {
+          border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
+          padding: 3px; /* Optional: Add padding for better spacing */
+        }
+         .page-break {
+          page-break-before: always; /* or page-break-after: always; */
+        }
+
+        `;
 
        d.print(document.querySelector(".print-id"), [css]);
 };
@@ -125,9 +611,19 @@ const printCSIReport = async () => {
                         </v-card-title>
                     </v-card>
                      <v-divider class="border-opacity-100"></v-divider>
-                     <v-card class="mb-3 my-auto">
-
+                    <v-card class="p-5 mb-3">
+                   
                          <v-row class="p-3">
+                             <v-col class="my-auto">
+                                <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
+                                :items="['By Date','By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                   
+                     <v-card class="mb-3 my-auto">
+                        
+                        <v-row class="p-3" v-if="form.csi_type == 'By Date'">
                             <v-col class="my-auto">
                                  <v-text-field
                                     label="Select Date From"
@@ -152,259 +648,117 @@ const printCSIReport = async () => {
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
                            <v-col class="text-end mr-5">
-                             <v-btn prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                           </v-col>
+                        </v-row>
+
+                         <v-row class="p-3" v-if="form.csi_type == 'By Month'">
+                            <v-col class="my-auto">
+                                  <v-combobox v-model="form.selected_month" 
+                                        class="m-3" label="Select Month" 
+                                        variant="outlined" 
+                                        :items="months" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col> 
+                            <v-col class="my-auto">
+                                <v-combobox v-model="form.selected_year" 
+                                        class="m-3" label="Select Year" 
+                                        variant="outlined" 
+                                        :items="years" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col>   
+
+                            <v-col class="ml-5 mt-3">
+                              <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                            </v-col>
+                           <v-col class="text-end mr-5 m-3">
+                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                           </v-col>
+                        </v-row>
+
+                          <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
+                            <v-col class="my-auto">
+                                  <v-combobox v-model="form.selected_quarter" 
+                                        class="m-3" label="Select Quarter" 
+                                        variant="outlined" 
+                                        :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col> 
+                            <v-col class="my-auto">
+                                <v-combobox v-model="form.selected_year" 
+                                        class="m-3" label="Select Year" 
+                                        variant="outlined" 
+                                        :items="years" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col>   
+
+                            <v-col class="ml-5 mt-3">
+                              <v-btn  @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                            </v-col>
+                           <v-col class="text-end mr-5 m-3">
+                             <v-btn :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                           </v-col>
+                        </v-row>
+                          <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
+                            <v-col class="my-auto">
+                                <v-combobox v-model="form.selected_year" 
+                                        class="m-3" label="Select Year" 
+                                        variant="outlined" 
+                                        :items="years" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col>   
+
+                            <v-col class="ml-5 mt-3">
+                              <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                            </v-col>
+                           <v-col class="text-end mr-5 m-3">
+                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                           </v-col>
+                        </v-row>
+
+                          <v-row class="p-3" v-if="form.csi_type == 'By Employee'">
+                            <v-col class="my-auto">
+                                <v-combobox v-model="form.selected_employee" 
+                                        class="m-3" label="Select Employee" 
+                                        variant="outlined" 
+                                        :items="['']" 
+                                        outlined="none"> 
+                                  </v-combobox>
+                            </v-col>   
+
+                            <v-col class="ml-5 mt-3">
+                              <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                            </v-col>
+                           <v-col class="text-end mr-5 m-3">
+                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
                      </v-card>
-                     <v-card class="mb-3">
-                        <v-card-title class="bg-gray-500 text-white">
-                           PART I: CUSTOMER RATING OF SERVICE QUALITY     
-                        </v-card-title>
-                       <table class="w-full border">
-                            <tr class="text-left font-bold text-center">
-                                <th class="pb-4 pt-6 px-6">Service Quality Attributes</th>
-                                <th class="pb-4 pt-6 px-6">Very Satisfied (5)</th>
-                                <th class="pb-4 pt-6 px-6">Satisfied (4)</th>
-                                <th class="pb-4 pt-6 px-6">Neither (3)</th>
-                                <th class="pb-4 pt-6 px-6" >Dissatisfied (2)</th>
-                                <th class="pb-4 pt-6 px-6">Very Dissatisfied (1)</th>
-                                <th class="pb-4 pt-6 px-6">TOTAL SCORE</th>
-                                 <th class="pb-4 pt-6 px-6">Likert Scale Rating</th>
-                                <th class="pb-4 pt-6 px-6">GAP</th>
-                            </tr>
 
-                            <tr v-for="(dimension, index) in dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                                    <td class="border-t p-5 pl-10">
-                                        {{ index + 1 }}.{{ dimension.name }}
-                                    </td>
-                                    <td v-if="y_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in y_totals[index+1]">
-                                        {{ total }}
-                                    </td>
-                                     <td v-if="x_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in x_totals[index+1]">
-                                        {{ total }}
-                                    </td>
-                                     <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in likert_scale_rating_totals[index+1]">
-                                        {{ total }}
-                                    </td>          
-                                    <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in gap_totals[index+1]">
-                                        {{ total }}
-                                    </td>                   
-                            </tr>
-                            <tr class="text-center font-black p-5 m-5 border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
-                                <td class="m-5 p-3">TOTAL SCORE</td>
-                                <td class="border-t ">{{ grand_vs_total }}</td>
-                                <td class="border-t ">{{ grand_s_total }}</td>
-                                <td class="border-t ">{{ grand_n_total }}</td>
-                                <td class="border-t ">{{ grand_d_total }}</td>
-                                <td class="border-t">{{ grand_vd_total }}</td>
-                                <td class="border-t">{{ x_grand_total }}</td>
-                                <td class="border-t">{{ lsr_grand_total }}</td>
-                                <td class="border-t">{{ gap_grand_total }}</td>
-                            </tr>                                               
-                        </table>
 
-               
-                    </v-card> 
-                    <v-card class="mb-3">
-                        <v-card-title class="bg-gray-500 text-white">
-                           PART II: IMPORTANCE OF THIS ATTRIBUTE   
-                        </v-card-title>
-                        <v-card-body>
-                            <table class="w-full border">
-                                <tr class="text-left font-bold text-center">
-                                    <th class="pb-4 pt-6 px-6">Importance Service Quality Attributes</th>
-                                    <th class="pb-4 pt-6 px-6">Very Important(5)</th>
-                                    <th class="pb-4 pt-6 px-6">Important (4)</th>
-                                    <th class="pb-4 pt-6 px-6">Moderately Important (3)</th>
-                                    <th class="pb-4 pt-6 px-6" >Slightly Important (2)</th>
-                                    <th class="pb-4 pt-6 px-6">Not All Important (1)</th>
-                                    <th class="pb-4 pt-6 px-6">TOTAL SCORE</th>
-                                    <th class="pb-4 pt-6 px-6">LS Rating</th>
-                                    <th class="pb-4 pt-6 px-6">WF</th>
-                                    <th class="pb-4 pt-6 px-6">SS</th>
-                                    <th class="pb-4 pt-6 px-6">WS</th>
-                                </tr>
-
-                                <tr v-for="(dimension, index) in dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
-                                    
-                                        <td class="border-t p-3 pl-10 w-1/8 ">
-                                            {{ index + 1 }}.{{ dimension.name }}
-                                        </td>
-                                        <td v-if="y_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in importance_rate_score_totals[index+1]">
-                                            {{ total }}
-                                        </td>
-                                        <td v-if="x_importance_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in x_importance_totals[index+1]">
-                                            {{ total }}
-                                        </td>
-                                        <td v-if="likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in importance_ilsr_totals[index+1]">
-                                            {{ total }}
-                                        </td>  
-                                        <td v-if="wf_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in wf_totals[index+1]">
-                                            {{ total }}
-                                        </td>       
-                                        <td v-if="ss_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in ss_totals[index+1]">
-                                            {{ total }}
-                                        </td>  
-                                        <td v-if="ws_totals" class="border-t p-5 w-1/8 text-center mr-10"  v-for="total in ws_totals[index+1]">
-                                            {{ total }}
-                                        </td>                   
-                                </tr>                                           
-                            </table>
-                        </v-card-body>     
-                    </v-card> 
-
-                
-                    <v-card class="mb-3 bg-none  font-black">
-                        <v-row class="text-center">
-                            <v-col cols="6" >
-                                <v-card class="mb-2">
-                                    <v-card-title class="bg-secondary text-white">
-                                            Total No. of Respondents/Customers:   
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ total_respondents }}
-                                    </v-card-content>
-                                </v-card>
-
-                                  <v-card class="mb-2">
-                                    <v-card-title class="bg-secondary text-white">
-                                            Total No. of Respondents/Customers who rated VS/S: 
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ total_vss_respondents }}
-                                    </v-card-content>
-                                </v-card>
-                                  <v-card class="mb-2">
-                                    <v-card-title class="bg-secondary text-white">
-                                          Percentage of Respondents/Customers who rated VS/S:       
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ percentage_vss_respondents }} %
-                                    </v-card-content>
-                                </v-card>
-
-                                 <v-card class="mb-2">
-                                    <v-card-title class="bg-secondary text-white">
-                                        Customer Satisfaction Score Rating(CSAT) 
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ customer_satisfaction_rating }} %
-                                    </v-card-content>
-                                </v-card>
-                            </v-col>
-                           <v-col cols="6" >
-                                <v-card class="mb-2">
-                                      <v-card-title class="bg-gray-500 text-white">
-                                            Customer Satifaction Index(CSI)
-                                    </v-card-title>
-                                    <v-card-content class="p-10 m-5 text-lg " >
-                                        {{ customer_satisfaction_index }} %
-                                    </v-card-content>
-                                </v-card>
-
-                                <v-card class="mb-2">
-                                    <v-card-title class="bg-gray-500 text-white">
-                                            Net Promotion Score(NPS)
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ net_promotion_score }} %
-                                    </v-card-content>
-                                </v-card>
-                  
-                               <v-row>
-                                    <v-col cols="6">
-                                        <v-card class="mb-2">
-                                             <v-card-title class="bg-gray-500 text-white">
-                                                Percentage of Promoters
-                                            </v-card-title>
-                                            <v-card-content class="p-5 m-5 text-lg">
-                                                {{ percentage_promoters }} %
-                                            </v-card-content>
-                                            
-                                        </v-card>
-                                    </v-col>
-                                     <v-col>
-                                        <v-card class="mb-2">
-                                             <v-card-title class="bg-gray-500 text-white">
-                                            Percentage of Detractors
-                                            </v-card-title>
-                                            <v-card-content class="p-5 m-5 text-lg">
-                                                {{ percentage_detractors }} %
-                                            </v-card-content>                                        
-                                        </v-card>
-                                    </v-col>
-                               </v-row>
-                                 <v-card class="mb-2">
-                                    <v-card-title class="bg-gray-500 text-white">
-                                        Likert Scale Rating(Average)
-                                    </v-card-title>
-                                    <v-card-content class="p-5 m-5 text-lg">
-                                        {{ lsr_grand_total }}
-                                    </v-card-content>
-                                </v-card>
-
-                              
-                            </v-col>
-                                
-                        </v-row>           
-                    </v-card> 
- 
-
-                      <v-card class="mb-3">
-                        <v-card-title class="bg-gray-500 text-white">
-                          RESPONDENTS/CUSTOMERS LIST
-                        </v-card-title>
-                        <v-card-content>
-                             <table class="w-full border">
-                                <tr class="text-left font-bold text-center">
-                                    <th class="pb-4 pt-6 px-6">#</th>
-                                    <th class="pb-4 pt-6 px-6">Name</th>
-                                    <th class="pb-4 pt-6 px-6">Email</th>
-                                    <th class="pb-4 pt-6 px-6">Sex</th>
-                                    <th class="pb-4 pt-6 px-6">is PWD?</th>
-                                    <th class="pb-4 pt-6 px-6">is Pregnant?</th>
-                                    <th class="pb-4 pt-6 px-6">is Senior Citizen?</th>
-                                    <th class="pb-4 pt-6 px-6">Attribute Rate Score</th>
-                                    <th class="pb-4 pt-6 px-6">Importance</th>
-                                </tr>
-
-                                <tr v-if="respondents_list" v-for="(respondent, index) in respondents_list.data" :key="respondent.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100"> 
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ index + 1 }}
-                                        </td>  
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.name }}
-                                        </td>           
-                                         <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.email }}
-                                        </td>         
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.sex }}
-                                        </td>   
-                                         <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.pwd }}
-                                        </td>       
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.pregnant }}
-                                        </td>  
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.customer.senior_citizen }}
-                                        </td>  
-                                         <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.rate_score }}
-                                        </td>  
-                                        <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                            {{ respondent.importance_rate_score }}
-                                        </td>
-                                </tr>                                           
-                            </table>
-                        </v-card-content>
-       
-                    </v-card>               
+                    <!-- Content Preview-->
+                    <MonthlyContent v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
+                    <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true "  :form="form"  :data="props" />
+                    <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER'" :form="form"  :data="props" />
+                    <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER'"  :form="form"  :data="props" />
+                    <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER'" :form="form"  :data="props" />
+                      <!-- End Content Preview-->
                 </div>
             </div>
         </div>
-        <PrintReport :data="props" />
+
+        <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
+        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true " :form="form"  :data="props" />
+        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true " :form="form"  :data="props" />
+        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true " :form="form"  :data="props" />
+        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true " :form="form"  :data="props" />
       
     </AppLayout>
 </template>
+
+

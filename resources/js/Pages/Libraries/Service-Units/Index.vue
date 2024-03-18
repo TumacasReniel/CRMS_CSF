@@ -33,6 +33,13 @@ const rating = async (service_id, unit_id) => {
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <v-card>
+                        <v-row>
+                            <v-col class="text-right m-5 mb-1">
+                                <v-btn prepend-icon="mdi-file" color="yellow" style="margin-right:120px">
+                                        All Unit Ratings
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                        <div class="m-5 text-end">
                        </div>
                         <table class="w-full border">

@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SurveyFormController;
 use App\Http\Controllers\ServiceUnitController;
@@ -28,6 +29,7 @@ Route::get('/', function () {
 });
 
 Route::get('/form/csf', [SurveyFormController::class, 'index'])->name('csf_form');
+Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web');
 Route::post('/csf_submission', [SurveyFormController::class, 'store']);
 
 
@@ -47,8 +49,11 @@ Route::middleware([
 
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
     Route::get('/csi', [ReportController::class , 'index']);
-    Route::get('/csi/generate', [ReportController::class, 'generateCSI']);
-
+    Route::get('/csi/generate/ByUnit/Monthly', [ReportController::class, 'generateCSIByUnitMonthly']);
+    Route::get('/csi/generate/ByUnit/FirstQuarter', [ReportController::class, 'generateCSIByUnitFirstQuarter']);
+    Route::get('/csi/generate/ByUnit/SecondQuarter', [ReportController::class, 'generateCSIByUnitSecondQuarter']);
+    Route::get('/csi/generate/ByUnit/ThirdQuarter', [ReportController::class, 'generateCSIByUnitThirdQuarter']);
+    Route::get('/csi/generate/ByUnit/FourthQuarter', [ReportController::class, 'generateCSIByUnitFourthQuarter']);
 
 });
 
