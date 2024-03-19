@@ -19,6 +19,11 @@ const rating = async (service_id, unit_id) => {
    router.get('/csi', form , { preserveState: true })
 };
 
+const all_service_unit_rating = async () => {
+   router.get('/csi/all-units', form , { preserveState: true })
+};
+
+
 </script>
 
 <template>
@@ -35,7 +40,7 @@ const rating = async (service_id, unit_id) => {
                     <v-card>
                         <v-row>
                             <v-col class="text-right m-5 mb-1">
-                                <v-btn prepend-icon="mdi-file" color="yellow" style="margin-right:120px">
+                                <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:120px">
                                         All Unit Ratings
                                 </v-btn>
                             </v-col>

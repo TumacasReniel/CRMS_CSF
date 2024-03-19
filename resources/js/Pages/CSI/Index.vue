@@ -5,11 +5,14 @@ import Q1Content from '@/Pages/CSI/Quarterly/Contents/Q1Content.vue';
 import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
 import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
 import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
+import YearlyContent from '@/Pages/CSI/Yearly/Content.vue';
+import AllUnitMonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
 import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
 import ByUnitQ1Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter1.vue';
 import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
 import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
 import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
+import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
 import { reactive, ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
@@ -169,7 +172,7 @@ const props = defineProps({
     ave_net_promoter_score: Number,
 
     //customer_satisfaction_rating
-    $customer_satisfaction_rating: Number,
+    customer_satisfaction_rating: Number,
 
      // --- QUARTER 2 ----
 
@@ -263,7 +266,7 @@ const props = defineProps({
     ave_net_promoter_score: Number,
 
     //customer_satisfaction_rating
-    $customer_satisfaction_rating: Number,
+    customer_satisfaction_rating: Number,
 
 
      // --- QUARTER 3 ----
@@ -358,7 +361,7 @@ const props = defineProps({
     sep_net_promoter_score: Number,
 
     //customer_satisfaction_rating
-    $customer_satisfaction_rating: Number,
+    customer_satisfaction_rating: Number,
 
       // --- QUARTER 4 ----
 
@@ -452,7 +455,125 @@ const props = defineProps({
     sep_net_promoter_score: Number,
 
     //customer_satisfaction_rating
-    $customer_satisfaction_rating: Number,
+    customer_satisfaction_rating: Number,
+
+    // --- Yearly ---
+
+
+  // all quarter totals
+    vs_totals: Object,
+    s_totals: Object,
+    n_totals: Object,
+    d_totals: Object,
+    vd_totals: Object,
+
+    grand_totals: Object,
+    trp_totals: Object,
+    grand_total_raw_points: Object,
+    vs_grand_total_raw_points: Object, 
+    s_grand_total_raw_points: Object,
+    ndvd_grand_total_raw_points: Object,
+    p1_total_scores: Object,
+    vs_grand_total_score: Number,
+    s_grand_total_score: Number,
+    ndvd_grand_total_score: Number,
+    grand_total_score: Number,
+    lsr_totals: Object,
+    lsr_grand_total: Number,
+    lsr_average: Number,
+
+    //all quarter total respondents/customer who rated Very satisfied in attributes rating
+    q1_total_vs_respondents: Number,
+    q2_total_vs_respondents: Number, 
+    q3_total_vs_respondents: Number,
+    q4_total_vs_respondents: Number,
+
+     //by quarter total respondents/customer who rated satisfied in attributes rating
+    q1_total_s_respondents: Number,
+    q2_total_s_respondents: Number,
+    q3_total_s_respondents: Number,
+    q4_total_s_respondents: Number,
+
+     //by quarter total respondents/customer who rated Neither, Dissatisfied and  very Dissatisfied in attributes rating
+    q1_total_ndvd_respondents: Number,
+    q2_total_ndvd_respondents: Number,
+    q3_total_ndvd_respondents: Number,
+    q4_total_ndvd_respondents: Number,
+
+    // By quarter total respondents
+    q1_total_respondents: Number,
+    q2_total_respondents: Number,
+    q3_total_respondents: Number,
+    q4_total_respondents: Number,
+    
+    // grandtotal of total respondents 
+    total_respondents: Number,
+
+    // by quarter respondents who rated VS/S
+    q1_total_vss_respondents: Number,
+    q2_total_vss_respondents: Number,
+    q3_total_vss_respondents: Number,
+    q4_total_vss_respondents: Number,
+
+    //grand total of respondents who rated VS/S
+    total_vss_respondents: Number,
+    //percentage of respondents who rated VS/S
+    percentage_vss_respondents: Number,
+
+    // total number of promoters and detractors
+    total_promoters: Number,
+    total_detractors: Number,
+
+    // all quarters importance attributes rating totals
+    vi_totals: Object,
+    i_totals: Object,
+    mi_totals: Object,
+    si_totals: Object,
+    nai_totals: Object,
+
+    // imporatnce grand total
+    i_grand_totals: Object,
+
+    // importance attributes total raw score
+    i_trp_totals: Object,
+
+    // importance raw points totals
+    i_grand_total_raw_point: Number,
+    vi_grand_total_raw_points: Number,
+    s_grand_total_raw_points: Number,
+    misinai_grand_total_raw_points: Number,
+    i_total_scores: Number,
+
+    vi_grand_total_score: Number,
+    i_grand_total_score: Number,
+    misinai_grand_total_score: Number,
+
+    // total promoters by quarter and percentage,  average
+    percentage_promoters: Number,
+    q1_percentage_promoters: Number,
+    q2_percentage_promoters: Number,
+    q3_percentage_promoters: Number,
+    q4_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+
+    // total detractors by quarter and percentage
+    q1_percentage_detractors: Number,
+    q2_percentage_detractors: Number,
+    q3_percentage_detractors: Number,
+    q4_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+
+    // total nps by quarter and average
+    q1_net_promoter_score: Number,
+    q2_net_promoter_score: Number,
+    q3_net_promoter_score: Number,
+    q4_net_promoter_score: Number,
+    ave_net_promoter_score: Number,
+
+    // CSAT
+    customer_satisfaction_rating: Number,
+
+         
 
 });
 
@@ -510,12 +631,10 @@ const generateCSIReport = async (service, unit) => {
    form.unit = unit;
   //  console.log(form,990);
    if(form.csi_type == 'By Date'){
-      form.selected_month = "";
+      router.get('/csi/generate/ByUnit/ByDate', form , { preserveState: true, preserveScroll: true})     
    }
    else if(form.csi_type == 'By Month'){
         form.selected_quarter = "";
-        form.selected_month = currentMonth.value;
-        form.selected_year = currentYear.value;
         router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
    }
    else if(form.csi_type == 'By Quarter'){
@@ -540,11 +659,27 @@ const generateCSIReport = async (service, unit) => {
             });
         }
    }
+    else if(form.csi_type == 'By Year/Annual'){
+        form.selected_quarter = "";
+        if(form.date_from && form.date_to ){
+           router.get('/csi/generate/ByUnit/Yearly', form , { preserveState: true, preserveScroll: true});
+        }
+        else{         
+            Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: "Please select Date range first!"           
+            });
+        }
+       
+   }
 
   
 };
 
+const is_printing = ref(false);
 const printCSIReport = async () => {
+    is_printing.value = true;
     //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
     //Create an instance of Printd
       let d = await new Printd();
@@ -589,7 +724,7 @@ const printCSIReport = async () => {
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Customer Satisfaction Index
+                Customer Satisfaction Index 
             </h2>
         </template>
 
@@ -599,17 +734,26 @@ const printCSIReport = async () => {
             <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
 
-                    <v-card class="mb-3">
-                        <v-card-title class="m-3">
-                            <div>
+                    <v-card class="mb-3" v-if="service && unit">
+                        <v-card-title class="m-3" >
+                            <div v-if="service">
                                 SERVICES :   {{ service.services_name }}
                             </div>
                             <v-divider class="border-opacity-100"></v-divider>
-                            <div>
+                            <div v-if="unit">
                                 SERVICE UNIT :    {{ unit.unit_name }}
                             </div>
                         </v-card-title>
                     </v-card>
+                     <v-card class="mb-3" v-else>
+                        <v-card-title class="m-3" >
+                            <div>
+                                All SERVICES UNITS
+                            </div>
+                           
+                        </v-card-title>
+                    </v-card>
+                    
                      <v-divider class="border-opacity-100"></v-divider>
                     <v-card class="p-5 mb-3">
                    
@@ -647,9 +791,9 @@ const printCSIReport = async () => {
                             <v-col class="ml-5">
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
-                           <v-col class="text-end mr-5">
+                           <!-- <v-col class="text-end mr-5">
                              <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col>
+                           </v-col> -->
                         </v-row>
 
                          <v-row class="p-3" v-if="form.csi_type == 'By Month'">
@@ -742,22 +886,27 @@ const printCSIReport = async () => {
 
 
                     <!-- Content Preview-->
-                    <MonthlyContent v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
+                    <MonthlyContent v-if="form.csi_type == 'By Month' || form.csi_type == 'By Date'" :form="form"  :data="props" />
                     <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true "  :form="form"  :data="props" />
-                    <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER'" :form="form"  :data="props" />
-                    <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER'"  :form="form"  :data="props" />
-                    <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER'" :form="form"  :data="props" />
+                    <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true" :form="form"  :data="props" />
+                    <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true"  :form="form"  :data="props" />
+                    <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :form="form"  :data="props" />
+                    <YearlyContent v-if="form.csi_type == 'By Year/Annual' && form.generated == true"  :form="form"  :data="props" />
+                    <AllUnitMonthlyContent v-if="form.csi_type == 'By Month' && form.generated == true"  :form="form"  :data="props" />
+                    
                       <!-- End Content Preview-->
                 </div>
             </div>
         </div>
 
+         <!-- Printouts-->
         <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
-        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true " :form="form"  :data="props" />
-        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true " :form="form"  :data="props" />
-        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true " :form="form"  :data="props" />
-        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true " :form="form"  :data="props" />
-      
+        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        
     </AppLayout>
 </template>
 

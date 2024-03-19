@@ -6,10 +6,13 @@
         form: {
             type: Object,
         },
+         is_printing: {
+            type:Boolean,
+        },
     });
 </script>
 <template>
-    <div class="mb-3 print-id print">
+    <div class="mb-3 print-id print" v-if="is_printing">
         <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
             CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR 
             <u><span>{{ form.selected_quarter }}</span>  {{ form.selected_year }}</u>
@@ -23,7 +26,7 @@
                 Service Unit : <u>{{ data.unit.unit_name }}</u>
             </div>
         </div>
-            <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
+                <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:10px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
                 <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                     <tr class="text-left font-bold text-center bg-blue-200">
                         <th colspan="3">Service Quality Attributes</th>
@@ -176,7 +179,7 @@
 
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right">Total No. of All Responses::</td>
+                        <td colspan="3" class="text-right">Total No. of All Responses:</td>
                         <td class="text-center">{{ data.oct_total_respondents }}</td>
                         <td class="text-center"> {{ data.nov_total_respondents }} </td>
                         <td class="text-center">{{ data.dec_total_respondents }} </td>
@@ -391,13 +394,13 @@
                     <p></p>
                 </div>
 
-                 <div style="margin-top: 5px ; font-size: 13px">
+              <div style="margin-top: 5px ; font-size: 13px">
                     ANALYSIS : 
                     <div  style="text-align: justify; margin: 5px">
-                        The  <span>{{ data.unit.unit_name }}</span> unit had 15 respondents who rated the CSF, 
+                        The  <span>{{ data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF, 
                         and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated 
                         the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.unit_name }}</span> unit had a 
-                        <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.net_promotion_score }}</span>. 
+                        <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.ave_net_promoter_score }}%</span>. 
                         The Customer Satisfaction Rating for the <span>{{ data.unit.unit_name }}</span> 
                         unit is <span>{{ data.customer_satisfaction_rating }}</span>%, 
                         which achieved its functional objective of 95% of customer surveyed are at least satisfied with the S&T services of DOST-IX

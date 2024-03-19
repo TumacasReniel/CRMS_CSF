@@ -12,18 +12,9 @@
         <div class="print-id print">
             <div style="width: 100%;">
                <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
-                    CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR 
+                    DOST IX CUSTOMER SATISFACTION FEEDBACK <br> for
                     <u><span>{{ form.selected_month }}</span>  {{ form.selected_year }}</u>
                 </h5><br>
-                <div style="display: flex; justify-content: space-between;" v-if="data.service && data.unit">
-                    <div style="font-size: 12px;">
-                        Services : <u>{{ data.service.services_name }}</u> 
-                       
-                    </div>
-                    <div style="font-size: 12px">  
-                        Service Unit : <u>{{ data.unit.unit_name }}</u>
-                    </div>
-                </div>
 
                 <div style="margin-top: 5px; margin-bottom: 20px">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
@@ -258,7 +249,7 @@
 
                  <div style="margin-top: 20px ; font-size: 13px">
                     ANALYSIS : 
-                    <div v-if="data.unit && data.service"  style="text-align: justify; margin: 5px">
+                    <div  style="text-align: justify; margin: 5px">
                         The  <span>{{ data.unit.unit_name }}</span> unit had 15 respondents who rated the CSF, 
                         and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated 
                         the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.unit_name }}</span> unit had a 

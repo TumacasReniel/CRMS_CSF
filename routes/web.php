@@ -49,11 +49,14 @@ Route::middleware([
 
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
     Route::get('/csi', [ReportController::class , 'index']);
+    Route::get('/csi/all-units', [ReportController::class , 'all_units']);
+    Route::get('/csi/generate/ByUnit/ByDate', [ReportController::class, 'generateCSIByUnitByDate']);
     Route::get('/csi/generate/ByUnit/Monthly', [ReportController::class, 'generateCSIByUnitMonthly']);
     Route::get('/csi/generate/ByUnit/FirstQuarter', [ReportController::class, 'generateCSIByUnitFirstQuarter']);
     Route::get('/csi/generate/ByUnit/SecondQuarter', [ReportController::class, 'generateCSIByUnitSecondQuarter']);
     Route::get('/csi/generate/ByUnit/ThirdQuarter', [ReportController::class, 'generateCSIByUnitThirdQuarter']);
     Route::get('/csi/generate/ByUnit/FourthQuarter', [ReportController::class, 'generateCSIByUnitFourthQuarter']);
+    Route::get('/csi/generate/ByUnit/Yearly', [ReportController::class, 'generateCSIByUnitYearly']);
 
 });
 

@@ -22,10 +22,10 @@ return new class extends Migration
             $table->boolean('pwd')->default(0);
             $table->boolean('pregnant')->default(0);
             $table->boolean('senior_citizen')->default(0);
-            $table->foreignId('pstc_id')->nullable();
-            $table->foreign('pstc_id')
+            $table->foreignId('region_id')->nullable();
+            $table->foreign('region_id')
                 ->references('id')
-                ->on('users')
+                ->on('regions')
                 ->onDelete('cascade');
             $table->foreignId('unit_id')->nullable();
             $table->foreign('unit_id')
