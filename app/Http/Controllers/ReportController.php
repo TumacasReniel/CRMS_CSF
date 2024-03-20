@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerAttributeRating;
 use App\Models\CustomerRecommendationRating;
 use App\Http\Resources\CustomerAttributeRatings as CARResource;
+use App\Http\Resources\Services as ServiceResource;
 
 class ReportController extends Controller
 {
@@ -30,11 +31,13 @@ class ReportController extends Controller
 
     public function all_units()
     {
-        $user = Auth::user();
-        $dimensions = Dimension::all();
+        //$user = Auth::user();
+        $service_units = Services::all();
 
-        return Inertia::render('CSI/Index')
-            ->with('dimensions', $dimensions);
+        //all Services and its units
+        $data = ServiceResource::collection($service_units);
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('service_units', $data);
     
     }
 

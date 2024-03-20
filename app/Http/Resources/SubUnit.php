@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Unit extends JsonResource
+class SubUnit extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,8 @@ class Unit extends JsonResource
     public function toArray(Request $request)
     {
         return [
-            'id' => $this->id,
-            'unit_name' => $this->unit_name,    
-            'sub_units'=> $this->sub_units ? SubUnit::collection($this->sub_units) : [],
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'sub_unit_name' => $this->title,    
+            // 'pstos'=> $this->pstos ? PSTO::collection($this->pstos) : [],
         ];
     }
 }

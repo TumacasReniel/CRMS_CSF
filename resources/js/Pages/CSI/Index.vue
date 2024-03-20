@@ -579,16 +579,19 @@ const props = defineProps({
 
 
 const form = reactive({
+  form_type: null,
   date_from: null,
   date_to: null,
   service: null,
   unit:  null,
+  sub_unit: null,
   csi_type: null,
   selected_month: null,
   selected_quarter: null,
   comments_complaints: null,
   analysis: null,
   generated: false,
+  client_type: null,
 })
 
 //get year
@@ -630,88 +633,87 @@ const generateCSIReport = async (service, unit) => {
    form.service = service;
    form.unit = unit;
   //  console.log(form,990);
-   if(form.csi_type == 'By Date'){
+    if(form.csi_type == 'By Date'){
       router.get('/csi/generate/ByUnit/ByDate', form , { preserveState: true, preserveScroll: true})     
-   }
-   else if(form.csi_type == 'By Month'){
-        form.selected_quarter = "";
-        router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
-   }
-   else if(form.csi_type == 'By Quarter'){
-        form.selected_month = "";
-        if(form.selected_quarter == 'FIRST QUARTER'){
-          router.get('/csi/generate/ByUnit/FirstQuarter', form , { preserveState: true, preserveScroll: true})
-        }
-        else if(form.selected_quarter == 'SECOND QUARTER'){
-          router.get('/csi/generate/ByUnit/SecondQuarter', form , { preserveState: true, preserveScroll: true})
-        }
-        else if(form.selected_quarter == 'THIRD QUARTER'){
-          router.get('/csi/generate/ByUnit/ThirdQuarter', form , { preserveState: true, preserveScroll: true})
-        }
-        else if(form.selected_quarter == 'FOURTH QUARTER'){
-          router.get('/csi/generate/ByUnit/FourthQuarter', form , { preserveState: true, preserveScroll: true})
-        }   
-        else{ 
-           Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: "Please select a quarter first!"           
-            });
-        }
-   }
-    else if(form.csi_type == 'By Year/Annual'){
-        form.selected_quarter = "";
-        if(form.date_from && form.date_to ){
-           router.get('/csi/generate/ByUnit/Yearly', form , { preserveState: true, preserveScroll: true});
-        }
-        else{         
+    }
+    else if(form.csi_type == 'By Month'){
+          form.selected_quarter = "";
+          router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
+    }
+    else if(form.csi_type == 'By Quarter'){
+          form.selected_month = "";
+          if(form.selected_quarter == 'FIRST QUARTER'){
+            router.get('/csi/generate/ByUnit/FirstQuarter', form , { preserveState: true, preserveScroll: true})
+          }
+          else if(form.selected_quarter == 'SECOND QUARTER'){
+            router.get('/csi/generate/ByUnit/SecondQuarter', form , { preserveState: true, preserveScroll: true})
+          }
+          else if(form.selected_quarter == 'THIRD QUARTER'){
+            router.get('/csi/generate/ByUnit/ThirdQuarter', form , { preserveState: true, preserveScroll: true})
+          }
+          else if(form.selected_quarter == 'FOURTH QUARTER'){
+            router.get('/csi/generate/ByUnit/FourthQuarter', form , { preserveState: true, preserveScroll: true})
+          }   
+          else{ 
             Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: "Please select Date range first!"           
-            });
-        }
-       
-   }
+                  title: "Error",
+                  icon: "error",
+                  text: "Please select a quarter first!"           
+              });
+          }
+    }
+      else if(form.csi_type == 'By Year/Annual'){
+          form.selected_quarter = "";
+          if(form.selected_year ){
+            router.get('/csi/generate/ByUnit/Yearly', form , { preserveState: true, preserveScroll: true});
+          }
+          else{         
+              Swal.fire({
+                  title: "Error",
+                  icon: "error",
+                  text: "Please select year first!"           
+              });
+          }     
+      }
 
-  
-};
+    
+  };
 
-const is_printing = ref(false);
-const printCSIReport = async () => {
-    is_printing.value = true;
-    //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
-    //Create an instance of Printd
-      let d = await new Printd();
-      let css = ` 
-        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
-        * {
-            font-family: 'Time New Roman'
-        }
-        .new-page {
-            page-break-before: always;
-        }
-        .th-color{
-            background-color: #8fd1e8;
-        }
-        .text-center{
-          text-align: center;
-        }
-        .text-right{
-          text-align:end
-        }
-        table {
-          border-collapse: collapse;
-          width: 100%; /* Optional: Set a width for the table */
-        }
+  const is_printing = ref(false);
+  const printCSIReport = async () => {
+      is_printing.value = true;
+      //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
+      //Create an instance of Printd
+        let d = await new Printd();
+        let css = ` 
+          @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+          * {
+              font-family: 'Time New Roman'
+          }
+          .new-page {
+              page-break-before: always;
+          }
+          .th-color{
+              background-color: #8fd1e8;
+          }
+          .text-center{
+            text-align: center;
+          }
+          .text-right{
+            text-align:end
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%; /* Optional: Set a width for the table */
+          }
 
-        tr, th, td {
-          border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
-          padding: 3px; /* Optional: Add padding for better spacing */
-        }
-         .page-break {
-          page-break-before: always; /* or page-break-after: always; */
-        }
+          tr, th, td {
+            border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
+            padding: 3px; /* Optional: Add padding for better spacing */
+          }
+          .page-break {
+            page-break-before: always; /* or page-break-after: always; */
+          }
 
         `;
 
@@ -745,24 +747,21 @@ const printCSIReport = async () => {
                             </div>
                         </v-card-title>
                     </v-card>
-                     <v-card class="mb-3" v-else>
-                        <v-card-title class="m-3" >
-                            <div>
-                                All SERVICES UNITS
-                            </div>
-                           
-                        </v-card-title>
-                    </v-card>
+
+
                     
                      <v-divider class="border-opacity-100"></v-divider>
                     <v-card class="p-5 mb-3">
-                   
-                         <v-row class="p-3">
-                             <v-col class="my-auto">
-                                <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
-                                :items="['By Date','By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
-                            </v-col>
-                        </v-row>
+                          <v-row class="p-3" >
+                              <v-col class="my-auto" cols="6" >
+                                  <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
+                                  :items="['By Date','By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
+                              </v-col>
+                                <v-col class="my-auto" cols="6" v-if="unit.id == 8" >
+                                  <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
+                                  :items="['Internal', 'External']" border="none"> </v-combobox>
+                              </v-col>
+                          </v-row>
                     </v-card>
                    
                      <v-card class="mb-3 my-auto">
@@ -892,7 +891,6 @@ const printCSIReport = async () => {
                     <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true"  :form="form"  :data="props" />
                     <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :form="form"  :data="props" />
                     <YearlyContent v-if="form.csi_type == 'By Year/Annual' && form.generated == true"  :form="form"  :data="props" />
-                    <AllUnitMonthlyContent v-if="form.csi_type == 'By Month' && form.generated == true"  :form="form"  :data="props" />
                     
                       <!-- End Content Preview-->
                 </div>

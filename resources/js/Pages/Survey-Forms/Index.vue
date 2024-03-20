@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import SignaturePad from 'signature_pad';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 export default {
   props: [ 'dimensions', 'cc_questions', 'message', 'status'  , 'captcha'],
@@ -100,21 +100,21 @@ export default {
   
   },
 
-  mounted(){
-      AOS.init();
+//   mounted(){
+//       AOS.init();
 
-        // this.signaturePad = new SignaturePad(this.signaturePad);
-        // // Set canvas dimensions
-        // this.canvas = this.signaturePad;
-        // canvas.width = 400;
-        // canvas.height = 200;
+//         // this.signaturePad = new SignaturePad(this.signaturePad);
+//         // // Set canvas dimensions
+//         // this.canvas = this.signaturePad;
+//         // canvas.width = 400;
+//         // canvas.height = 200;
 
-        Swal.fire({
-            title: "Disclaimer",
-            icon: "warning",
-            text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
-        });
-  },
+//         Swal.fire({
+//             title: "Disclaimer",
+//             icon: "warning",
+//             text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
+//         });
+//   },
 
   
 
@@ -203,28 +203,28 @@ export default {
   },
 
 
-//   setup() {
-//     const signaturePad = ref(null);
-//         onMounted(() => {
-//             AOS.init();
+  setup() {
+    const signaturePad = ref(null);
+        onMounted(() => {
+            AOS.init();
 
-//             signaturePad.value = new SignaturePad(signaturePad.value);
-//             // Set canvas dimensions
-//             const canvas = signaturePad.value;
-//             canvas.width = 400;
-//             canvas.height = 200;
+            signaturePad.value = new SignaturePad(signaturePad.value);
+            // Set canvas dimensions
+            const canvas = signaturePad.value;
+            canvas.width = 400;
+            canvas.height = 200;
 
-//            Swal.fire({
-//                 title: "Disclaimer",
-//                 icon: "warning",
-//                 text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
-//             });
-//         });
+           Swal.fire({
+                title: "Disclaimer",
+                icon: "warning",
+                text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
+            });
+        });
     
-//     return {
-//       signaturePad,
-//     };
-//   },
+    return {
+      signaturePad,
+    };
+  },
 
 };
 

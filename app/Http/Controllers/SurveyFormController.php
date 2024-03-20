@@ -22,17 +22,15 @@ use Mews\Captcha\Facades\Captcha;
 
 class SurveyFormController extends Controller
 {
-    public function index(Captcha $captcha)
+    public function index()
     {
         $cc_questions = CcQuestion::all();
         $dimensions = Dimension::all();
-        
-        $captcha = Captcha::create();
 
         return Inertia::render('Survey-Forms/Index')
             ->with('cc_questions', $cc_questions)
-            ->with('dimensions', $dimensions)
-            ->with('captcha', $captcha);  
+            ->with('dimensions', $dimensions);  
+
 
     }
 
@@ -42,16 +40,9 @@ class SurveyFormController extends Controller
             DB::beginTransaction();  
             
             Validator::make($request->all(), $request->rules());
+
             // Retrieve the CAPTCHA code from the session
-            $captchaCode = session('captcha_code');
-
-            //Check if the entered CAPTCHA code matches the stored CAPTCHA code
-            if ($request->captcha !== $captchaCode) {
-                dd('Incorrect captcha code');
-            }else{
-                dd('error cap');
-            };
-
+      
             
             // Save Customer
             $customer = Customer::create([
@@ -143,5 +134,7 @@ class SurveyFormController extends Controller
         
    
     }
+
+
     
 }

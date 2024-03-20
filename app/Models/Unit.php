@@ -16,4 +16,8 @@ class Unit extends Model
         return $this->belongsTo(Services::class);
     }
 
+    public function sub_units(){
+        return $this->hasMAny(SubUnit::class);
+    }
+
 }

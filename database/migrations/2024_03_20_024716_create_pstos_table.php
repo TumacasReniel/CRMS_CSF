@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('pstos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('services_id');
-            $table->foreign('services_id')
+            $table->foreignId('unit_id');
+            $table->foreign('unit_id')
                     ->references('id')
-                    ->on('services');
-            $table->string('unit_name');
-            $table->string('unit_url')->nullable();
-            $table->boolean('is_disabled')->default(0);
+                    ->on('units');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('pstos');
     }
 };

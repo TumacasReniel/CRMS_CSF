@@ -48,7 +48,8 @@ class SurveyFormRequest extends FormRequest
             'indication' => 'nullable|string|max:255',
             'recommend_rate_score' => 'required|max:255',
 
-            'captcha' => 'required|string',
+            'captcha' => 'required|captcha',
+            
         ];
     }
 }

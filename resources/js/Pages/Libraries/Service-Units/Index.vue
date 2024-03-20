@@ -11,6 +11,7 @@ defineProps({
 const form = reactive({
   service_id: null,
   unit_id:  null,
+  unit: null,
 })
 
 const rating = async (service_id, unit_id) => {
@@ -20,8 +21,16 @@ const rating = async (service_id, unit_id) => {
 };
 
 const all_service_unit_rating = async () => {
+   form.form_type = "all units";
    router.get('/csi/all-units', form , { preserveState: true })
 };
+
+const viewUnitCategories = async (unit) => {
+    form.unit = unit;
+   router.get('/service_unit/unit', form , { preserveState: true })
+};
+
+
 
 
 </script>
@@ -30,7 +39,7 @@ const all_service_unit_rating = async () => {
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Services
+                 <v-breadcrumbs :items="['Dashboard', 'Service Units']"></v-breadcrumbs>
             </h2>
         </template>
 
@@ -56,7 +65,7 @@ const all_service_unit_rating = async () => {
                             <template v-if="service_units" v-for="(service_unit, index) in service_units.data" :key="service_unit.id">
                                 <tr class="border border-solid bg-blue-100">                
                                     <td class="m5 p-5  border border-solid font-black" colspan="3" >
-                                            {{ service_unit.services_name }}
+                                         {{ service_unit.services_name }}
                                     </td>  
                                 </tr>       
 
@@ -68,8 +77,30 @@ const all_service_unit_rating = async () => {
                                         {{ unit.unit_name }}
                                     </td>  
                                      <td class="text-center px-4 py-2 p-2 mr-2 border border-solid">
-                                        <v-btn prepend-icon="mdi-eye" class="mr-3" size="small">View</v-btn>
-                                        <v-btn @click="rating(service_unit.id, unit.id)" prepend-icon="mdi-file" color="yellow" size="small">Rating</v-btn>
+                                        <v-btn  
+                                                v-if="
+                                                    unit.unit_name == 'Administrative Support' || unit.unit_name == 'Innovation System Support' ||
+                                                    unit.unit_name == 'Technology Training and Consultancy'  || unit.unit_name == 'S&T Intervention' || 
+                                                    unit.unit_name == 'S&T Scholarship' ||  unit.unit_name == 'S&T Information' ||
+                                                    unit.unit_name == 'Research and Development Support' 
+                                                " 
+                                                prepend-icon="mdi-eye" class="mr-3" size="small"
+                                                @click="viewUnitCategories(unit)"
+                                            >
+                                            View
+                                        </v-btn>
+                                        <v-btn v-else prepend-icon="mdi-eye" class="mr-3" size="small">View</v-btn>
+                                        <v-btn
+                                            v-if="unit.unit_name != 'Administrative Support' && unit.unit_name != 'Innovation System Support' &&
+                                                  unit.unit_name != 'Technology Training and Consultancy'  && unit.unit_name != 'S&T Intervention' && 
+                                                 unit.unit_name != 'S&T Scholarship' &&  unit.unit_name != 'S&T Information' &&
+                                                 unit.unit_name != 'Research and Development Support' " 
+                                            @click="rating(service_unit.id, unit.id)" 
+                                            prepend-icon="mdi-file" color="yellow" 
+                                            size="small"
+                                        >
+                                            Rating
+                                        </v-btn>
                                     </td>  
                                 </tr>          
                             </template>                          

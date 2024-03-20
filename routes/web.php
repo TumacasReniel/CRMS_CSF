@@ -48,6 +48,8 @@ Route::middleware([
     })->name('accounts');
 
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
+
     Route::get('/csi', [ReportController::class , 'index']);
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
     Route::get('/csi/generate/ByUnit/ByDate', [ReportController::class, 'generateCSIByUnitByDate']);

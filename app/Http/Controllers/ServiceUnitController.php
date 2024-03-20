@@ -19,4 +19,14 @@ class ServiceUnitController extends Controller
         return Inertia::render('Libraries/Service-Units/Index')
             ->with('service_units', $data);
     }
+
+    public function unit_index(Request $request)
+    {
+        $unit = $request->unit;
+
+        return Inertia::render('Libraries/Service-Units/Views/Index')
+            ->with('unit', $unit);
+    }
+
+    
 }
