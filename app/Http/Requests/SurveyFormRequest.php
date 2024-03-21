@@ -28,7 +28,6 @@ class SurveyFormRequest extends FormRequest
             'sex' => 'required|string|max:255',
             'age_group' => 'required|string|max:255',
             'client_type' => 'required|string|max:100',
-            'digital_literacy' => 'boolean|max:10',
             'pwd' => 'boolean|max:10',
             'pregnant' => 'boolean|max:10',
             'senior_citizen' => 'boolean|max:10',

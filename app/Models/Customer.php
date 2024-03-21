@@ -14,7 +14,6 @@ class Customer extends Model
         'client_type',
         'sex',
         'age_group',
-        'digital_literacy',
         'pwd',
         'pregnant',
         'senior_citizen',

@@ -62,7 +62,6 @@ export default {
         client_type: null,
         sex: null,
         age_group: null,
-        // digital_literacy: 0,
         pwd: 0,
         pregnant: 0,
         senior_citizen: 0,
@@ -165,7 +164,8 @@ export default {
                     return this.form.captcha = document.getElementById('captcha-input').value;
                 }
             }).then((result) => {
-                if (result.isConfirmed) {             
+                if (result.isConfirmed) {   
+                    console.log('hello',999);          
                     // this.form.signature = this.signaturePad;  
                     this.form.post('/csf_submission',{
                         // onSuccess: () => {
@@ -182,13 +182,18 @@ export default {
                         //     })
 
                         // }
+
                     })
     
                 }
             });
-
-             
+                            
         } catch (error) {
+            Swal.fire({
+                title: 'Failed',
+                icon: 'error',
+                text: this.error ? this.error: "Something went wrong please check",
+            })
         }
         
     },
@@ -291,8 +296,8 @@ export default {
                                         Email
                                         <span class="text-red-800">*</span>
                                     </label>
-                                    <input v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
-                                    <div class="text-red-800" v-if="form.errors.email && !form.email">{{ form.errors.email }}</div>
+                                    <input  v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
+                                    <div class="text-red-800" v-if="!form.email">{{ form.errors.email }} </div>
                                 </div>
 
                                 <div class="mb-5">
@@ -300,7 +305,7 @@ export default {
                                         Name
                                         (<span class="text-blue-500">Optional</span>)
                                     </label>
-                                    <input v-model="form.name" type="text" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="e.g. Juan Dela Cruz" required />
+                                    <input v-model="form.name" type="text" id="name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="e.g. Juan Dela Cruz" required />
                                     <div v-if="errors.name">{{ errors.name }}</div>
                                 </div>
 
@@ -360,11 +365,6 @@ export default {
                                         (<span class="text-blue-500">Optional</span>)
                                     </div>
                                     <div class="grid grid-cols-4 gap-4">
-
-                                        <!-- <div class="flex items-center ps-4   rounded ">
-                                            <input v-model="form.digital_literacy" id="bordered-checkbox-1" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                            <label for="bordered-checkbox-1" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Digital Literacy</label>
-                                        </div> -->
                                         <div class="flex items-center ps-4  rounded">
                                             <input v-model="form.pwd" id="bordered-checkbox-2" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Person with Disability</label>

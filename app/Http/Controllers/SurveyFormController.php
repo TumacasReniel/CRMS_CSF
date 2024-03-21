@@ -34,28 +34,25 @@ class SurveyFormController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(SurveyFormRequest $request)
     {      
-
+      
         try{
             DB::beginTransaction();  
             
-            $validate = Validator::make($request->all(), $request->rules());
-
-            dd($validate);
-
-            // Save Customer
+            //Save Customer
             $customer = Customer::create([
                 'email' => $request->email,
                 'name' => $request->name,
                 'client_type' => $request->client_type,
                 'sex' => $request->sex,
                 'age_group' => $request->age_group,
-                'digital_literacy' => $request->digital_literacy,
                 'pwd' => $request->pwd,
                 'pregnant' => $request->pregnant,
                 'senior_citizen' => $request->senior_citizen,
             ]);
+
+         
     
             // Validate dimension_form data
             $dimensionData = request()->validate([
@@ -118,7 +115,6 @@ class SurveyFormController extends Controller
             );
 
             
-      
             DB::commit();
            
             return Inertia::render('Survey-Forms/ThankYou')
