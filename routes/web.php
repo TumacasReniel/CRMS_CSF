@@ -7,6 +7,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SurveyFormController;
 use App\Http\Controllers\ServiceUnitController;
+use App\Http\Controllers\SubUnitPstoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,8 @@ Route::middleware([
     Route::get('/csi/generate/ByUnit/ThirdQuarter', [ReportController::class, 'generateCSIByUnitThirdQuarter']);
     Route::get('/csi/generate/ByUnit/FourthQuarter', [ReportController::class, 'generateCSIByUnitFourthQuarter']);
     Route::get('/csi/generate/ByUnit/Yearly', [ReportController::class, 'generateCSIByUnitYearly']);
+
+    Route::get('/sub-unit/psto/{sub_unit_id}', [SubUnitPstoController::class, 'index']);
 
 });
 

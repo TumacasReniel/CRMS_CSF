@@ -36,14 +36,14 @@ class SurveyFormController extends Controller
 
     public function store(Request $request)
     {      
+
         try{
             DB::beginTransaction();  
             
-            Validator::make($request->all(), $request->rules());
+            $validate = Validator::make($request->all(), $request->rules());
 
-            // Retrieve the CAPTCHA code from the session
-      
-            
+            dd($validate);
+
             // Save Customer
             $customer = Customer::create([
                 'email' => $request->email,

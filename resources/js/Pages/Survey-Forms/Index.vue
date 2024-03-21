@@ -168,20 +168,20 @@ export default {
                 if (result.isConfirmed) {             
                     // this.form.signature = this.signaturePad;  
                     this.form.post('/csf_submission',{
-                        onSuccess: () => {
-                            this.form.reset();
-                            this.form.recommend_rate_score = null;
-                            // this.form.signaturePad = new SignaturePad(this.signaturePad.value);
-                        },
+                        // onSuccess: () => {
+                        //     this.form.reset();
+                        //     this.form.recommend_rate_score = null;
+                        //     // this.form.signaturePad = new SignaturePad(this.signaturePad.value);
+                        // },
 
-                        onError: () => {
-                            Swal.fire({
-                                title: 'Failed',
-                                icon: 'error',
-                                text: this.error ? this.error: "Something went wrong please check",
-                            })
+                        // onError: () => {
+                        //     Swal.fire({
+                        //         title: 'Failed',
+                        //         icon: 'error',
+                        //         text: this.error ? this.error: "Something went wrong please check",
+                        //     })
 
-                        }
+                        // }
                     })
     
                 }

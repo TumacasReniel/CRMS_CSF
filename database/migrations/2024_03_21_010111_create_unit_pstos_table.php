@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pstos', function (Blueprint $table) {
+        Schema::create('unit_pstos', function (Blueprint $table) {
             $table->id();
-            $table->string('psto_name')->unique();
-            $table->string('slug')->unique();
+            $table->foreignId('unit_id');
+            $table->foreign('unit_id')
+                    ->references('id')
+                    ->on('units');
+            $table->foreignId('psto_id');
+            $table->foreign('psto_id')
+                    ->references('id')
+                    ->on('pstos');
             $table->timestamps();
         });
     }
@@ -24,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pstos');
+        Schema::dropIfExists('unit_pstos');
     }
 };

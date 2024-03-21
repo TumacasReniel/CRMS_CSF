@@ -10,8 +10,7 @@ defineProps({
 
 const form = reactive({
   service_id: null,
-  unit_id:  null,
-  unit: null,
+  unit_id: null,
 })
 
 const rating = async (service_id, unit_id) => {
@@ -24,13 +23,6 @@ const all_service_unit_rating = async () => {
    form.form_type = "all units";
    router.get('/csi/all-units', form , { preserveState: true })
 };
-
-const viewUnitCategories = async (unit) => {
-    form.unit = unit;
-   router.get('/service_unit/unit', form , { preserveState: true })
-};
-
-
 
 
 </script>
@@ -71,30 +63,17 @@ const viewUnitCategories = async (unit) => {
 
                                 <tr  v-for="(unit, index) in service_unit.units" :key="unit.id"> 
                                     <td class="text-center p-2 border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
-                                        {{ index + 1 }}
+                                        {{ unit.id }}
                                     </td>  
                                     <td  class="p-2 mr-2  border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                                         {{ unit.unit_name }}
                                     </td>  
                                      <td class="text-center px-4 py-2 p-2 mr-2 border border-solid">
-                                        <v-btn  
-                                                v-if="
-                                                    unit.unit_name == 'Administrative Support' || unit.unit_name == 'Innovation System Support' ||
-                                                    unit.unit_name == 'Technology Training and Consultancy'  || unit.unit_name == 'S&T Intervention' || 
-                                                    unit.unit_name == 'S&T Scholarship' ||  unit.unit_name == 'S&T Information' ||
-                                                    unit.unit_name == 'Research and Development Support' 
-                                                " 
-                                                prepend-icon="mdi-eye" class="mr-3" size="small"
-                                                @click="viewUnitCategories(unit)"
-                                            >
+                                        <v-btn prepend-icon="mdi-eye" class="mr-3" size="small">
                                             View
                                         </v-btn>
-                                        <v-btn v-else prepend-icon="mdi-eye" class="mr-3" size="small">View</v-btn>
+                                        <!-- <v-btn v-else prepend-icon="mdi-eye" class="mr-3" size="small">View</v-btn> -->
                                         <v-btn
-                                            v-if="unit.unit_name != 'Administrative Support' && unit.unit_name != 'Innovation System Support' &&
-                                                  unit.unit_name != 'Technology Training and Consultancy'  && unit.unit_name != 'S&T Intervention' && 
-                                                 unit.unit_name != 'S&T Scholarship' &&  unit.unit_name != 'S&T Information' &&
-                                                 unit.unit_name != 'Research and Development Support' " 
                                             @click="rating(service_unit.id, unit.id)" 
                                             prepend-icon="mdi-file" color="yellow" 
                                             size="small"

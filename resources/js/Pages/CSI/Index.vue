@@ -13,7 +13,7 @@ import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
 import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
 import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
 import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
-import { reactive, ref, computed, onMounted } from 'vue'
+import { reactive, ref, computed, onMounted, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
 import Swal from 'sweetalert2'
@@ -21,6 +21,9 @@ import Swal from 'sweetalert2'
 const props = defineProps({
     service: Object, 
     unit: Object,
+    sub_units: Object,
+    unit_pstos: Object,
+    sub_unit_pstos: Object,
 
     dimensions: Object,
     respondents_list: Object,
@@ -585,6 +588,7 @@ const form = reactive({
   service: null,
   unit:  null,
   sub_unit: null,
+  psto: null,
   csi_type: null,
   selected_month: null,
   selected_quarter: null,
@@ -720,6 +724,40 @@ const generateCSIReport = async (service, unit) => {
        d.print(document.querySelector(".print-id"), [css]);
 };
 
+
+watch(
+  () => form.sub_unit,
+  (value) => {
+        if(value){
+          getSubUnitPSTO(value);
+        }
+  }
+);
+
+const getSubUnitPSTO = async (sub_unit_id) => {
+   // Get the current query parameters
+  const currentQueryParams = new URLSearchParams(window.location.search);
+
+  // Add or update the 'sub_unit_id' parameter
+  currentQueryParams.set('sub_unit_id', sub_unit_id);
+
+  // Construct the new URL with updated query parameters
+  const newUrl = `/csi?${currentQueryParams.toString()}`;
+
+  // Navigate to the new URL
+  await router.visit(
+    newUrl,
+    {
+      preserveQuery: true, 
+      preserveState: true,
+      preserveScroll: true,
+    }
+  );
+
+};
+
+
+
 </script>
 
 <template>
@@ -753,13 +791,45 @@ const generateCSIReport = async (service, unit) => {
                      <v-divider class="border-opacity-100"></v-divider>
                     <v-card class="p-5 mb-3">
                           <v-row class="p-3" >
-                              <v-col class="my-auto" cols="6" >
+                              <v-col class="my-auto" >
                                   <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
-                                  :items="['By Date','By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
+                                  :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> </v-combobox>
                               </v-col>
-                                <v-col class="my-auto" cols="6" v-if="unit.id == 8" >
+                                <v-col class="my-auto"  v-if="unit.id == 8" >
                                   <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
                                   :items="['Internal', 'External']" border="none"> </v-combobox>
+                              </v-col>
+                               <v-col class="my-auto" v-if="sub_units.length > 0" >
+                                  <v-select
+                                    variant="outlined"
+                                    v-model="form.sub_unit"
+                                    :items="sub_units"
+                                    item-title="sub_unit_name"
+                                    item-value="id"
+                                    label="Select Sub Unit"
+                                  ></v-select>
+                              </v-col>
+                                               
+                               <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
+                                <v-select
+                                    variant="outlined"
+                                    v-model="form.unit_psto"
+                                    :items="unit_pstos"
+                                    item-title="psto_name"
+                                    item-value="id"
+                                    label="Select Unit PSTO"
+                                  ></v-select>
+             
+                              </v-col>
+                                 <v-col class="my-auto"  v-if="sub_unit_pstos.length > 0" >
+                                  <v-select
+                                      variant="outlined"
+                                      v-model="form.sub_unit_psto"
+                                      :items="sub_unit_pstos"
+                                      item-title="psto_name"
+                                      item-value="id"
+                                      label="Select Sub Unit PSTO"
+                                  ></v-select>                          
                               </v-col>
                           </v-row>
                     </v-card>

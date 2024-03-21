@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitSeeder::class);
         $this->call(SubUnitSeeder::class);
         $this->call(PSTOSeeder::class);
+        $this->call(UnitSubUnitSeeder::class);
+        $this->call(UnitPSTOSeeder::class);
+        $this->call(SubUnitPSTOSeeder::class);
     }
 
 }

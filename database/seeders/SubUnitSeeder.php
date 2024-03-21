@@ -15,101 +15,83 @@ class SubUnitSeeder extends Seeder
     {
         $sub_units = [
             [
-                'title' => 'Procurement',
+                'sub_unit_name' => 'Procurement',
                 'slug' => 'procurement',
-                'unit_id' => 7,
             ],
             [
-                'title' => 'Property and Supply',
+                'sub_unit_name' => 'Property and Supply',
                 'slug' => 'property-and-supply',
-                'unit_id' => 7,
             ],
             [
-                'title' => 'Driving',
+                'sub_unit_name' => 'Driving',
                 'slug' => 'driving',
-                'unit_id' => 7,
             ],
             [
-                'title' => 'Janitorial',
+                'sub_unit_name' => 'Janitorial',
                 'slug' => 'janitorial',
-                'unit_id' => 7,
             ],
             [
-                'title' => 'Maintenance',
+                'sub_unit_name' => 'Maintenance',
                 'slug' => 'maintenance',
-                'unit_id' => 7,
             ],
 
 
             //
             [
-                'title' => 'Training',
+                'sub_unit_name' => 'Training',
                 'slug' => 'training',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Consultancy',
+                'sub_unit_name' => 'Consultancy',
                 'slug' => 'consultancy',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Manufacturing Productivity Extension Program',
+                'sub_unit_name' => 'Manufacturing Productivity Extension Program',
                 'slug' => 'manufacturing-productivity-extension-program',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Consultancy for Agricultural Productivity',
+                'sub_unit_name' => 'Consultancy for Agricultural Productivity',
                 'slug' => 'consultancy-for-agricultural-productivity',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'S&T Experts Volunteer Pool Program',
+                'sub_unit_name' => 'S&T Experts Volunteer Pool Program',
                 'slug' => 's&t-experts-volunteer-pool-program	',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'DOST-Academe Technology Assessment',
+                'sub_unit_name' => 'DOST-Academe Technology Assessment',
                 'slug' => 'dost-academe-technology-assessment',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Energy Audit',
+                'sub_unit_name' => 'Energy Audit',
                 'slug' => 'energy-audit',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Packaging and Labeling',
+                'sub_unit_name' => 'Packaging and Labeling',
                 'slug' => 'packaging-and-labeling',
-                'unit_id' => 10,
             ],
             [
-                'title' => 'Food Safety',
+                'sub_unit_name' => 'Food Safety',
                 'slug' => 'food-safety',
-                'unit_id' => 10,
             ],
             //
             [
-                'title' => 'PCHRD',
+                'sub_unit_name' => 'PCHRD',
                 'slug' => 'pcrd',
-                'unit_id' => 20,
             ],
 
             [
-                'title' => 'PCIEERD',
+                'sub_unit_name' => 'PCIEERD',
                 'slug' => 'pcieerd',
-                'unit_id' => 20,
             ],
 
             [
-                'title' => 'PCAARRD',
+                'sub_unit_name' => 'PCAARRD',
                 'slug' => 'pcaard',
-                'unit_id' => 20,
             ],
 
             [
-                'title' => 'NSTEP',
+                'sub_unit_name' => 'NSTEP',
                 'slug' => 'nstep',
-                'unit_id' => 20,
             ],
 
 

@@ -17,8 +17,8 @@ class SubUnit extends JsonResource
     public function toArray(Request $request)
     {
         return [
-            'sub_unit_name' => $this->title,    
-            // 'pstos'=> $this->pstos ? PSTO::collection($this->pstos) : [],
+            'id' => $this->id,
+            'sub_unit_name' => $this->sub_unit_name,    
         ];
     }
 }

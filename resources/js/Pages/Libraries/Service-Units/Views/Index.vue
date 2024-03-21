@@ -4,6 +4,7 @@ import { router } from '@inertiajs/vue3'
 import { reactive } from 'vue'
 
 defineProps({
+    service: Object,
     unit: Object,
 });
 
@@ -16,7 +17,7 @@ const form = reactive({
 const rating = async (service, unit) => {
    form.service = service;
    form.unit =unit ;
-   router.get('/csi', form , { preserveState: unit_idtrue })
+   router.get('/csi', form , { preserveState: true })
 };
 
 
@@ -33,20 +34,22 @@ const rating = async (service, unit) => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <v-card class="m-5" v-if="unit.sub_units">           
+                    <v-card class="m-5" v-if="unit">           
                            <table>
                                 <tr>
                                     <th>#</th>
                                     <th class="text-left">Sub Units</th>
                                     <th>Actions</th>
                                 </tr>
-                                <template v-if="unit" v-for="(sub_unit, index) in unit.sub_units" :key="sub_unit.id" >
+                       
+
+                                <template  v-for="(sub_unit, index) in unit.sub_units" :key="sub_unit.id" >
                                     <tr >
                                         <td class="text-center">{{ index + 1 }}</td>
                                        <td class="text-left"> {{  sub_unit.sub_unit_name }}</td>
                                         <td class="text-center">
                                             <v-btn prepend-icon="mdi-eye" class="mr-5" size="small">View</v-btn>
-                                            <v-btn @click="rating(unit)" prepend-icon="mdi-file" color="yellow"  size="small">Rating</v-btn>
+                                            <v-btn @click="rating(service,unit)" prepend-icon="mdi-file" color="yellow"  size="small">Rating</v-btn>
                                         </td>
                                     </tr>
                                </template>
