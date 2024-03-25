@@ -46,7 +46,7 @@ const years = computed(() => {
 const months = [
     'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL',
     'MAY', 'JUNE', 'JULY', 'AUGUST',
-    'SEPEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+    'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
 ];
 
 const currentYear = ref(getCurrentYear());

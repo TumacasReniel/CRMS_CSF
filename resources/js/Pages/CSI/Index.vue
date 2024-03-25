@@ -582,21 +582,35 @@ const props = defineProps({
 
 
 const form = reactive({
-  form_type: null,
-  date_from: null,
-  date_to: null,
   service: null,
   unit:  null,
-  sub_unit: null,
-  psto: null,
+
+  selected_sub_unit: null,
+  selected_unit_psto: null,
+  selected_sub_unit_psto: null,
+
+  // form type if all or per unit
+  form_type: null,
+
+  //by date
+  date_from: null,
+  date_to: null,
+
+  // by date , monthly ,querterly or yearly
   csi_type: null,
+
+  // by month and year
   selected_month: null,
+  selected_year: null,
+
+  //by quarter
   selected_quarter: null,
-  comments_complaints: null,
-  analysis: null,
-  generated: false,
+
+  // for HR case only
   client_type: null,
-})
+});
+
+const generated = ref(false);
 
 //get year
 const years = computed(() => {
@@ -608,7 +622,7 @@ const years = computed(() => {
 const months = [
     'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL',
     'MAY', 'JUNE', 'JULY', 'AUGUST',
-    'SEPEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
+    'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
 ];
 
 const currentYear = ref(getCurrentYear());
@@ -628,36 +642,27 @@ function getCurrentMonth() {
 onMounted(() => {
     form.selected_month = currentMonth.value;
     form.selected_year = currentYear.value;
-    form.generated == false;
+    generated.value == false;
 });
 
 
-const generateCSIReport = async (service, unit) => {
-   form.generated = true;
+  const generateCSIReport = async (service, unit) => {
+   generated.value = true;
    form.service = service;
    form.unit = unit;
   //  console.log(form,990);
     if(form.csi_type == 'By Date'){
-      router.get('/csi/generate/ByUnit/ByDate', form , { preserveState: true, preserveScroll: true})     
+      router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
     }
     else if(form.csi_type == 'By Month'){
           form.selected_quarter = "";
-          router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
+          router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
     }
     else if(form.csi_type == 'By Quarter'){
           form.selected_month = "";
-          if(form.selected_quarter == 'FIRST QUARTER'){
-            router.get('/csi/generate/ByUnit/FirstQuarter', form , { preserveState: true, preserveScroll: true})
+          if(form.selected_quarter){
+              router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
           }
-          else if(form.selected_quarter == 'SECOND QUARTER'){
-            router.get('/csi/generate/ByUnit/SecondQuarter', form , { preserveState: true, preserveScroll: true})
-          }
-          else if(form.selected_quarter == 'THIRD QUARTER'){
-            router.get('/csi/generate/ByUnit/ThirdQuarter', form , { preserveState: true, preserveScroll: true})
-          }
-          else if(form.selected_quarter == 'FOURTH QUARTER'){
-            router.get('/csi/generate/ByUnit/FourthQuarter', form , { preserveState: true, preserveScroll: true})
-          }   
           else{ 
             Swal.fire({
                   title: "Error",
@@ -669,7 +674,7 @@ const generateCSIReport = async (service, unit) => {
       else if(form.csi_type == 'By Year/Annual'){
           form.selected_quarter = "";
           if(form.selected_year ){
-            router.get('/csi/generate/ByUnit/Yearly', form , { preserveState: true, preserveScroll: true});
+             router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
           }
           else{         
               Swal.fire({
@@ -682,6 +687,11 @@ const generateCSIReport = async (service, unit) => {
 
     
   };
+
+  function refresh() {
+      window.history.back()
+  }
+
 
   const is_printing = ref(false);
   const printCSIReport = async () => {
@@ -729,6 +739,7 @@ watch(
   () => form.sub_unit,
   (value) => {
         if(value){
+          generated.value = false;
           getSubUnitPSTO(value);
         }
   }
@@ -746,9 +757,9 @@ const getSubUnitPSTO = async (sub_unit_id) => {
 
   // Navigate to the new URL
   await router.visit(
-    newUrl,
+    newUrl + 'sub_unit_id=' + sub_unit_id,
     {
-      preserveQuery: true, 
+      //preserveQuery: true, 
       preserveState: true,
       preserveScroll: true,
     }
@@ -799,7 +810,7 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                                   <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
                                   :items="['Internal', 'External']" border="none"> </v-combobox>
                               </v-col>
-                               <v-col class="my-auto" v-if="sub_units.length > 0" >
+                               <!-- <v-col class="my-auto" v-if="sub_units.length > 0" >
                                   <v-select
                                     variant="outlined"
                                     v-model="form.sub_unit"
@@ -807,8 +818,9 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                                     item-title="sub_unit_name"
                                     item-value="id"
                                     label="Select Sub Unit"
+                                    :readonly="generated"
                                   ></v-select>
-                              </v-col>
+                              </v-col> -->
                                                
                                <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
                                 <v-select
@@ -861,7 +873,7 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
                            <!-- <v-col class="text-end mr-5">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col> -->
                         </v-row>
 
@@ -885,9 +897,10 @@ const getSubUnitPSTO = async (sub_unit_id) => {
 
                             <v-col class="ml-5 mt-3">
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                              <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                             </v-col>
                            <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
 
@@ -913,7 +926,7 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                               <v-btn  @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
                            <v-col class="text-end mr-5 m-3">
-                             <v-btn :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
                           <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
@@ -930,7 +943,7 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
                            <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
 
@@ -948,7 +961,7 @@ const getSubUnitPSTO = async (sub_unit_id) => {
                               <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                             </v-col>
                            <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
                      </v-card>
@@ -956,11 +969,11 @@ const getSubUnitPSTO = async (sub_unit_id) => {
 
                     <!-- Content Preview-->
                     <MonthlyContent v-if="form.csi_type == 'By Month' || form.csi_type == 'By Date'" :form="form"  :data="props" />
-                    <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true "  :form="form"  :data="props" />
-                    <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true" :form="form"  :data="props" />
-                    <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true"  :form="form"  :data="props" />
-                    <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :form="form"  :data="props" />
-                    <YearlyContent v-if="form.csi_type == 'By Year/Annual' && form.generated == true"  :form="form"  :data="props" />
+                    <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true "  :form="form"  :data="props" />
+                    <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
+                    <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
+                    <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :form="form"  :data="props" />
+                    <YearlyContent v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props" />
                     
                       <!-- End Content Preview-->
                 </div>
@@ -969,11 +982,11 @@ const getSubUnitPSTO = async (sub_unit_id) => {
 
          <!-- Printouts-->
         <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
-        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+        <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
         
     </AppLayout>
 </template>

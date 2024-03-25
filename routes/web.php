@@ -48,20 +48,20 @@ Route::middleware([
         return Inertia::render('Account/Index');
     })->name('accounts');
 
-    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');;
     Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
+    Route::get('/service_unit/psto', [ServiceUnitController::class , 'psto_index'])->name('psto');
+    Route::get('/service_unit/unit-psto', [ServiceUnitController::class , 'unit_psto_index'])->name('unit_psto');
+    Route::get('/service_unit/sub-unit-psto', [ServiceUnitController::class , 'sub_unit_psto_index'])->name('sub_unit_psto');
 
     Route::get('/csi', [ReportController::class , 'index']);
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
-    Route::get('/csi/generate/ByUnit/ByDate', [ReportController::class, 'generateCSIByUnitByDate']);
-    Route::get('/csi/generate/ByUnit/Monthly', [ReportController::class, 'generateCSIByUnitMonthly']);
-    Route::get('/csi/generate/ByUnit/FirstQuarter', [ReportController::class, 'generateCSIByUnitFirstQuarter']);
-    Route::get('/csi/generate/ByUnit/SecondQuarter', [ReportController::class, 'generateCSIByUnitSecondQuarter']);
-    Route::get('/csi/generate/ByUnit/ThirdQuarter', [ReportController::class, 'generateCSIByUnitThirdQuarter']);
-    Route::get('/csi/generate/ByUnit/FourthQuarter', [ReportController::class, 'generateCSIByUnitFourthQuarter']);
-    Route::get('/csi/generate/ByUnit/Yearly', [ReportController::class, 'generateCSIByUnitYearly']);
 
-    Route::get('/sub-unit/psto/{sub_unit_id}', [SubUnitPstoController::class, 'index']);
+    Route::get('/csi/generate', [ReportController::class, 'generateReports']);
+
+    Route::get('/services/csf', [SurveyFormController::class, 'index']);
+
+    //Route::post('/sub-unit/psto/{sub_unit_id}', [SubUnitPstoController::class, 'index']);
 
 });
 

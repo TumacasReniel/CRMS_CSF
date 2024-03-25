@@ -27,6 +27,7 @@ class ReportController extends Controller
 {
     public function index(Request $request )
     {
+        //dd($request->all());
         $dimensions = Dimension::all();
         $service = Services::findOrFail($request->service_id);
         $unit = Unit::findOrFail($request->unit_id);
@@ -42,15 +43,13 @@ class ReportController extends Controller
         $unit_pstos = UnitPSTOResource::collection($unit_pstos);
 
         $unit_pstos = $unit_pstos->pluck('psto');
-
-       
+ 
         //get sub unit pstos
 
         $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get(); 
         $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
 
         $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
-
 
         return Inertia::render('CSI/Index')
             ->with('dimensions', $dimensions)
@@ -61,6 +60,37 @@ class ReportController extends Controller
             ->with('sub_unit_pstos', $sub_unit_pstos);
     
     }
+
+    public function generateReports(Request $request )
+    {
+
+        if($request->csi_type == 'By Date'){
+            return $this->generateCSIByUnitByDate($request);
+        }
+        else if($request->csi_type == "By Month"){
+            return $this->generateCSIByUnitMonthly($request);
+        }
+        else if($request->csi_type == "By Quarter"){
+            if($request->selected_quarter == "FIRST QUARTER"){
+                return $this->generateCSIByUnitFirstQuarter($request);
+            }
+            else if($request->selected_quarter == "SECOND QUARTER"){
+                return $this->generateCSIByUnitSecondQuarter($request);
+            }
+            else if($request->selected_quarter == "THIRD QUARTER"){
+                return $this->generateCSIByUnitThirdQuarter($request);
+            }
+            else if($request->selected_quarter == "FOURTH QUARTER"){
+                return $this->generateCSIByUnitFourthQuarter($request);
+            }
+          
+        }
+        else if($request->csi_type == "By Year/Annual"){
+            return $this->generateCSIByUnitYearly($request);  
+        }
+    
+    }
+
 
     public function all_units()
     {
@@ -74,7 +104,7 @@ class ReportController extends Controller
     
     }
 
-    public function generateCSIByUnitByDate(Request $request)
+    public function generateCSIByUnitByDate($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -381,7 +411,7 @@ class ReportController extends Controller
     }   
 
 
-    public function generateCSIByUnitMonthly(Request $request)
+    public function generateCSIByUnitMonthly($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -389,8 +419,15 @@ class ReportController extends Controller
 
         $date_range = null;
         $customer_recommendation_ratings = null;
-       $respondents_list = null;
+        $respondents_list = null;
+
+        //selected search data
+        // $search = CSFForm::when('service_id',$request->selected_service_id)
+        //                                  ->when('sub_unit_id',$request->selected_sub_unit_id)
+        //                                  ->when('unit_psto_id',$request->selected_unit_psto_id)
+        //                                  ->when('sub_unit_psto_id',$request->sub_unit_psto_id);
         
+
         if($request->csi_type == "By Month"){      
             $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
             $date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
@@ -698,7 +735,7 @@ class ReportController extends Controller
             ->with('request', $request);    
     }   
 
-    public function generateCSIByUnitFirstQuarter(Request $request)
+    public function generateCSIByUnitFirstQuarter($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -1207,7 +1244,7 @@ class ReportController extends Controller
 
     }
 
-    public function generateCSIByUnitSecondQuarter(Request $request)
+    public function generateCSIByUnitSecondQuarter($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -1739,7 +1776,7 @@ class ReportController extends Controller
 
     }
 
-    public function generateCSIByUnitThirdQuarter(Request $request)
+    public function generateCSIByUnitThirdQuarter($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -2269,7 +2306,7 @@ class ReportController extends Controller
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
     }
 
-    public function generateCSIByUnitFourthQuarter(Request $request)
+    public function generateCSIByUnitFourthQuarter($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -2797,7 +2834,7 @@ class ReportController extends Controller
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
     }
 
-    public function generateCSIByUnitYearly(Request $request)
+    public function generateCSIByUnitYearly($request)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -3444,7 +3481,7 @@ class ReportController extends Controller
     public function getSubUnits($request)
     {
        //get unit sub units
-       $unit_sub_units = UnitSubUnit::where('unit_id',$request->unit_id)->get();
+       $unit_sub_units = UnitSubUnit::where('unit_id',$request->unit['id'])->get();
        $unit_sub_units = UnitSubUnitResource::collection($unit_sub_units);
  
        $sub_units = $unit_sub_units->pluck('sub_unit');
@@ -3456,7 +3493,7 @@ class ReportController extends Controller
     public function getUnitPSTOs($request)
     {
          //get unit pstos
-         $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
+         $unit_pstos = UnitPsto::where('unit_id',$request->unit['id'])->get();
          $unit_pstos = UnitPSTOResource::collection($unit_pstos);
    
          $unit_pstos = $unit_pstos->pluck('psto');
@@ -3469,7 +3506,7 @@ class ReportController extends Controller
     {
         //get sub unit pstos
  
-       $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get(); 
+       $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit)->get(); 
        $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
  
        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');

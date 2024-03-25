@@ -1,14 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Account from '@/Components/Account.vue';
-import { router } from '@inertiajs/vue3'
-import { reactive } from 'vue'
+import ViewForm from '@/Pages/Libraries/Service-Units/Views/Modal.vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { reactive ,ref, watch} from 'vue'
 
-defineProps({
+const props = defineProps({
     service_units: Object,
+    user: Object,
 });
 
 const form = reactive({
+  service: null,
+  unit: null,
   service_id: null,
   unit_id: null,
 })
@@ -24,6 +27,32 @@ const all_service_unit_rating = async () => {
    router.get('/csi/all-units', form , { preserveState: true })
 };
 
+const show_modal = ref(false);
+
+const showViewModal = async (service, unit) => {
+  form.service = service;
+  form.unit = unit;
+  show_modal.value = true;
+};
+
+const viewModal = async (is_show) => {
+  show_modal.value = is_show;
+};
+
+const viewMore = async (service, unit) => {
+    form.service = service;
+    form.unit = unit;
+    console.log(form, 88);
+
+    if(unit.id == 9 || unit.id == 11 || unit.id == 14 || unit.id == 15){
+        router.get('/service_unit/unit-psto', form , { preserveState: true })
+    }
+    else{
+        router.get('/service_unit/unit', form , { preserveState: true })
+    }
+
+       
+};
 
 </script>
 
@@ -69,14 +98,21 @@ const all_service_unit_rating = async () => {
                                         {{ unit.unit_name }}
                                     </td>  
                                      <td class="text-center px-4 py-2 p-2 mr-2 border border-solid">
-                                        <v-btn prepend-icon="mdi-eye" class="mr-3" size="small">
+                                        <v-btn prepend-icon="mdi-eye" class="mr-3" size="small" @click="showViewModal(service_unit, unit)"
+                                             v-if="unit.id == 1 || unit.id == 2 || unit.id == 3 || unit.id == 4 || unit.id == 5 || unit.id == 6 || 
+                                                    unit.id == 8 || unit.id == 12 || unit.id == 13 || unit.id == 16 || unit.id == 17 || unit.id == 18 || 
+                                                    unit.id == 19 || unit.id == 21"
+                                        >
                                             View
                                         </v-btn>
-                                        <!-- <v-btn v-else prepend-icon="mdi-eye" class="mr-3" size="small">View</v-btn> -->
+                                        <v-btn v-else prepend-icon="mdi-eye" class="mr-3" size="small" @click="viewMore(service_unit,unit)">View</v-btn>
                                         <v-btn
                                             @click="rating(service_unit.id, unit.id)" 
                                             prepend-icon="mdi-file" color="yellow" 
                                             size="small"
+                                              v-if="unit.id == 1 || unit.id == 2 || unit.id == 3 || unit.id == 4 || unit.id == 5 || unit.id == 6 || 
+                                                    unit.id == 8  || unit.id == 12 || unit.id == 13 || unit.id == 16 || unit.id == 17 || unit.id == 18 || 
+                                                    unit.id == 19 || unit.id == 21"
                                         >
                                             Rating
                                         </v-btn>
@@ -89,5 +125,7 @@ const all_service_unit_rating = async () => {
                 </div>
             </div>
         </div>
+
+        <ViewForm :show_modal="show_modal" :data="props" :form="form"  @input="viewModal()"/>
     </AppLayout>
 </template>

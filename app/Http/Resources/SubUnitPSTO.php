@@ -17,7 +17,7 @@ class SubUnitPSTO extends JsonResource
         return [
             'id' => $this->id,
             'sub_unit'=> $this->sub_unit ? new SubUnit( $this->sub_unit) : null,
-            'psto'=> $this->psto ? new psto( $this->psto) : null,
+            'psto'=> $this->psto ? new PSTO( $this->psto) : null,
             // 'created_at' => $this->created_at,
             // 'updated_at' => $this->updated_at,
         ];
