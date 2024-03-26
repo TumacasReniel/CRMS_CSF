@@ -34,6 +34,7 @@ class SurveyFormController extends Controller
 
     }
 
+ 
     public function store(SurveyFormRequest $request)
     {      
       

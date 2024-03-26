@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\SubUnit;
+use App\Models\UnitSubUnit;
 use Illuminate\Http\Request;
+use App\Http\Resources\UnitSubUnit as UnitSubUnitResource;
 
 class SubUnitController extends Controller
 {
@@ -12,54 +15,21 @@ class SubUnitController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getSubUnits($unit_id)
     {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+  
+        // get unit sub units
+        $unit_sub_units = UnitSubUnit::where('unit_id',$unit_id)->get();
+        $unit_sub_units = UnitSubUnitResource::collection($unit_sub_units);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(SubUnit $subUnit)
-    {
-        //
+        $sub_units = $unit_sub_units->pluck('sub_unit');
+        
+        return Inertia::render('Libraries/Service-Units/Views/View')
+                    ->withViewData('sub_units',  $sub_units);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SubUnit $subUnit)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, SubUnit $subUnit)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SubUnit $subUnit)
-    {
-        //
-    }
+  
 }

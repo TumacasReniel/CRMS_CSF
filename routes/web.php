@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubUnitController;
 use App\Http\Controllers\SurveyFormController;
 use App\Http\Controllers\ServiceUnitController;
 use App\Http\Controllers\SubUnitPstoController;
@@ -48,13 +49,15 @@ Route::middleware([
         return Inertia::render('Account/Index');
     })->name('accounts');
 
-    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');;
+    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    
     Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
     Route::get('/service_unit/psto', [ServiceUnitController::class , 'psto_index'])->name('psto');
     Route::get('/service_unit/unit-psto', [ServiceUnitController::class , 'unit_psto_index'])->name('unit_psto');
     Route::get('/service_unit/sub-unit-psto', [ServiceUnitController::class , 'sub_unit_psto_index'])->name('sub_unit_psto');
 
     Route::get('/csi', [ReportController::class , 'index']);
+    Route::get('/csi/view', [ReportController::class , 'view']);
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
 
     Route::get('/csi/generate', [ReportController::class, 'generateReports']);
