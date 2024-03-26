@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UnitSubUnitSeeder::class);
         $this->call(UnitPSTOSeeder::class);
         $this->call(SubUnitPSTOSeeder::class);
+        $this->call(RegionSeeder::class);
     }
 
+    
 }

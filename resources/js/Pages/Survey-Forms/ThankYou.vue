@@ -3,8 +3,9 @@ import { Head, Link } from '@inertiajs/vue3';
 
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 
-defineProps({
+const props = defineProps({
     message: String,
+    current_url: String,
 });
 
 
@@ -45,11 +46,10 @@ defineProps({
 
         Have a good day!
         </p>
-
         <v-divider class="mb-4"></v-divider>
 
         <div class="text-end">
-            <Link :href="route('csf_form')">
+            <Link :href="props.current_url">
                 <v-btn
                     class="text-none"
                     color="success"

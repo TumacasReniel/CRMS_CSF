@@ -57,6 +57,14 @@ export default {
       ],
     
       form: this.$inertia.form({
+        //CSF Form 
+        region_id: null,
+        service_id: null,
+        unit_id: null,
+        sub_unit_id: null,
+        psto_id: null,
+
+        //Customer
         email: null,
         name: null,
         client_type: null,
@@ -65,9 +73,13 @@ export default {
         pwd: 0,
         pregnant: 0,
         senior_citizen: 0,
+
+        //CC
         cc1: null,
         cc2: null,
         cc3: null,
+
+        // Recommendation rating
         recommend_rate_score: null,
         comment:null,
         is_complaint: false,
@@ -84,7 +96,12 @@ export default {
             title: [],
             answer: [],
         },
+
+        //
         captcha: null,
+
+        // current url
+        current_url: null,
 
       }),
       signaturePad:null,
@@ -99,21 +116,28 @@ export default {
   
   },
 
-//   mounted(){
-//       AOS.init();
+  mounted(){
+         AOS.init();
 
-//         // this.signaturePad = new SignaturePad(this.signaturePad);
-//         // // Set canvas dimensions
-//         // this.canvas = this.signaturePad;
-//         // canvas.width = 400;
-//         // canvas.height = 200;
+        const currentURL = window.location.href;
+        // Extract query parameters from the URL
+        const searchParams = new URLSearchParams(currentURL.split("?")[1]);
 
-//         Swal.fire({
-//             title: "Disclaimer",
-//             icon: "warning",
-//             text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
-//         });
-//   },
+        // Get region_id, service_id, and unit_id values
+        this.form.region_id = searchParams.get("region_id");
+        this.form.service_id = searchParams.get("service_id");
+        this.form.unit_id = searchParams.get("unit_id");
+        this.form.sub_unit_id = searchParams.get("sub_unit_id");
+        this.form.psto_id = searchParams.get("psto_id");
+        this.form.current_url =currentURL; 
+
+
+        Swal.fire({
+            title: "Disclaimer",
+            icon: "warning",
+            text: "The DOST is committed to protect and respect your personal data privacy. All information collected will only be used for documentation purposes and will not be published in any platform.",
+        });
+  },
 
   
 
@@ -164,24 +188,21 @@ export default {
                     return this.form.captcha = document.getElementById('captcha-input').value;
                 }
             }).then((result) => {
-                if (result.isConfirmed) {   
-                    console.log('hello',999);          
+                if (result.isConfirmed) {            
                     // this.form.signature = this.signaturePad;  
                     this.form.post('/csf_submission',{
-                        // onSuccess: () => {
-                        //     this.form.reset();
-                        //     this.form.recommend_rate_score = null;
-                        //     // this.form.signaturePad = new SignaturePad(this.signaturePad.value);
-                        // },
+                        onSuccess: () => {
+                           
+                        },
 
-                        // onError: () => {
-                        //     Swal.fire({
-                        //         title: 'Failed',
-                        //         icon: 'error',
-                        //         text: this.error ? this.error: "Something went wrong please check",
-                        //     })
+                        onError: () => {
+                            Swal.fire({
+                                title: 'Failed',
+                                icon: 'error',
+                                text: this.error ? this.error: "Something went wrong please check",
+                            })
 
-                        // }
+                        }
 
                     })
     
@@ -296,7 +317,7 @@ export default {
                                         Email
                                         <span class="text-red-800">*</span>
                                     </label>
-                                    <input  v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" required />
+                                    <input  v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" />
                                     <div class="text-red-800" v-if="!form.email">{{ form.errors.email }} </div>
                                 </div>
 

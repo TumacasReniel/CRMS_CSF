@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\psto;
 use App\Models\Unit;
 use Inertia\Inertia;
+use App\Models\CSFForm;
 use App\Models\SubUnit;
 use App\Models\Services;
 use App\Models\UnitPsto;
@@ -18,10 +19,10 @@ use App\Models\CustomerAttributeRating;
 use App\Http\Resources\Unit as UnitResource;
 use App\Models\CustomerRecommendationRating;
 use App\Http\Resources\Services as ServiceResource;
-use App\Http\Resources\CustomerAttributeRatings as CARResource;
-use App\Http\Resources\UnitSubUnit as UnitSubUnitResource;
 use App\Http\Resources\UnitPSTO as UnitPSTOResource;
 use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
+use App\Http\Resources\UnitSubUnit as UnitSubUnitResource;
+use App\Http\Resources\CustomerAttributeRatings as CARResource;
 
 class ReportController extends Controller
 {
@@ -109,30 +110,42 @@ class ReportController extends Controller
 
     public function generateReports(Request $request )
     {
+        //dd($request->all());
+
+        $psto_id = null;
+        if($request->selected_unit_psto){
+            $psto_id = $request->selected_unit_psto;
+        }
+        else if($request->selected_sub_unit_psto){
+            $psto_id = $request->selected_sub_unit_psto;
+        }
+       
+        //get user
+        $user = Auth::user();
 
         if($request->csi_type == 'By Date'){
-            return $this->generateCSIByUnitByDate($request);
+            return $this->generateCSIByUnitByDate($request , $user->region_id, $psto_id);
         }
         else if($request->csi_type == "By Month"){
-            return $this->generateCSIByUnitMonthly($request);
+            return $this->generateCSIByUnitMonthly($request , $user->region_id, $psto_id);
         }
         else if($request->csi_type == "By Quarter"){
             if($request->selected_quarter == "FIRST QUARTER"){
-                return $this->generateCSIByUnitFirstQuarter($request);
+                return $this->generateCSIByUnitFirstQuarter($request , $user->region_id, $psto_id);
             }
             else if($request->selected_quarter == "SECOND QUARTER"){
-                return $this->generateCSIByUnitSecondQuarter($request);
+                return $this->generateCSIByUnitSecondQuarter($request , $user->region_id, $psto_id);
             }
             else if($request->selected_quarter == "THIRD QUARTER"){
-                return $this->generateCSIByUnitThirdQuarter($request);
+                return $this->generateCSIByUnitThirdQuarter($request , $user->region_id, $psto_id);
             }
             else if($request->selected_quarter == "FOURTH QUARTER"){
-                return $this->generateCSIByUnitFourthQuarter($request);
+                return $this->generateCSIByUnitFourthQuarter($request , $user->region_id, $psto_id);
             }
           
         }
         else if($request->csi_type == "By Year/Annual"){
-            return $this->generateCSIByUnitYearly($request);  
+            return $this->generateCSIByUnitYearly($request , $user->region_id, $psto_id);  
         }
     
     }
@@ -150,23 +163,33 @@ class ReportController extends Controller
     
     }
 
-    public function generateCSIByUnitByDate($request)
+    public function generateCSIByUnitByDate($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
 
-        $date_range = CustomerAttributeRating::whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
-        $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$request->date_from, $request->date_to])->get();        
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+
+        $date_range = CustomerAttributeRating::whereIn('customer_id',$customer_ids)
+                                             ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id',$customer_ids)
+                                                                        ->whereBetween('created_at', [$request->date_from, $request->date_to])->get();        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
         // total number of respondents/customer
-        $total_respondents = $date_range->groupBy('customer.id')->count();
+        $total_respondents = $date_range->groupBy('customer_id')->count();
 
         // total number of respondents/customer who rated VS/S
-        $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer.id')->count();
+        $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
         
         // total number of promoters or respondents who rated 9-10 in recommendation rating
         $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','8')->groupBy('customer_id')->count();
@@ -457,8 +480,9 @@ class ReportController extends Controller
     }   
 
 
-    public function generateCSIByUnitMonthly($request)
+    public function generateCSIByUnitMonthly($request, $region_id, $psto_id)
     {
+        
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
@@ -467,22 +491,25 @@ class ReportController extends Controller
         $customer_recommendation_ratings = null;
         $respondents_list = null;
 
-        //selected search data
-        // $search = CSFForm::when('service_id',$request->selected_service_id)
-        //                                  ->when('sub_unit_id',$request->selected_sub_unit_id)
-        //                                  ->when('unit_psto_id',$request->selected_unit_psto_id)
-        //                                  ->when('sub_unit_psto_id',$request->sub_unit_psto_id);
-        
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
 
-        if($request->csi_type == "By Month"){      
-            $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
-            $date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
-            $customer_recommendation_ratings = CustomerRecommendationRating::whereMonth('created_at', $numericMonth)->get();
-             // List of Respondents/Customers
-            $respondents_list = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+          
+    
+        $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
+        //$date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                             ->whereMonth('created_at', $numericMonth)->get();
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', $numericMonth)->get();
+        // List of Respondents/Customers
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                    ->whereMonth('created_at', $numericMonth)->get();
            
-        }
-
+        // Dimensions or attributes
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
@@ -781,7 +808,7 @@ class ReportController extends Controller
             ->with('request', $request);    
     }   
 
-    public function generateCSIByUnitFirstQuarter($request)
+    public function generateCSIByUnitFirstQuarter($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -793,40 +820,50 @@ class ReportController extends Controller
         $month_jan = [];
         $month_feb = [];
         $month_mar = [];
+
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
             
-        if($request->csi_type == "By Quarter"){
-            // Retrieve records for the specified quarter and year
-            if($request->selected_quarter == "FIRST QUARTER"){
-                $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
-                $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
-                $date_range = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
-                                    ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_jan = CustomerAttributeRating::whereMonth('created_at', 01)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_feb = CustomerAttributeRating::whereMonth('created_at', 02)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_mar = CustomerAttributeRating::whereMonth('created_at', 03)
-                                        ->whereYear('created_at', $request->selected_year)->get();
-
-                $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
-                                                                                ->whereYear('created_at', $request->selected_year)->get();
-
-                $jan_crr =  CustomerRecommendationRating::whereMonth('created_at',01)
-                                                         ->whereYear('created_at', $request->selected_year)->get();
-                
-                $feb_crr =  CustomerRecommendationRating::whereMonth('created_at',02)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-                                                            
-                $mar_crr =  CustomerRecommendationRating::whereMonth('created_at',03)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-
-
-
-                $respondents_list = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
+        $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereBetween('created_at', [$startDate, $endDate])
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_jan = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 01)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_feb = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 02)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_mar = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 03)
                                             ->whereYear('created_at', $request->selected_year)->get();
-            }      
-          
-        }
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                                        ->whereBetween('created_at', [$startDate, $endDate])
+                                                                        ->whereYear('created_at', $request->selected_year)->get();
+
+        $jan_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',01)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
+        $feb_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',02)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                    
+        $mar_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',03)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$startDate, $endDate])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -856,7 +893,7 @@ class ReportController extends Controller
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
             //PART I
 
-            // January total responses with its dimensions and rate score
+            // April total responses with its dimensions and rate score
             $jan_vs_total = $month_jan->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_s_total = $month_jan->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_n_total = $month_jan->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -865,7 +902,7 @@ class ReportController extends Controller
 
             $jan_grand_total =  $jan_vs_total + $jan_s_total + $jan_n_total + $jan_d_total + $jan_vd_total ; 
 
-            //  February total responses with its dimensions and rate score
+            //  May total responses with its dimensions and rate score
             $feb_vs_total = $month_feb->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_s_total = $month_feb->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_n_total = $month_feb->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -874,7 +911,7 @@ class ReportController extends Controller
 
             $feb_grand_total =  $feb_vs_total + $feb_s_total + $feb_n_total + $feb_d_total + $feb_vd_total ; 
 
-            //  March total responses with its dimensions and rate score
+            //  June total responses with its dimensions and rate score
             $mar_vs_total = $month_mar->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $mar_s_total = $month_mar->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $mar_n_total = $month_mar->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -923,9 +960,9 @@ class ReportController extends Controller
             //Total Raw Points totals
             $vs_total_raw_points = $jan_vs_total + $feb_vs_total + $mar_vs_total;
             $s_total_raw_points = $jan_s_total + $feb_s_total + $mar_s_total;
-            $n_total_raw_points = $jan_n_total + $feb_n_total + $mar_n_total;
-            $d_total_raw_points = $jan_d_total + $feb_d_total + $mar_d_total;
-            $vd_total_raw_points = $jan_vd_total + $feb_vd_total + $mar_vd_total;
+            $n_total_raw_points =$jan_n_total + $feb_n_total + $mar_n_total;
+            $d_total_raw_points =$jan_d_total + $feb_d_total + $mar_d_total;
+            $vd_total_raw_points =$jan_vd_total + $feb_vd_total + $mar_vd_total;
             $total_raw_points = $vs_total_raw_points + $s_total_raw_points + $n_total_raw_points +  $d_total_raw_points +  $vd_total_raw_points;           
 
             $vs_grand_total_raw_points += $vs_total_raw_points;
@@ -965,14 +1002,26 @@ class ReportController extends Controller
             ];
 
             // Likert Scale Rating = total score / grand total of total raw points
-            $vs_lsr_total =   $x_vs_total /  $total_raw_points;
-            $s_lsr_total =   $x_s_total /  $total_raw_points;
-            $n_lsr_total =   $x_n_total /  $total_raw_points;
-            $d_lsr_total =   $x_d_total /  $total_raw_points;
-            $vd_lsr_total =   $x_vd_total /  $total_raw_points;
-            $lsr_total =  $vs_lsr_total +  $s_lsr_total  +  $n_lsr_total  +  $d_lsr_total  +  $vd_lsr_total;
-            $lsr_grand_total +=  $lsr_total;
-            $lsr_average =  number_format(($lsr_grand_total / $dimensionId), 2);
+            if($total_raw_points != 0 ){
+                $vs_lsr_total =   $x_vs_total  /  $total_raw_points;
+                $s_lsr_total =   $x_s_total /  $total_raw_points;
+                $n_lsr_total =   $x_n_total /  $total_raw_points;
+                $d_lsr_total =   $x_d_total /  $total_raw_points;
+                $vd_lsr_total =   $x_vd_total /  $total_raw_points;
+                $lsr_total =  $vs_lsr_total +  $s_lsr_total  +  $n_lsr_total  +  $d_lsr_total  +  $vd_lsr_total;
+                $lsr_grand_total +=  $lsr_total;
+                $lsr_average =  number_format(($lsr_grand_total / $dimensionId), 2);
+            }
+            else{
+                $vs_lsr_total =  0;
+                $s_lsr_total =  0;
+                $n_lsr_total =  0;
+                $d_lsr_total = 0;
+                $vd_lsr_total =  0;
+                $lsr_total = 0;
+                $lsr_grand_total +=  0;
+                $lsr_average =  0;
+            }
 
             $lsr_totals[$dimensionId] = [
                 'vs_lsr_total' => $vs_lsr_total,
@@ -984,7 +1033,7 @@ class ReportController extends Controller
             ];
             
             // PART II
-              // January total responses with its dimensions and rate score
+              // April total responses with its dimensions and rate score
               $jan_vi_total = $month_jan->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $jan_i_total = $month_jan->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $jan_mi_total = $month_jan->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -993,7 +1042,7 @@ class ReportController extends Controller
   
               $jan_i_grand_total =  $jan_vi_total + $jan_i_total + $jan_mi_total + $jan_si_total + $jan_nai_total ; 
   
-              //  February total responses with its dimensions and rate score
+              //  MAy total responses with its dimensions and rate score
               $feb_vi_total = $month_feb->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $feb_i_total = $month_feb->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $feb_mi_total = $month_feb->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -1002,7 +1051,7 @@ class ReportController extends Controller
   
               $feb_i_grand_total =  $feb_vi_total + $feb_i_total + $feb_mi_total + $feb_si_total + $feb_nai_total ; 
   
-              //  March total responses with its dimensions and rate score
+              //  June total responses with its dimensions and rate score
               $mar_vi_total = $month_mar->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $mar_i_total = $month_mar->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
               $mar_mi_total = $month_mar->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -1011,19 +1060,19 @@ class ReportController extends Controller
   
               $mar_i_grand_total =  $mar_vi_total + $mar_i_total + $mar_mi_total + $mar_si_total + $mar_nai_total ; 
 
-                // Quarter 1 Very Important total with specific dimention or attribute
+                //Very Important total with specific dimention or attribute
                 $q1_vi_totals[$dimensionId] = [
                     'jan_vi_total' => $jan_vi_total,
                     'feb_vi_total' => $feb_vi_total,
                     'mar_vi_total' => $mar_vi_total,
                 ];
-                // Quarter 1 Important total with specific dimention or attribute
+                //Important total with specific dimention or attribute
                 $q1_i_totals[$dimensionId] = [
                     'jan_i_total' => $jan_i_total,
                     'feb_i_total' => $feb_i_total,
                     'mar_i_total' => $mar_i_total,
                 ];
-                // Quarter 1 Moderately Important total with specific dimention or attribute
+                //Moderately Important total with specific dimention or attribute
                 $q1_mi_totals[$dimensionId] = [
                     'jan_mi_total' => $jan_mi_total,
                     'feb_mi_total' => $feb_mi_total,
@@ -1042,7 +1091,7 @@ class ReportController extends Controller
                     'mar_nai_total' => $mar_nai_total,
                 ];
 
-                $q1_i_grand_totals[$dimensionId] = [
+                $q2_i_grand_totals[$dimensionId] = [
                     'jan_i_grand_total' => $jan_i_grand_total,
                     'feb_i_grand_total' => $feb_i_grand_total,
                     'mar_i_grand_total' => $mar_i_grand_total,
@@ -1097,36 +1146,24 @@ class ReportController extends Controller
         }
 
         // Total No. of Very Satisfied (VS) Responses of First Quarte
-        // -- January
         $jan_total_vs_respondents = $month_jan->where('rate_score',5)->groupBy('customer_id')->count();
-        // -- February
         $feb_total_vs_respondents = $month_feb->where('rate_score',5)->groupBy('customer_id')->count();
-        // -- March
         $mar_total_vs_respondents = $month_mar->where('rate_score',5)->groupBy('customer_id')->count();
 
         // Total No. of Satisfied (S) Responses
-        // -- January
         $jan_total_s_respondents = $month_jan->where('rate_score',4)->groupBy('customer_id')->count();
-        // -- February
         $feb_total_s_respondents = $month_feb->where('rate_score',4)->groupBy('customer_id')->count();
-        // -- March
         $mar_total_s_respondents = $month_mar->where('rate_score',4)->groupBy('customer_id')->count();
 
         // Total No. of Other (N, D, VD) Responses
-        // -- January
         $jan_total_ndvd_respondents = $month_jan->where('rate_score','<', 4)->groupBy('customer_id')->count();
-        // -- February
         $feb_total_ndvd_respondents = $month_feb->where('rate_score','<', 4)->groupBy('customer_id')->count();
-        // -- March
-        $mar_total_ndvd_respondents = $month_mar->where('rate_score', '<', 4)->groupBy('customer_id')->count();
+        $mar_total_ndvd_respondents = $month_mar->where('rate_score','<', 4)->groupBy('customer_id')->count();
           
         // Total No. of All Responses
-        // -- January
         $jan_total_respondents = $month_jan->groupBy('customer_id')->count();
-        // -- February
         $feb_total_respondents = $month_feb->groupBy('customer_id')->count();
-        // -- March
-        $mar_total_respondents = $month_mar->groupBy('customer_id')->count();
+        $mar_total_respondents = $month_feb->groupBy('customer_id')->count();
 
         //Total respondents /Customers
         $total_respondents = $date_range->groupBy('customer_id')->count();
@@ -1140,20 +1177,14 @@ class ReportController extends Controller
     
         // Frst quarter total number of promoters or respondents who rated 9-10 in recommendation rating
         $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
-        // january
         $jan_total_promoters = $jan_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
-        // february
         $feb_total_promoters = $feb_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
-        // march
         $mar_total_promoters = $mar_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
         $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
-         // january
          $jan_total_detractors = $jan_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
-         // february
          $feb_total_detractors = $feb_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
-         // march
          $mar_total_detractors = $mar_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
   
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
@@ -1176,39 +1207,51 @@ class ReportController extends Controller
         $feb_percentage_promoters = 0.00;
         $mar_percentage_promoters = 0.00;
 
-        $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
-        $jan_percentage_promoters = number_format((($jan_total_promoters / $total_respondents) * 100), 2);
-        $feb_percentage_promoters = number_format((($feb_total_promoters / $total_respondents) * 100), 2);
-        $mar_percentage_promoters = number_format((($mar_total_promoters / $total_respondents) * 100), 2);
-        
-
-        //Percentage of Promoters = number of promoters / total respondents
+        // Percentage of promoter
         $jan_percentage_detractors = 0.00;
         $feb_percentage_detractors = 0.00;
         $mar_percentage_detractors = 0.00;
 
-        $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
-        $jan_percentage_detractors = number_format((($jan_total_detractors / $total_respondents) * 100),2);
-        $feb_percentage_detractors = number_format((($feb_total_detractors / $total_respondents) * 100),2);
-        $mar_percentage_detractors = number_format((($mar_total_detractors / $total_respondents) * 100),2);
+        //nps
+        $jan_net_promoter_score =  0.00;
+        $feb_net_promoter_score = 0.00;
+        $mar_net_promoter_score =  0.00;
+
+        //average
+        $ave_net_promoter_score = 0.00;
+        $average_percentage_promoters =  0.00;
+        $average_percentage_detractors =  0.00;
+
+        if($total_respondents != 0){
+            $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
+            $jan_percentage_promoters = number_format((($jan_total_promoters / $total_respondents) * 100), 2);
+            $feb_percentage_promoters = number_format((($feb_total_promoters / $total_respondents) * 100), 2);
+            $mar_percentage_promoters = number_format((($mar_total_promoters / $total_respondents) * 100), 2);
         
+            //Percentage of Promoters = number of promoters / total respondents
+            $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
+            $jan_percentage_detractors = number_format((($jan_total_detractors / $total_respondents) * 100),2);
+            $feb_percentage_detractors = number_format((($feb_total_detractors / $total_respondents) * 100),2);
+            $mar_percentage_detractors = number_format((($mar_total_detractors / $total_respondents) * 100),2);
+            
 
-        // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
-        $jan_net_promoter_score =  number_format(($jan_percentage_promoters - $jan_percentage_detractors),2);
-        $feb_net_promoter_score =  number_format(($feb_percentage_promoters - $feb_percentage_detractors),2);
-        $mar_net_promoter_score =  number_format(($mar_percentage_promoters - $mar_percentage_detractors),2);
+            // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
+            $jan_net_promoter_score =  number_format(($jan_percentage_promoters - $jan_percentage_detractors),2);
+            $feb_net_promoter_score =  number_format(($feb_percentage_promoters - $feb_percentage_detractors),2);
+            $mar_net_promoter_score =  number_format(($mar_percentage_promoters - $mar_percentage_detractors),2);
 
-        $ave_net_promoter_score =  number_format((($jan_net_promoter_score + $feb_net_promoter_score + $mar_net_promoter_score)/ 3),2);
-        $average_percentage_promoters =  number_format((($jan_percentage_promoters + $feb_percentage_promoters + $mar_percentage_promoters)/ 3),2);
-        $average_percentage_detractors =  number_format((($jan_percentage_detractors + $feb_percentage_detractors + $mar_percentage_detractors)/ 3),2);
+            $ave_net_promoter_score =  number_format((($jan_net_promoter_score + $feb_net_promoter_score + $mar_net_promoter_score)/ 3),2);
+            $average_percentage_promoters =  number_format((($jan_percentage_promoters + $feb_percentage_promoters + $mar_percentage_promoters)/ 3),2);
+            $average_percentage_detractors =  number_format((($jan_percentage_detractors + $feb_percentage_detractors + $mar_percentage_detractors)/ 3),2);
 
 
-        // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
-        $customer_satisfaction_rating = 0;
-        if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+            // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
+            $customer_satisfaction_rating = 0;
+            if($total_vss_respondents != 0){
+                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+            }
+            $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
-        $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
         //Respondents list
         $data = CARResource::collection($respondents_list);
@@ -1263,7 +1306,7 @@ class ReportController extends Controller
             ->with('q1_mi_totals', $q1_mi_totals)
             ->with('q1_si_totals', $q1_si_totals)
             ->with('q1_nai_totals', $q1_nai_totals)
-            ->with('q1_i_grand_totals', $q1_i_grand_totals)
+            ->with('q1_i_grand_totals', $q2_i_grand_totals)
             ->with('i_trp_totals', $i_trp_totals)
             ->with('i_grand_total_raw_points', $i_grand_total_raw_points)
             ->with('vi_grand_total_raw_points', $vi_grand_total_raw_points)
@@ -1287,10 +1330,9 @@ class ReportController extends Controller
             ->with('mar_net_promoter_score', $mar_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+   }
 
-    }
-
-    public function generateCSIByUnitSecondQuarter($request)
+    public function generateCSIByUnitSecondQuarter($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -1302,39 +1344,50 @@ class ReportController extends Controller
         $month_apr = [];
         $month_may = [];
         $month_jun = [];
+
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
             
-        if($request->csi_type == "By Quarter"){
-            // Retrieve records for the specified quarter and year
-            if($request->selected_quarter == "SECOND QUARTER"){
-                $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
-                $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
-                $date_range = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
-                                    ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_apr = CustomerAttributeRating::whereMonth('created_at', 04)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_may = CustomerAttributeRating::whereMonth('created_at', 05)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_jun = CustomerAttributeRating::whereMonth('created_at', 06)
-                                        ->whereYear('created_at', $request->selected_year)->get();
-
-                $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
-                                                                                ->whereYear('created_at', $request->selected_year)->get();
-
-                $apr_crr =  CustomerRecommendationRating::whereMonth('created_at',04)
-                                                         ->whereYear('created_at', $request->selected_year)->get();
-                
-                $may_crr =  CustomerRecommendationRating::whereMonth('created_at',05)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-                                                            
-                $jun_crr =  CustomerRecommendationRating::whereMonth('created_at',06)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-
-
-                $respondents_list = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
+        $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereBetween('created_at', [$startDate, $endDate])
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_apr = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 04)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_may = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 05)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_jun = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 06)
                                             ->whereYear('created_at', $request->selected_year)->get();
-            }      
-          
-        }
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                                        ->whereBetween('created_at', [$startDate, $endDate])
+                                                                        ->whereYear('created_at', $request->selected_year)->get();
+
+        $apr_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',04)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
+        $may_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',05)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                    
+        $jun_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',06)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$startDate, $endDate])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -1822,7 +1875,7 @@ class ReportController extends Controller
 
     }
 
-    public function generateCSIByUnitThirdQuarter($request)
+    public function generateCSIByUnitThirdQuarter($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -1835,38 +1888,51 @@ class ReportController extends Controller
         $month_aug = [];
         $month_sep = [];
             
-        if($request->csi_type == "By Quarter"){
-            // Retrieve records for the specified quarter and year
-            if($request->selected_quarter == "THIRD QUARTER"){
-                $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
-                $endDate = Carbon::create($request->selected_year, 9, 31)->endOfDay();
-                $date_range = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
-                                    ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_jul = CustomerAttributeRating::whereMonth('created_at', 7)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_aug = CustomerAttributeRating::whereMonth('created_at', 8)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_sep = CustomerAttributeRating::whereMonth('created_at', 9)
-                                        ->whereYear('created_at', $request->selected_year)->get();
 
-                $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
-                                                                                ->whereYear('created_at', $request->selected_year)->get();
+        // store
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
 
-                $jul_crr =  CustomerRecommendationRating::whereMonth('created_at', 7)
-                                                         ->whereYear('created_at', $request->selected_year)->get();
-                
-                $aug_crr =  CustomerRecommendationRating::whereMonth('created_at',8)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-                                                            
-                $sep_crr =  CustomerRecommendationRating::whereMonth('created_at',9)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
 
-
-                $respondents_list = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
+        // Retrieve records for the specified quarter and year
+        $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 9, 31)->endOfDay();
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereBetween('created_at', [$startDate, $endDate])
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_jul = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 7)
+                                             ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_aug = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 8)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_sep = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at', 9)
                                             ->whereYear('created_at', $request->selected_year)->get();
-            }      
-          
-        }
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
+                                                                        ->whereYear('created_at', $request->selected_year)->get();
+
+        $jul_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at', 7)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
+        $aug_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',8)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                    
+        $sep_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',9)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                    ->whereBetween('created_at', [$startDate, $endDate])
+                                                    ->whereYear('created_at', $request->selected_year)->get();
+            
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -2352,7 +2418,7 @@ class ReportController extends Controller
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
     }
 
-    public function generateCSIByUnitFourthQuarter($request)
+    public function generateCSIByUnitFourthQuarter($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -2364,39 +2430,53 @@ class ReportController extends Controller
         $month_oct = [];
         $month_nov = [];
         $month_dec = [];
+
+        
+        // store
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
             
-        if($request->csi_type == "By Quarter"){
-            // Retrieve records for the specified quarter and year
-            if($request->selected_quarter == "FOURTH QUARTER"){
-                $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
-                $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
-                $date_range = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
-                                    ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_oct = CustomerAttributeRating::whereMonth('created_at',10)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_nov = CustomerAttributeRating::whereMonth('created_at',11)
-                                        ->whereYear('created_at', $request->selected_year)->get(); 
-                $month_dec = CustomerAttributeRating::whereMonth('created_at',12)
-                                        ->whereYear('created_at', $request->selected_year)->get();
-
-                $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
-                                                                                ->whereYear('created_at', $request->selected_year)->get();
-
-                $oct_crr =  CustomerRecommendationRating::whereMonth('created_at', 10)
-                                                         ->whereYear('created_at', $request->selected_year)->get();
-                
-                $nov_crr =  CustomerRecommendationRating::whereMonth('created_at',11)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-                                                            
-                $dec_crr =  CustomerRecommendationRating::whereMonth('created_at',12)
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-
-
-                $respondents_list = CustomerAttributeRating::whereBetween('created_at', [$startDate, $endDate])
+        // Retrieve records for the specified quarter and year
+        $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereBetween('created_at', [$startDate, $endDate])
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_oct = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at',10)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_nov = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at',11)
+                                            ->whereYear('created_at', $request->selected_year)->get(); 
+        $month_dec = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                            ->whereMonth('created_at',12)
                                             ->whereYear('created_at', $request->selected_year)->get();
-            }      
-          
-        }
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                            ->whereBetween('created_at', [$startDate, $endDate])
+                                            ->whereYear('created_at', $request->selected_year)->get();
+
+        $oct_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at', 10)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
+        $nov_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',11)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                    
+        $dec_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereMonth('created_at',12)
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$startDate, $endDate])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+           
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -2880,7 +2960,7 @@ class ReportController extends Controller
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
     }
 
-    public function generateCSIByUnitYearly($request)
+    public function generateCSIByUnitYearly($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
@@ -2893,50 +2973,67 @@ class ReportController extends Controller
         $q4_date_range = [];
         $customer_recommendation_ratings = null;
         $respondents_list = null;
-            
-        if($request->csi_type == "By Year/Annual"){
-            // Retrieve records for the specified quarter and year
-                $q1_start_date = Carbon::create($request->selected_year, 1, 1)->startOfDay();
-                $q1_end_date = Carbon::create($request->selected_year, 3, 31)->endOfDay();
-
-                $q2_start_date = Carbon::create($request->selected_year, 4, 1)->startOfDay();
-                $q2_end_date = Carbon::create($request->selected_year, 6, 31)->endOfDay();
-
-                $q3_start_date = Carbon::create($request->selected_year, 7, 1)->startOfDay();
-                $q3_end_date = Carbon::create($request->selected_year, 9, 31)->endOfDay();
-
-                $q4_start_date = Carbon::create($request->selected_year, 10, 1)->startOfDay();
-                $q4_end_date = Carbon::create($request->selected_year, 12, 31)->endOfDay();
-
-                $q1_date_range = CustomerAttributeRating::whereBetween('created_at', [$q1_start_date, $q1_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get(); 
-                $q2_date_range = CustomerAttributeRating::whereBetween('created_at', [$q2_start_date, $q2_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get(); 
-                $q3_date_range = CustomerAttributeRating::whereBetween('created_at', [$q3_start_date, $q3_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get();
-                $q4_date_range = CustomerAttributeRating::whereBetween('created_at', [$q4_start_date, $q4_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get();
-                
-                $date_range = CustomerAttributeRating::whereYear('created_at', $request->selected_year)->get(); 
-
-                $customer_recommendation_ratings = CustomerRecommendationRating::whereYear('created_at', $request->selected_year)->get();
-
-                $q1_crr =  CustomerRecommendationRating::whereBetween('created_at', [$q1_start_date, $q1_end_date])
-                                                       ->whereYear('created_at', $request->selected_year)->get();
-
-                $q2_crr =  CustomerRecommendationRating::whereBetween('created_at', [$q2_start_date, $q2_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get();
-                                                            
-                $q3_crr =  CustomerRecommendationRating::whereBetween('created_at', [$q3_start_date, $q3_end_date])
-                                                      ->whereYear('created_at', $request->selected_year)->get();
-
-                $q4_crr =  CustomerRecommendationRating::whereBetween('created_at', [$q4_start_date, $q4_end_date])
-                                                        ->whereYear('created_at', $request->selected_year)->get();
-
-
-                $respondents_list = CustomerAttributeRating::whereYear('created_at', $request->selected_year)->get();     
           
-        }
+        // store
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+            
+        // Retrieve records for the specified quarter and year
+        $q1_start_date = Carbon::create($request->selected_year, 1, 1)->startOfDay();
+        $q1_end_date = Carbon::create($request->selected_year, 3, 31)->endOfDay();
+
+        $q2_start_date = Carbon::create($request->selected_year, 4, 1)->startOfDay();
+        $q2_end_date = Carbon::create($request->selected_year, 6, 31)->endOfDay();
+
+        $q3_start_date = Carbon::create($request->selected_year, 7, 1)->startOfDay();
+        $q3_end_date = Carbon::create($request->selected_year, 9, 31)->endOfDay();
+
+        $q4_start_date = Carbon::create($request->selected_year, 10, 1)->startOfDay();
+        $q4_end_date = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+
+        $q1_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q1_start_date, $q1_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get(); 
+        $q2_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q2_start_date, $q2_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get(); 
+        $q3_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q3_start_date, $q3_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        $q4_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q4_start_date, $q4_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+        
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereYear('created_at', $request->selected_year)->get(); 
+
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereYear('created_at', $request->selected_year)->get();
+
+        $q1_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q1_start_date, $q1_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+        $q2_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q2_start_date, $q2_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                    
+        $q3_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q3_start_date, $q3_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+        $q4_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                                                ->whereBetween('created_at', [$q4_start_date, $q4_end_date])
+                                                ->whereYear('created_at', $request->selected_year)->get();
+
+
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                                ->whereYear('created_at', $request->selected_year)->get();     
+          
+        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -3552,12 +3649,31 @@ class ReportController extends Controller
     {
         //get sub unit pstos
  
-       $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit)->get(); 
+       $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->selected_sub_unit)->get(); 
        $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
  
        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
        return $sub_unit_pstos;
+    
+    }
+
+    public function querySearchCSF($region_id, $service_id, $unit_id , $sub_unit_id , $psto_id )
+    {
+        $customer_ids = CSFForm::when($region_id, function ($query, $region_id) {
+            $query->where('region_id', $region_id);
+        })->when($service_id, function ($query, $service_id) {
+            $query->where('service_id', $service_id);
+        })->when($unit_id, function ($query, $unit_id) {
+            $query->where('unit_id', $unit_id);
+        })->when($sub_unit_id, function ($query, $sub_unit_id) {
+            $query->where('sub_unit_id', $sub_unit_id);
+        })->when($psto_id, function ($query, $psto_id) {
+            $query->where('psto_id', $psto_id);
+        })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
+        ->get();
+
+        return  $customer_ids;
     
     }
 

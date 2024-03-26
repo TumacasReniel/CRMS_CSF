@@ -30,7 +30,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/form/csf', [SurveyFormController::class, 'index'])->name('csf_form');
+Route::get('/services/csf', [SurveyFormController::class, 'index']);
+Route::get('/form/csf/msg', [SurveyFormController::class, 'msg_index'])->name('msg_index');
 Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web');
 Route::post('/csf_submission', [SurveyFormController::class, 'store']);
 
@@ -62,7 +63,7 @@ Route::middleware([
 
     Route::get('/csi/generate', [ReportController::class, 'generateReports']);
 
-    Route::get('/services/csf', [SurveyFormController::class, 'index']);
+
 
     //Route::post('/sub-unit/psto/{sub_unit_id}', [SubUnitPstoController::class, 'index']);
 

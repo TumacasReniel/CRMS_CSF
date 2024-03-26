@@ -742,7 +742,7 @@ const currentYear = ref(getCurrentYear());
 
 
   watch(
-  () => form.sub_unit,
+  () => form.selected_sub_unit,
   (value) => {
         if(value){
           generated.value = false;
@@ -815,7 +815,7 @@ const currentYear = ref(getCurrentYear());
                                           <v-col class="my-auto" v-if="sub_units.length > 0" >
                                               <v-select
                                                 variant="outlined"
-                                                v-model="form.sub_unit"
+                                                v-model="form.selected_sub_unit"
                                                 :items="sub_units"
                                                 item-title="sub_unit_name"
                                                 item-value="id"
@@ -827,18 +827,19 @@ const currentYear = ref(getCurrentYear());
                                           <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
                                             <v-select
                                                 variant="outlined"
-                                                v-model="form.unit_psto"
+                                                v-model="form.selected_unit_psto"
                                                 :items="unit_pstos"
                                                 item-title="psto_name"
                                                 item-value="id"
                                                 label="Select Unit PSTO"
+                                                :readonly="generated"
                                               ></v-select>
                         
                                           </v-col>
-                                            <v-col class="my-auto"  v-if="sub_unit_pstos.length > 0" >
+                                            <v-col class="my-auto" v-if="sub_unit_pstos.length > 0">
                                               <v-select
                                                   variant="outlined"
-                                                  v-model="form.sub_unit_psto"
+                                                  v-model="form.selected_sub_unit_psto"
                                                   :items="sub_unit_pstos"
                                                   item-title="psto_name"
                                                   item-value="id"

@@ -57,7 +57,7 @@
       if(unit_psto){
         qr_link_type.value = 3;
         form.generated_url = baseURL + '/services/csf?' +
-                                '/region_id=' + props.user.region_id + 
+                                'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.id +
                                 '&psto_id=' + unit_psto;
@@ -65,7 +65,7 @@
       else if(sub_unit_psto && sub_unit_psto){
             qr_link_type.value = 2;
             form.generated_url = baseURL + '/services/csf?' +
-                                '/region_id=' + props.user.region_id + 
+                                'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.id +
                                 '&sub_unit_id=' + sub_unit + 
@@ -76,7 +76,7 @@
       else if(sub_unit){
             qr_link_type.value = 1;
             form.generated_url = baseURL + '/services/csf?' +
-                                '/region_id=' + props.user.region_id + 
+                                'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.id +
                                 '&sub_unit_id=' + sub_unit;
@@ -86,7 +86,7 @@
       else{
          qr_link_type.value = 0;
         form.generated_url = baseURL + '/services/csf?' +
-                                '/region_id=' + props.user.region_id + 
+                                'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.id;
       }

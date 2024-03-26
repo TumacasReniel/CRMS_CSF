@@ -22,8 +22,13 @@ class SurveyFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            //
+            'region_id' => 'required|integer|exists:regions,id',
+            'service_id' => 'required|integer|exists:services,id',
+            'unit_id' => 'required|integer|exists:units,id',
+
             //customer validation
-            'email' => 'required|email|max:255',
+            'email' => 'nullable|email|max:255',
             'name' => 'nullable|string|max:255',
             'sex' => 'required|string|max:255',
             'age_group' => 'required|string|max:255',
