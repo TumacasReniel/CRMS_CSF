@@ -284,4 +284,5 @@
     border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
     padding: 8px; /* Optional: Add padding for better spacing */
   }
+  
 </style>

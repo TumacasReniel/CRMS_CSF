@@ -805,8 +805,9 @@ const currentYear = ref(getCurrentYear());
                                 <v-card class="p-5 mb-3">
                                       <v-row class="p-3" >
                                           <v-col class="my-auto" >
-                                              <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
-                                              :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> </v-combobox>
+                                              <v-select v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
+                                              :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
+                                              </v-select>
                                           </v-col>
                                             <v-col class="my-auto"  v-if="unit.id == 8" >
                                               <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
@@ -814,7 +815,7 @@ const currentYear = ref(getCurrentYear());
                                           </v-col>
                                           <v-col class="my-auto" v-if="sub_units.length > 0" >
                                               <v-select
-                                                variant="outlined"
+                                                variant="solo"
                                                 v-model="form.selected_sub_unit"
                                                 :items="sub_units"
                                                 item-title="sub_unit_name"

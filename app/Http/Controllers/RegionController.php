@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Regions;
+use Inertia\Inertia;
+use App\Models\Region;
 use Illuminate\Http\Request;
+use App\Http\Resources\Account as AccountResource;
 
-class RegionsController extends Controller
+class RegionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        // $regions = Region::all();
+        // $data = AccountResource::collection($regions);
+        // return Inertia::render('Account/Index')
+        //             ->with('accounts', $data);
     }
 
     /**

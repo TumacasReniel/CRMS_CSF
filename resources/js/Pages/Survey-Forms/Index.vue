@@ -266,7 +266,7 @@ export default {
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="../../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Department of Science and Technology </span>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white text-black">Department of Science and Technology </span>
             </a>
         </div>
     </nav>
@@ -281,19 +281,29 @@ export default {
             <v-form class="max-w" @submit.prevent="saveCSF">
                 <div class="py-20 bg-gray-200 ">
                     <v-card class="mb-5" width="1000">
-                    <v-card-title class="text-center m-5 font-black">
-                            <img
+                  <v-card-title class="m-5 font-black flex flex-col items-center">
+                      <v-row>
+                          <v-col class="text-center">
+                            <div>
+                                <img
                                 data-aos="zoom-in" 
                                 data-aos-duration="500" 
                                 data-aos-delay="500"
-                                class="mx-auto mb-5" style="width:200px; height:200px" src="../../../../public/images/dost-logo.jpg" alt="..">
-                            <span class="font-black lg:text-4xl"  
-                                data-aos="fade-down" 
-                                data-aos-duration="500" 
-                                data-aos-delay="500"
-                                >CUSTOMER SATISFACTION FEEDBACK</span>
+                                class="mx-auto mb-5" 
+                                style="width:200px; height:200px" 
+                                src="../../../../public/images/dost-logo.jpg" 
+                                alt="..">
+                            </div>
+                             <span 
+                            class="font-black lg:text-4xl"  
+                            data-aos="fade-down" 
+                            data-aos-duration="500" 
+                            data-aos-delay="500"
+                            >CUSTOMER SATISFACTION FEEDBACK</span>
+                            </v-col>
+                        </v-row>
                     </v-card-title>
-                    
+                                        
                     </v-card>
                   
                     <v-card 
@@ -595,11 +605,13 @@ export default {
                             )</div>
                             <v-container class="text-center">
                                 <v-row>
-                                <v-col>
-                                    <canvas ref="signaturePad" class="mb-3 mx-auto">
-                                    </canvas>
-                                    <v-btn @click="clearSignature" class="">Clear</v-btn>
-                                </v-col>
+                                    <v-col >
+                                       <div>
+                                         <canvas ref="signaturePad" class="mb-3 mx-auto">
+                                        </canvas>
+                                        </div>
+                                        <v-btn @click="clearSignature" class="">Clear</v-btn>
+                                    </v-col>
                                 </v-row>
                             </v-container>
                     </v-card>

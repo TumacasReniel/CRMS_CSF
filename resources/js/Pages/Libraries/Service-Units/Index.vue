@@ -26,14 +26,11 @@ const all_service_unit_rating = async () => {
    router.get('/csi/all-units', form , { preserveState: true })
 };
 
-const show_modal = ref(false);
 
 const showViewModal = async (service_id, unit_id) => {
     form.service_id = service_id;
    form.unit_id = unit_id;
    router.get('/csi/view', form , { preserveState: true });
-
-  //show_modal.value = true;
 };
 
 
@@ -53,6 +50,11 @@ const showViewModal = async (service_id, unit_id) => {
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <v-card>
                         <v-row>
+                            <!-- <v-col class="text-left m-5 mb-1">
+                                <v-btn @click="addNewService()" prepend-icon="mdi-plus" color="primary" style="margin-right:120px">
+                                       Add New Service
+                                </v-btn>
+                            </v-col> -->
                             <v-col class="text-right m-5 mb-1">
                                 <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:120px">
                                         All Unit Ratings
@@ -63,11 +65,11 @@ const showViewModal = async (service_id, unit_id) => {
                         {{ sub_units }}
                        </div>
                        
-                        <table class="w-full border">
-                            <tr class="text-left font-bold text-center">
-                                <th class="pb-4 pt-6 px-6" colspan="2"></th>
+                        <table class="w-full">
+                            <thead class="font-bold text-center ">
+                                <th class="pb-4 pt-6 px-6" colspan="2">Services Units</th>
                                 <th class="pb-4 pt-6 px-6">Actions</th>
-                            </tr>
+                            </thead>
 
                             <template v-if="service_units" v-for="(service_unit, index) in service_units.data" :key="service_unit.id">
                                 <tr class="border border-solid bg-blue-100">                
@@ -108,3 +110,18 @@ const showViewModal = async (service_id, unit_id) => {
 
     </AppLayout>
 </template>
+
+<style scoped>
+   table {
+    border-collapse: collapse;
+    width: 100%; /* Optional: Set a width for the table */
+    border: none;
+  }
+  tr, th,td {
+    border: 1px solid none; /* Optional: Add a border for better visibility */
+    padding: 8px; /* Optional: Add padding for better spacing */
+  }
+
+
+  
+</style>

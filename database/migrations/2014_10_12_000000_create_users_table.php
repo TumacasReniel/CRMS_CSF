@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('status')->nullable();
-            $table->foreignId('region_id')->nullable();;
-            $table->foreignId('services_unit_id')->nullable();;
-            $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('account_type')->default('user');
+            $table->foreignId('region_id')->nullable();
+            $table->foreignId('services_unit_id')->nullable(); 
+            // $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            $table->boolean('is_active')->default(1);
+            $table->rememberToken();
             $table->timestamps();
         });
     }

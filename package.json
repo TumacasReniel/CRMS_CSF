@@ -16,13 +16,13 @@
     "aos": "^2.3.4",
     "fontawesome": "^5.6.3",
     "install": "^0.13.0",
-    "jetstream": "^0.13.4",
+    "jetstream": "^0.1.0",
     "printd": "^1.6.0",
     "qrcode.vue": "^3.4.1",
     "roboto-fontface": "*",
     "signature_pad": "^4.1.7",
     "swal": "^0.1.0",
-    "sweetalert2": "^11.10.5",
+    "sweetalert2": "^11.6.13",
     "vue-signature-pad": "^3.0.2",
     "webfontloader": "^1.0.0",
     "wkhtmltopdf": "^0.4.0"
@@ -42,7 +42,7 @@
     "vite-plugin-vuetify": "^2.0.1",
     "vue": "^3.2.31",
     "vue-cli-plugin-vuetify": "~2.5.8",
-    "vuetify": "^3.5.8"
+    "vuetify": "^3.5.13"
   },
   "type": "module"
 }

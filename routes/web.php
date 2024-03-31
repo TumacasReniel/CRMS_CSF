@@ -9,6 +9,8 @@ use App\Http\Controllers\SubUnitController;
 use App\Http\Controllers\SurveyFormController;
 use App\Http\Controllers\ServiceUnitController;
 use App\Http\Controllers\SubUnitPstoController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\RegionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +32,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/services/csf', [SurveyFormController::class, 'index']);
+Route::get('/services/csf', [SurveyFormController::class, 'index'])->name('csf_form');
 Route::get('/form/csf/msg', [SurveyFormController::class, 'msg_index'])->name('msg_index');
 Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web');
 Route::post('/csf_submission', [SurveyFormController::class, 'store']);
@@ -45,27 +47,26 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-
-    Route::get('/accounts', function () {
-        return Inertia::render('Account/Index');
-    })->name('accounts');
-
-    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
     
+    Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
+    Route::post('/accounts/add', [AccountController::class, 'store']);
+    Route::post('/accounts/update', [AccountController::class, 'update']);
+    Route::post('/accounts/reset-password', [AccountController::class, 'resetPassword']);
+    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
     Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
     Route::get('/service_unit/psto', [ServiceUnitController::class , 'psto_index'])->name('psto');
     Route::get('/service_unit/unit-psto', [ServiceUnitController::class , 'unit_psto_index'])->name('unit_psto');
     Route::get('/service_unit/sub-unit-psto', [ServiceUnitController::class , 'sub_unit_psto_index'])->name('sub_unit_psto');
-
     Route::get('/csi', [ReportController::class , 'index']);
     Route::get('/csi/view', [ReportController::class , 'view']);
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
-
     Route::get('/csi/generate', [ReportController::class, 'generateReports']);
+    Route::resource('/regions', RegionController::class);
 
+    Route::get('/libraries', function () {
+        return Inertia::render('Libraries/Services/Index');
+    })->name('libraries');
 
-
-    //Route::post('/sub-unit/psto/{sub_unit_id}', [SubUnitPstoController::class, 'index']);
 
 });
 
