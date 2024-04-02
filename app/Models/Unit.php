@@ -17,7 +17,7 @@ class Unit extends Model
     }
 
     public function sub_units(){
-        return $this->hasMAny(SubUnit::class);
+        return $this->hasMany(SubUnit::class);
     }
 
 }

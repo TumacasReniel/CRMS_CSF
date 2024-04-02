@@ -41,14 +41,16 @@ const showViewModal = async (service_id, unit_id) => {
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 <v-breadcrumbs :items="['Dashboard', 'Service Units']"></v-breadcrumbs>
+                 <!-- <v-breadcrumbs :items="['Dashboard', 'Service Units']"></v-breadcrumbs> -->
+                 Services Units
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-5">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <v-card>
+                      
                         <v-row>
                             <!-- <v-col class="text-left m-5 mb-1">
                                 <v-btn @click="addNewService()" prepend-icon="mdi-plus" color="primary" style="margin-right:120px">
@@ -61,16 +63,15 @@ const showViewModal = async (service_id, unit_id) => {
                                 </v-btn>
                             </v-col>
                         </v-row>
-                       <div class="m-5 text-end">
-                        {{ sub_units }}
-                       </div>
+                        
                        
                         <table class="w-full">
+                            
                             <thead class="font-bold text-center ">
                                 <th class="pb-4 pt-6 px-6" colspan="2">Services Units</th>
                                 <th class="pb-4 pt-6 px-6">Actions</th>
                             </thead>
-
+                            
                             <template v-if="service_units" v-for="(service_unit, index) in service_units.data" :key="service_unit.id">
                                 <tr class="border border-solid bg-blue-100">                
                                     <td class="m5 p-5  border border-solid font-black" colspan="3" >
@@ -85,19 +86,25 @@ const showViewModal = async (service_id, unit_id) => {
                                     <td  class="p-2 mr-2  border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                                         {{ unit.unit_name }}
                                     </td>  
-                                     <td class="text-center px-4 py-2 p-2 mr-2 border border-solid">
-                                        <v-btn prepend-icon="mdi-eye" class="mr-3" size="small" @click="showViewModal(service_unit.id, unit.id)"
-                                        >
-                                            View
-                                        </v-btn>
+                                     <td class="text-center px-4 py-2 p-2 mr-2 border border-solid" 
+                                     >
 
+                                       <div>
+                                         <v-btn prepend-icon="mdi-eye" class="mr-3" size="small" @click="showViewModal(service_unit.id, unit.id)"
+                                            :disabled="user.account_type == 'user' && user.unit_id != unit.id"
+                                        >
+                                            View 
+                                        </v-btn>
+          
                                         <v-btn
                                             @click="rating(service_unit.id, unit.id)" 
                                             prepend-icon="mdi-file" color="yellow" 
                                             size="small"
+                                            :disabled="user.account_type == 'user' && user.unit_id != unit.id"
                                         >
                                             Rating
                                         </v-btn>
+                                        </div>
                                     </td>  
                                 </tr>          
                             </template>                          

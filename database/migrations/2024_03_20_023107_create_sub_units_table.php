@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('sub_unit_name')->unique();
             $table->string('slug')->unique();
+            $table->foreignId('unit_id');
+            $table->foreign('unit_id')
+                    ->references('id')
+                    ->on('units');
             $table->timestamps();
         });
     }

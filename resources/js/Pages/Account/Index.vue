@@ -8,6 +8,7 @@
     const props = defineProps({
         accounts: Object, 
         regions: Object, 
+        services: Object, 
     });
 
 
@@ -215,6 +216,7 @@
             :value="show_modal"
             :account="account"
             :regions="regions"
+            :data="props"
             :action="action_clicked"
             @input="showAccountModal"
             @reloadAccounts="reloadAccounts"

@@ -19,6 +19,7 @@ class Unit extends JsonResource
         return [
             'id' => $this->id,
             'unit_name' => $this->unit_name,    
+            'sub_units'=> $this->sub_units ? SubUnit::collection($this->sub_units) : [],
             // 'created_at' => $this->created_at,
             // 'updated_at' => $this->updated_at,
         ];

@@ -3,6 +3,10 @@ import { reactive, watch, ref, onMounted } from "vue";
 import { Head, Link, router } from '@inertiajs/vue3';
 const emit = defineEmits(["reloadAccounts", "input"]);
 const props = defineProps({
+    data: {
+        type: Object,
+        default: null,
+    },
     account: {
         type: Object,
         default: null,
@@ -39,6 +43,8 @@ const form = reactive({
     name:null,
     email: null,
     selected_region: [],
+    selected_account_type: null,
+    selected_service: null,
 });
 
 
@@ -58,6 +64,15 @@ watch(
         action_clicked.value = value;
     }
 );
+
+watch(
+    () => form.selected_service,
+    (value) => {
+        form.selected_unit = null;
+    }
+);
+
+
 
 const saveAccount = async () => {
    
@@ -91,6 +106,7 @@ const closeDialog = (value) => {
                 <span class="text-h5">{{ props.action }} Account</span>
             </v-card-title>
             <v-card-text>
+
                 
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
@@ -98,7 +114,7 @@ const closeDialog = (value) => {
                             prepend-icon="mdi-account"
                             label="Name*"
                             v-model="form.name"
-                            variant="solo"
+                            variant="outlined"
                         ></v-text-field>
                     </v-col>
                 </v-row>
@@ -109,27 +125,75 @@ const closeDialog = (value) => {
                             prepend-icon="mdi-email"
                             label="Email*"
                             v-model="form.email"
-                            variant="solo"
+                            variant="outlined"
                             type="email"
                             required
                         ></v-text-field>
                     </v-col>
                 </v-row>
 
-                <v-row>
+                <v-row style="margin-bottom:-30px;">
                    <v-col cols="12">
                         <v-select
                             prepend-icon="mdi-map-marker"
                             label="Region*"
                             v-model="form.selected_region"
-                            variant="solo"
-                            :items="regions"
+                            variant="outlined"
+                            :items="data.regions"
                             item-title="name"
                             item-value="id"
                             required
                         ></v-select>
                     </v-col>
                 </v-row>
+
+                 <v-row style="margin-bottom:-30px;">
+                   <v-col cols="12">
+                        <v-select
+                            prepend-icon="mdi-account-circle"
+                            label="Account_type*"
+                            v-model="form.selected_account_type"
+                            variant="outlined"
+                            :items="['user','admin']"
+                            item-title="name"
+                            required
+                        ></v-select>
+                    </v-col>
+                </v-row>
+
+                  <v-row style="margin-bottom:-30px;">
+                   <v-col cols="12">
+                        <v-select
+                            v-if="form.selected_account_type == 'user'"
+                            prepend-icon="mdi-map-marker"
+                            label="Service*"
+                            v-model="form.selected_service"
+                            variant="outlined"
+                            :items="data.services.data"
+                            item-title="services_name"
+                            item-value="id"
+                            required
+                        ></v-select>
+                        
+                    </v-col>
+                </v-row>
+
+                <v-row style="margin-bottom:-30px;">
+                   <v-col cols="12">
+                        <v-select
+                            prepend-icon="mdi-map-marker"
+                            label="Unit*"
+                            v-if="form.selected_account_type == 'user' && form.selected_service"
+                            v-model="form.selected_unit"
+                            variant="outlined"
+                            :items="data.services.data[form.selected_service-1].units"
+                            item-title="unit_name"
+                            item-value="id"
+                            required
+                        ></v-select>
+                    </v-col>
+                </v-row>
+
             </v-card-text>
             <v-spacer></v-spacer>
             <v-card-action>

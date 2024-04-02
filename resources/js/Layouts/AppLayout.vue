@@ -9,9 +9,9 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 
-
 defineProps({
     title: String,
+    auth: Object,
 });
 
 const showingNavigationDropdown = ref(false);
@@ -27,6 +27,7 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
 </script>
 
 <template>
@@ -62,8 +63,8 @@ const logout = () => {
                                    Service Units
                                 </NavLink>
 
-                                <NavLink :href="route('libraries')" :active="route().current('libraries')">
-                                   Libraries
+                                 <NavLink :href="route('libraries')" :active="route().current('libraries')" v-if="$page.props.auth.user.account_type  == 'admin'">
+                                    Libraries 
                                 </NavLink>
                                 
                             </div>

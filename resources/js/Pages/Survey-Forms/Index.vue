@@ -266,7 +266,7 @@ export default {
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img src="../../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white text-black">Department of Science and Technology </span>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white text-blue-900">Department of Science and Technology </span>
             </a>
         </div>
     </nav>
@@ -327,7 +327,7 @@ export default {
                                         Email
                                         <span class="text-red-800">*</span>
                                     </label>
-                                    <input  v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name@gmail.com" />
+                                    <input  v-model="form.email" type="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="example@gmail.com" />
                                     <div class="text-red-800" v-if="!form.email">{{ form.errors.email }} </div>
                                 </div>
 

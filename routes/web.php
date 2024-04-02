@@ -11,6 +11,7 @@ use App\Http\Controllers\ServiceUnitController;
 use App\Http\Controllers\SubUnitPstoController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\RegionController;
+use App\Http\Middleware\CheckAdmin;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,15 +44,19 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::middleware([CheckAdmin::class])->group(function () {
+        Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
+        Route::post('/accounts/add', [AccountController::class, 'store']);
+        Route::post('/accounts/update', [AccountController::class, 'update']);
+        Route::post('/accounts/reset-password', [AccountController::class, 'resetPassword']);   
+        Route::get('/libraries', function () {
+            return Inertia::render('Libraries/Services/Index');
+        })->name('libraries');
+    });
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-
-    
-    Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
-    Route::post('/accounts/add', [AccountController::class, 'store']);
-    Route::post('/accounts/update', [AccountController::class, 'update']);
-    Route::post('/accounts/reset-password', [AccountController::class, 'resetPassword']);
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
     Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
     Route::get('/service_unit/psto', [ServiceUnitController::class , 'psto_index'])->name('psto');
@@ -63,11 +68,11 @@ Route::middleware([
     Route::get('/csi/generate', [ReportController::class, 'generateReports']);
     Route::resource('/regions', RegionController::class);
 
-    Route::get('/libraries', function () {
-        return Inertia::render('Libraries/Services/Index');
-    })->name('libraries');
+
 
 
 });
+
+
 
 
