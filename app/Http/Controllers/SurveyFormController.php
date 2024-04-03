@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Unit;
 use Inertia\Inertia;
 use App\Models\CSFForm;
+use App\Models\SubUnit;
 use App\Models\Customer;
 use App\Models\Dimension;
 use App\Models\CcQuestion;
 use Illuminate\Http\Request;
 use App\Models\CustomerComment;
+use App\Models\UnitPsto;
 use App\Models\CustomerCCRating;
 use Mews\Captcha\Facades\Captcha;
 use Illuminate\Support\Facades\DB;
+use App\Models\SubUnitPsto;
 use App\Models\CustomerAttributeRating;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\SurveyFormRequest;
@@ -20,33 +24,58 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\CustomerRecommendationRating;
 use App\Models\CustomerOtherAttributeIndication;
 
+use App\Http\Resources\Unit as UnitResource;
+use App\Http\Resources\SubUnit as SubUnitResource;
+use App\Http\Resources\UnitPSTO as UnitPSTOResource;
+use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
+use App\Models\CustomerSignature;
 
 class SurveyFormController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        //dd($request->all());
         $cc_questions = CcQuestion::all();
         $dimensions = Dimension::all();
+        $unit = Unit::where('id', $request->unit_id)->get();
+        $sub_unit = SubUnit::where('unit_id', $request->unit_id)
+                           ->where('id', $request->sub_unit_id)->get();
+        $unit_psto = UnitPsto::where('unit_id', $request->unit_id)
+                             ->where('psto_id', $request->psto_id)->get();
+        $sub_unit_psto = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)
+                                     ->where('psto_id', $request->psto_id)->get();
+        
+        $unit = UnitResource::collection($unit);
+        $sub_unit = SubUnitResource::collection($sub_unit);
+        $unit_psto = UnitPSTOResource::collection($unit_psto);
+        $sub_unit_psto = SubUnitPSTOResource::collection($sub_unit_psto);
+
 
         return Inertia::render('Survey-Forms/Index')
             ->with('cc_questions', $cc_questions)
-            ->with('dimensions', $dimensions);  
+            ->with('dimensions', $dimensions)
+            ->with('unit', $unit)
+            ->with('sub_unit', $sub_unit)
+            ->with('unit_psto', $unit_psto)
+            ->with('sub_unit_psto', $sub_unit_psto);  
     }
+
+
+
 
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
-    {          
-        
+    {       
+      
         try{
             DB::beginTransaction();    
            
             //Save Customer
             $customer = $this->saveCustomer($request);
-       
+
             // Validate dimension_form data
             $dimensionData = request()->validate([
                 'dimension_form.id.*' => ['required', 'exists:dimensions,id'],
-                'dimension_form.name.*' => ['required', 'max:255'],
                 'dimension_form.rate_score.*' => ['required', 'max:1'],
                 'dimension_form.importance_rate_score.*' => ['required', 'max:1'],
             ]);
@@ -64,7 +93,6 @@ class SurveyFormController extends Controller
             // Validate CC
             $ccData = request()->validate([
                 'cc_form.id.*' => ['required', 'exists:cc_questions,id'],
-                'cc_form.title.*' => ['required', 'max:255'],
                 'cc_form.answer.*' => ['required', 'max:1'],
             ]);
     
@@ -73,7 +101,6 @@ class SurveyFormController extends Controller
                 CustomerCCRating::create([
                     'customer_id' => $customer->id,
                     'cc_id' => $ccId,
-                    'title' => $ccData['cc_form']['title'][$index],
                     'answer' => $ccData['cc_form']['answer'][$index],
                 ]);
             }
@@ -90,6 +117,7 @@ class SurveyFormController extends Controller
             // Save csf form
             $this->saveCSFForm($request, $customer);
 
+
             DB::commit();
            
             return Inertia::render('Survey-Forms/ThankYou')
@@ -100,8 +128,11 @@ class SurveyFormController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $e;
-            //return Inertia::location($request->current_url);
+            //return $e;
+            return Inertia::render('Survey-Forms/ThankYou')
+                ->with('message', "Somehting went wrong please check.")
+                ->with('status', "error")
+                ->with('current_url', $request->current_url);
         }
 
         
@@ -133,6 +164,7 @@ class SurveyFormController extends Controller
             'pwd' => $request->pwd,
             'pregnant' => $request->pregnant,
             'senior_citizen' => $request->senior_citizen,
+            // 'signature_path' => $request->signature,
         ]);
 
         return $customer;

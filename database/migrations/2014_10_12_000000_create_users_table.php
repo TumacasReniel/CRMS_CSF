@@ -27,19 +27,6 @@ return new class extends Migration
             $table->foreign('unit_id')
                 ->references('id')
                 ->on('units');
-            // $table->foreignId('sub_unit_id')->nullable();
-            // $table->foreign('sub_unit_id')
-            //     ->references('id')
-            //     ->on('sub_units');
-            // $table->foreignId('unit_psto_id')->nullable();
-            // $table->foreign('unit_psto_id')
-            //     ->references('id')
-            //     ->on('unit_pstos');
-            // $table->foreignId('sub_unit_psto_id')->nullable();
-            // $table->foreign('sub_unit_psto_id')
-            //     ->references('id')
-            //     ->on('sub_unit_pstos');
-            // $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->boolean('is_active')->default(1);
             $table->rememberToken();

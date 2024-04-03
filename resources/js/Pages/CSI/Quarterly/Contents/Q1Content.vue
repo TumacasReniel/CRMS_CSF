@@ -7,6 +7,10 @@
             type: Object,
         },
     });
+    const calculate = (ndvd_grand_total_score ,grand_total_score) => {
+        const result = (ndvd_grand_total_score / grand_total_score) * 100;
+        return result.toFixed(2);
+    };
 </script>
 <template>
     <v-card class="mb-3">
@@ -134,46 +138,42 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
-                        <td class="text-center">{{ data.jan_total_vs_respondents }}</td>
-                        <td class="text-center"> {{ data.feb_total_vs_respondents }} </td>
-                        <td class="text-center">{{ data.mar_total_vs_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_vs_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_vs_respondents }} </td>
                         <td class="text-center">{{ data.vs_grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.vs_grand_total_score }}</td>
-                        <td class="text-center">{{ data.grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.vs_grand_total_score, data.grand_total_score) }}</td>
 
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
-                        <td class="text-center">{{ data.jan_total_s_respondents }}</td>
-                        <td class="text-center"> {{ data.feb_total_s_respondents }} </td>
-                        <td class="text-center">{{ data.mar_total_s_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_s_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_s_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_s_respondents }} </td>
                         <td class="text-center">{{ data.s_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.s_grand_total_score }}</td>
-                        <td class="text-center">{{ data.s_grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.s_grand_total_score, data.grand_total_score) }}</td>
 
  
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
-                        <td class="text-center">{{ data.jan_total_ndvd_respondents }}</td>
-                        <td class="text-center"> {{ data.feb_total_ndvd_respondents }} </td>
-                        <td class="text-center">{{ data.mar_total_ndvd_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_ndvd_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_ndvd_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_ndvd_respondents }} </td>
                         <td class="text-center">{{ data.ndvd_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.ndvd_grand_total_score }}</td>
-                        <td class="text-center">{{ data.ndvd_grand_total_score / data.grand_total_score * 100 }}</td>
-
-
+                        <td class="text-center">{{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}</td>
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of All Responses::</td>
-                        <td class="text-center">{{ data.jan_total_respondents }}</td>
-                        <td class="text-center"> {{ data.feb_total_respondents }} </td>
-                        <td class="text-center">{{ data.mar_total_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_respondents }} </td>
                         <td class="text-center">{{ data.grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.grand_total_score }}</td>
-                        <td class="text-center">{{ data.lsr_grand_total }}</td>
-
-
+                        <td class="text-center"></td>
                     </tr>
                     <tr>
                         <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
@@ -358,10 +358,10 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2"></td>
+                        <td class="text-center" v-if="data.first_month_csi">{{ data.first_month_csi }}</td>
+                         <td class="text-center" v-if="data.second_month_csi">{{ data.second_month_csi }}</td>
+                        <td class="text-center" v-if="data.third_month_csi">{{ data.third_month_csi }}</td>
+                        <td class="text-center" colspan="2" v-if="data.csi">{{ data.csi }} </td>
                     </tr> 
                     <tr>
                         <td colspan="8"></td>
@@ -369,7 +369,7 @@
                     </tr>
                    <tr>
                         <td colspan="3" class="text-right">Customer Satisfaction Rating  :</td>
-                        <td colspan="5" v-if="data.customer_satisfaction_rating">
+                        <td colspan="5" class="text-center" v-if="data.customer_satisfaction_rating">
                             {{ data.customer_satisfaction_rating }}
                         </td>
                     </tr>                                   

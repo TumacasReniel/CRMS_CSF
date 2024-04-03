@@ -10,6 +10,10 @@
             type:Boolean,
         },
     });
+        const calculate = (ndvd_grand_total_score ,grand_total_score) => {
+            const result = (ndvd_grand_total_score / grand_total_score) * 100;
+            return result.toFixed(2);
+        };
 </script>
 <template>
     <div class="mb-3 print-id print" v-if="is_printing">
@@ -23,7 +27,7 @@
                 
             </div>
             <div style="font-size: 12px">  
-                Service Unit : <u>{{ data.unit.unit_name }}</u>
+                Service Unit : <u>{{ data.unit.unit_name }}</u> 
             </div>
         </div>
                 <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:10px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
@@ -146,48 +150,44 @@
                     <tr>
                         <td></td>
                     </tr>
-                    <tr>
+                     <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
-                        <td class="text-center">{{ data.oct_total_vs_respondents }}</td>
-                        <td class="text-center"> {{ data.nov_total_vs_respondents }} </td>
-                        <td class="text-center">{{ data.dec_total_vs_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_vs_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_vs_respondents }} </td>
                         <td class="text-center">{{ data.vs_grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.vs_grand_total_score }}</td>
-                        <td class="text-center">{{ data.grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.vs_grand_total_score, data.grand_total_score) }}</td>
 
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
-                        <td class="text-center">{{ data.oct_total_s_respondents }}</td>
-                        <td class="text-center"> {{ data.nov_total_s_respondents }} </td>
-                        <td class="text-center">{{ data.dec_total_s_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_s_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_s_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_s_respondents }} </td>
                         <td class="text-center">{{ data.s_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.s_grand_total_score }}</td>
-                        <td class="text-center">{{ data.s_grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.s_grand_total_score, data.grand_total_score) }}</td>
 
  
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
-                        <td class="text-center">{{ data.cot_total_ndvd_respondents }}</td>
-                        <td class="text-center"> {{ data.nov_total_ndvd_respondents }} </td>
-                        <td class="text-center">{{ data.dec_total_ndvd_respondents }} </td>
+                        <td class="text-center">{{ data.apr_total_ndvd_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_ndvd_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_ndvd_respondents }} </td>
                         <td class="text-center">{{ data.ndvd_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.ndvd_grand_total_score }}</td>
-                        <td class="text-center">{{ data.ndvd_grand_total_score / data.grand_total_score * 100 }}</td>
-
-
+                        <td class="text-center">{{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right">Total No. of All Responses:</td>
-                        <td class="text-center">{{ data.oct_total_respondents }}</td>
-                        <td class="text-center"> {{ data.nov_total_respondents }} </td>
-                        <td class="text-center">{{ data.dec_total_respondents }} </td>
+                        <td colspan="3" class="text-right">Total No. of All Responses::</td>
+                        <td class="text-center">{{ data.apr_total_respondents }}</td>
+                        <td class="text-center"> {{ data.may_total_respondents }} </td>
+                        <td class="text-center">{{ data.jun_total_respondents }} </td>
                         <td class="text-center">{{ data.grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.grand_total_score }}</td>
-                        <td class="text-center">{{ data.lsr_grand_total }}</td>
-
-
+                        <td class="text-center"></td>
                     </tr>
                     <tr>
                         <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
@@ -369,10 +369,10 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2"></td>
+                        <td class="text-center" v-if="data.first_month_csi">{{ data.first_month_csi }}</td>
+                        <td class="text-center" v-if="data.second_month_csi">{{ data.second_month_csi }}</td>
+                        <td class="text-center" v-if="data.third_month_csi">{{ data.third_month_csi }}</td>
+                        <td class="text-center" colspan="2" v-if="data.csi">{{ data.csi }} </td>
                     </tr> 
                     <tr>
                         <td colspan="8"></td>

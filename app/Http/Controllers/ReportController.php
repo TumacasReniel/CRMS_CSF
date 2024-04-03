@@ -901,6 +901,7 @@ class ReportController extends Controller
             $jan_vd_total = $month_jan->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
 
             $jan_grand_total =  $jan_vs_total + $jan_s_total + $jan_n_total + $jan_d_total + $jan_vd_total ; 
+            
 
             //  May total responses with its dimensions and rate score
             $feb_vs_total = $month_feb->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -1252,6 +1253,13 @@ class ReportController extends Controller
             }
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
+        // get Monthly CSI
+        $first_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 1);
+        $second_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 2);
+        $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 3);
+
+        $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
 
         //Respondents list
         $data = CARResource::collection($respondents_list);
@@ -1329,7 +1337,11 @@ class ReportController extends Controller
             ->with('feb_net_promoter_score', $feb_net_promoter_score)
             ->with('mar_net_promoter_score', $mar_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
-            ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('csi', $customer_satisfaction_index)
+            ->with('first_month_csi', $first_month_csi)
+            ->with('second_month_csi', $second_month_csi)
+            ->with('third_month_csi', $third_month_csi);
    }
 
     public function generateCSIByUnitSecondQuarter($request, $region_id, $psto_id)
@@ -1795,6 +1807,13 @@ class ReportController extends Controller
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
 
+        // get Monthly CSI
+        $first_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 4);
+        $second_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 5);
+        $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 6);
+   
+        $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+        
         //Respondents list
         $data = CARResource::collection($respondents_list);
 
@@ -1871,7 +1890,11 @@ class ReportController extends Controller
             ->with('may_net_promoter_score', $may_net_promoter_score)
             ->with('jun_net_promoter_score', $jun_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
-            ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('csi', $customer_satisfaction_index)
+            ->with('first_month_csi', $first_month_csi)
+            ->with('second_month_csi', $second_month_csi)
+            ->with('third_month_csi', $third_month_csi);
 
     }
 
@@ -1888,7 +1911,6 @@ class ReportController extends Controller
         $month_aug = [];
         $month_sep = [];
             
-
         // store
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
@@ -2339,6 +2361,13 @@ class ReportController extends Controller
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
 
+        // get Monthly CSI
+        $first_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 7);
+        $second_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 8);
+        $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 9);
+
+        $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
         //Respondents list
         $data = CARResource::collection($respondents_list);
 
@@ -2415,7 +2444,11 @@ class ReportController extends Controller
             ->with('aug_net_promoter_score', $aug_net_promoter_score)
             ->with('sep_net_promoter_score', $sep_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
-            ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('csi', $customer_satisfaction_index)
+            ->with('first_month_csi', $first_month_csi)
+            ->with('second_month_csi', $second_month_csi)
+            ->with('third_month_csi', $third_month_csi);
     }
 
     public function generateCSIByUnitFourthQuarter($request, $region_id, $psto_id)
@@ -2881,6 +2914,13 @@ class ReportController extends Controller
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
 
+        // get Monthly CSI
+        $first_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 10);
+        $second_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 11);
+        $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 12);
+  
+        $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
         //Respondents list
         $data = CARResource::collection($respondents_list);
 
@@ -2957,7 +2997,11 @@ class ReportController extends Controller
             ->with('nov_net_promoter_score', $nov_net_promoter_score)
             ->with('dec_net_promoter_score', $dec_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
-            ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('csi', $customer_satisfaction_index)
+            ->with('first_month_csi', $first_month_csi)
+            ->with('second_month_csi', $second_month_csi)
+            ->with('third_month_csi', $third_month_csi);
     }
 
     public function generateCSIByUnitYearly($request, $region_id, $psto_id)
@@ -3485,6 +3529,39 @@ class ReportController extends Controller
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
 
+
+        // get Yearly CSI
+        $jan_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 1);
+        $feb_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 2);
+        $mar_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 3);
+
+        $q1_csi = 0;
+        $q1_csi =  $jan_csi +  $feb_csi + $mar_csi;
+
+        $apr_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 4);
+        $may_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 5);
+        $jun_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 6);
+        
+        $q2_csi = 0;
+        $q2_csi =  $apr_csi +  $may_csi + $jun_csi;
+
+        $jul_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 7);
+        $aug_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 8);
+        $sep_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 9);
+
+        $q3_csi = 0;
+        $q3_csi =  $jul_csi +  $aug_csi + $sep_csi;
+
+        $oct_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 10);
+        $nov_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 11);
+        $dec_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 12);
+
+        $q4_csi = 0;
+        $q4_csi =  $oct_csi +  $nov_csi + $dec_csi;
+
+        $customer_satisfaction_index = number_format((($q1_csi + $q2_csi +  $q3_csi + $q4_csi)/4), 2);
+
+
         //Respondents list
         $data = CARResource::collection($respondents_list);
 
@@ -3572,54 +3649,14 @@ class ReportController extends Controller
             ->with('q3_net_promoter_score', $q3_net_promoter_score)
             ->with('q4_net_promoter_score', $q4_net_promoter_score)
             ->with('ave_net_promoter_score', $ave_net_promoter_score)
-            ->with('customer_satisfaction_rating', $customer_satisfaction_rating);
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('q1_csi', $q1_csi)
+            ->with('q2_csi', $q2_csi)
+            ->with('q3_csi', $q3_csi)
+            ->with('q4_csi', $q4_csi)
+            ->with('csi', $customer_satisfaction_index);
     }
 
-    public function calculateCSI(Request $request)
-    {
-        $dimensions = Dimension::all();
-        $dimension_count = $dimensions->count();
-
- 
-        // each dimension or attribute
-        for ($dimension_id = 1; $dimension_id <= $dimension_count; $dimension_id++) {
-
-            // wf = (ilsr_total /  ilsr_grand_total) * 100
-
-            //ilsr
-
-        }
-    
-    }
-
-
-    public function calculateLikertScaleRating($ws_grand_total)
-    {
-       // (ws_grand_total /5)*100
-        $ilsr = ($ws_grand_total / 5) * 100;
-
-        return $ilsr;
-    
-    }
-
-    
-    public function calculateWF($ilsr_total, $ilsr_grand_total)
-    {
-       // wf = (ilsr_total /  ilsr_grand_total)*100
-        $wf = ($ilsr_total / $ilsr_grand_total) * 100;
-
-        return $wf;
-    
-    }
-
-    public function calculateWS($ss_total, $ilsr_total)
-    {
-       // ws = ws= (ss_total * ilsr_total ) / 100
-        $ws = ($ss_total / $ilsr_total) / 100;
-
-        return $ws;
-    
-    }
 
     public function getSubUnits($request)
     {
@@ -3676,6 +3713,262 @@ class ReportController extends Controller
         return  $customer_ids;
     
     }
+
+
+    public function getMonthlyCSI($request, $region_id, $psto_id, $month)
+    {
+
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit['id'];
+        $sub_unit_id = $request->selected_sub_unit;
+
+       // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+          
+    
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                             ->whereMonth('created_at', $month)->get();
+           
+        // Dimensions or attributes
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
+
+        // total number of respondents/customer
+        $total_respondents = $date_range->groupBy('customer.id')->count();
+
+        // total number of respondents/customer who rated VS/S
+        $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer.id')->count();
+
+        $ilsr_grand_total =0;
+        // loop for getting importance ls rating grand total for ws rating calculation
+        for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
+            $vi_total = $date_range->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
+            $i_total = $date_range->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->count();
+            $mi_total = $date_range->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->count();
+            $li_total = $date_range->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->count();
+            $nai_total = $date_range->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->count();
+
+            $x_vi_total = $vi_total * 5; 
+            $x_i_total = $i_total * 4; 
+            $x_mi_total = $mi_total * 3; 
+            $x_li_total = $li_total * 2; 
+            $x_nai_total = $nai_total * 1;
+            $x_importance_total = $x_vi_total + $x_i_total + $x_mi_total + $x_li_total + $x_nai_total  ; 
+
+            // Importance Likert Scale RAting 
+            if($x_importance_total != 0){
+                $ilsr_total = $x_importance_total / $total_respondents;
+                $ilsr_grand_total =  $ilsr_grand_total + $ilsr_total;
+            }
+
+        }
+
+        // PART I : CUSTOMER RATING OF SERVICE QUALITY 
+
+        //set initial value of buttom side total scores
+        $y_totals = [];
+        $grand_vs_total = 0;
+        $grand_s_total = 0;
+        $grand_n_total = 0;
+        $grand_vd_total = 0;
+        $grand_d_total = 0;
+        $grand_total = 0;
+        
+        //set initial value of right side total scores
+        $x_vs_total = 0; 
+        $x_s_total = 0; 
+        $x_n_total = 0; 
+        $x_d_total = 0; 
+        $x_vd_total = 0; 
+        $x_grand_total = 0 ; 
+
+        $likert_scale_rating_totals = [];
+        $lsr_total= 0;
+        $lsr_grand_total= 0;
+
+         // PART II : IMPORTANCE OF THIS ATTRIBUTE 
+
+        //set importance rating score 
+        $importance_rate_score_totals = [];
+        $x_importance_totals = [];
+        $x_importance_total=0; 
+
+        $x_vi_total = 0; 
+        $x_i_total =0; 
+        $x_mi_total =0; 
+        $x_li_total = 0; 
+        $x_nai_total = 0;
+
+        $importance_ilsr_totals = [];
+        $ilsr_total = 0;
+
+        $gap_totals = [];
+        $gap_total = 0 ;
+        $gap_grand_total=0;
+        $ss_total= 0;
+        $ss_totals = [];
+        $wf_total= 0;
+        $wf_totals = [];
+        $ws_total= 0;
+        $ws_totals = [];
+        $ws_grand_total = 0;
+
+        for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
+            //PART I
+            $vs_total = $date_range->where('rate_score', 5)->where('dimension_id', $dimensionId)->count();
+            $s_total = $date_range->where('rate_score', 4)->where('dimension_id', $dimensionId)->count();
+            $n_total = $date_range->where('rate_score', 3)->where('dimension_id', $dimensionId)->count();
+            $d_total = $date_range->where('rate_score', 2)->where('dimension_id', $dimensionId)->count();
+            $vd_total = $date_range->where('rate_score', 1)->where('dimension_id', $dimensionId)->count();          
+       
+            $x_vs_total = $vs_total * 5; 
+            $x_s_total = $s_total * 4; 
+            $x_n_total = $n_total * 3; 
+            $x_d_total = $d_total * 2; 
+            $x_vd_total = $vd_total * 1; 
+            $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total  ; 
+         
+            // right side total score divided by total repondents or customers
+            if($x_grand_total != 0){
+                $lsr_total = $x_grand_total / $total_respondents;
+            }
+           
+            // SS = lsr with 3 decimals
+            $ss_total = number_format($lsr_total, 3);
+            $ss_totals[$dimensionId] = [
+                'ss_total' => $ss_total,
+            ];
+
+            //likert sclae rating grandtotal
+
+            $lsr_grand_total =  $lsr_grand_total + $lsr_total;
+            $x_totals[$dimensionId] = [
+                'x_total_score' => $x_grand_total,
+            ];
+
+            $lsr_total = number_format($lsr_total, 2);
+
+            $likert_scale_rating_totals[$dimensionId] = [
+                'lsr_total' => $lsr_total,
+            ];
+
+            $y_totals[$dimensionId] = [
+                'vs_total' => $vs_total,
+                's_total' => $s_total,
+                'n_total' => $n_total,
+                'd_total' => $d_total,
+                'vd_total' => $vd_total,
+            ];
+
+            $grand_vs_total+=$vs_total;
+            $grand_s_total+=$s_total;
+            $grand_n_total+=$n_total;
+            $grand_d_total+=$d_total;
+            $grand_vd_total+=$vd_total;       
+                     
+            // PART II
+            $vi_total = $date_range->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
+            $i_total = $date_range->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->count();
+            $mi_total = $date_range->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->count();
+            $li_total = $date_range->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->count();
+            $nai_total = $date_range->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->count();
+        
+            $importance_rate_score_totals[$dimensionId] = [
+                'vi_total' => $vi_total,
+                'i_total' => $i_total,
+                'mi_total' => $mi_total,
+                'li_total' => $li_total,
+                'nai_total' => $nai_total,
+            ];
+
+            $x_vi_total = $vi_total * 5; 
+            $x_i_total = $i_total * 4; 
+            $x_mi_total = $mi_total * 3; 
+            $x_li_total = $li_total * 2; 
+            $x_nai_total = $nai_total * 1;
+            $x_importance_total = $x_vi_total + $x_i_total + $x_mi_total + $x_li_total + $x_nai_total  ; 
+            
+            //right side total importance rate scores 
+            $x_importance_totals[$dimensionId] = [
+                'x_importance_total_score' => $x_importance_total,
+            ];
+            
+            // Likert Scale RAting 
+            if($x_importance_total != 0){
+                $ilsr_total = $x_importance_total / $total_respondents;
+            }
+            $ilsr_total = number_format($ilsr_total, 2);
+
+            $importance_ilsr_totals[$dimensionId] = [
+                'ilsr_total' => $ilsr_total,
+            ];
+ 
+            // GAP = attributes total score minus importance of attributes total score
+            $gap_total=  $ilsr_total - $lsr_total;
+            $gap_total = number_format($gap_total, 2);
+
+            $gap_totals[$dimensionId] = [
+                'gap_total' => $gap_total,
+            ];
+
+            $gap_grand_total += $gap_total;
+            $gap_grand_total = number_format($gap_grand_total, 2);
+
+            // WF = (importance LS Rating divided by importance grand total  of ls rating) * 100
+            if($ilsr_total != 0){
+                $wf_total =  ($ilsr_total / $ilsr_grand_total) * 100;
+            }
+            $wf_total = number_format($wf_total, 2);
+            $wf_totals[$dimensionId] = [
+                'wf_total' => $wf_total,
+            ];
+
+            // WS = (SS * WF) / 100  
+            $ws_total = ($ss_total * $wf_total) / 100;   
+            $ws_grand_total = $ws_grand_total + $ws_total;
+            $ws_total = number_format($ws_total, 2);
+            $ws_grand_total = number_format($ws_grand_total, 2);
+            $ws_totals[$dimensionId] = [
+                'ws_total' => $ws_total,
+            ];
+        }
+
+        // round off Likert Scale Rating grand total and control decimal to 2 
+        $lsr_grand_total = number_format($lsr_grand_total, 2);      
+
+        // table below total score
+        $grand_vs_total =   $grand_vs_total * 5;
+        $grand_s_total =   $grand_s_total * 5;
+        $grand_n_total =   $grand_n_total * 5;
+        $grand_d_total =   $grand_d_total * 5;
+        $grand_vd_total =   $grand_vd_total * 5;
+
+        $x_grand_total =  $grand_vs_total +  $grand_s_total + $grand_n_total +  $grand_d_total +   $grand_vd_total;
+
+        //Percentage of Respondents/Customers who rated VS/S: 
+        // = total no. of respondents / total no. respondets who rated vs/s * 100
+        $percentage_vss_respondents  = 0;
+        if($total_respondents != 0){
+            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+        }
+        $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
+
+        $customer_satisfaction_rating = 0;
+        if($total_vss_respondents != 0){
+            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+        }
+        $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
+
+        // Customer Satisfaction Index (CSI) = (ws grand total / 5) * 100
+        $customer_satisfaction_index = 0;
+        if($ws_grand_total != 0){
+            $customer_satisfaction_index = ($ws_grand_total/5) * 100;
+        }
+        $customer_satisfaction_index = number_format( $customer_satisfaction_index , 2);
+
+        return $customer_satisfaction_index;
+    }   
+
 
 
     

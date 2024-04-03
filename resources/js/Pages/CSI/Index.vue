@@ -576,9 +576,21 @@ const props = defineProps({
     // CSAT
     customer_satisfaction_rating: Number,
 
-         
+    // CSI by quarter
+    csi: Number,
+    first_month_csi: Number, 
+    second_month_csi: Number, 
+    third_month_csi: Number, 
+
+    //CSI By year
+    q1_csi: Number,
+    q2_csi: Number,
+    q3_csi: Number,
+    q4_csi: Number,
+
     //get current user
     user: Object,
+    
 
 });
 
@@ -611,6 +623,7 @@ const form = reactive({
   // for HR case only
   client_type: null,
 });
+
 
 const view_form = reactive({
   generated_url: null,
@@ -741,14 +754,22 @@ const currentYear = ref(getCurrentYear());
 };
 
 
+  const report_header = reactive({
+    unit: null,
+    sub_unit: null,
+    unit_psto: null,
+    sub_unit_psto: null,
+  });
+
+
   watch(
-  () => form.selected_sub_unit,
-  (value) => {
-        if(value){
-          generated.value = false;
-          getSubUnitPSTO(value);
-        }
-  }
+    () => form.selected_sub_unit,
+    (value) => {
+          if(value){
+            generated.value = false;
+            getSubUnitPSTO(value);
+          }
+    }
 );
 
 
@@ -815,7 +836,7 @@ const currentYear = ref(getCurrentYear());
                                           </v-col>
                                           <v-col class="my-auto" v-if="sub_units.length > 0" >
                                               <v-select
-                                                variant="solo"
+                                                variant="outlined"
                                                 v-model="form.selected_sub_unit"
                                                 :items="sub_units"
                                                 item-title="sub_unit_name"
@@ -875,6 +896,7 @@ const currentYear = ref(getCurrentYear());
                                         </v-col>
                                         <v-col class="ml-5">
                                           <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                         </v-col>
                                       <!-- <v-col class="text-end mr-5">
                                         <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
@@ -928,6 +950,7 @@ const currentYear = ref(getCurrentYear());
 
                                         <v-col class="ml-5 mt-3">
                                           <v-btn  @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                         </v-col>
                                       <v-col class="text-end mr-5 m-3">
                                         <v-btn :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
@@ -945,6 +968,7 @@ const currentYear = ref(getCurrentYear());
 
                                         <v-col class="ml-5 mt-3">
                                           <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                         </v-col>
                                       <v-col class="text-end mr-5 m-3">
                                         <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
@@ -963,6 +987,7 @@ const currentYear = ref(getCurrentYear());
 
                                         <v-col class="ml-5 mt-3">
                                           <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                            <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                         </v-col>
                                       <v-col class="text-end mr-5 m-3">
                                         <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
@@ -976,7 +1001,7 @@ const currentYear = ref(getCurrentYear());
                                 <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
                                 <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
                                 <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :form="form"  :data="props" />
-                                <YearlyContent v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props" />
+                                <YearlyContent v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props"  />
                                 
                                   <!-- End Content Preview-->
 

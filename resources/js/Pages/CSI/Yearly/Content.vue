@@ -7,6 +7,11 @@
             type: Object,
         },
     });
+
+    const calculate = (ndvd_grand_total_score ,grand_total_score) => {
+        const result = (ndvd_grand_total_score / grand_total_score) * 100;
+        return result.toFixed(2);
+    };
 </script>
 <template>
     <v-card class="mb-3">
@@ -141,7 +146,7 @@
                         <td class="text-center">{{ data.q4_total_vs_respondents }} </td>
                         <td class="text-center">{{ data.vs_grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.vs_grand_total_score }}</td>
-                        <td class="text-center">{{ data.grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.vs_grand_total_score, data.grand_total_score) }}</td>
 
                     </tr>
                     <tr>
@@ -152,7 +157,7 @@
                         <td class="text-center">{{ data.q4_total_s_respondents }} </td>
                         <td class="text-center">{{ data.s_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.s_grand_total_score }}</td>
-                        <td class="text-center">{{ data.s_grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.s_grand_total_score, data.grand_total_score) }}</td>
 
  
                     </tr>
@@ -164,7 +169,7 @@
                         <td class="text-center">{{ data.q4_total_ndvd_respondents }} </td>
                         <td class="text-center">{{ data.ndvd_grand_total_raw_points }}</td>
                         <td class="text-center">{{ data.ndvd_grand_total_score }}</td>
-                        <td class="text-center">{{ data.ndvd_grand_total_score / data.grand_total_score * 100 }}</td>
+                        <td class="text-center">{{ calculate(data.ndvd_grand_total_score, data.grand_total_score)}}</td>
 
 
                     </tr>
@@ -176,9 +181,7 @@
                         <td class="text-center">{{ data.q4_total_respondents }} </td>
                         <td class="text-center">{{ data.grand_total_raw_points }} </td>
                         <td class="text-center">{{ data.grand_total_score }}</td>
-                        <td class="text-center">{{ data.lsr_grand_total }}</td>
-
-
+                        <td class="text-center"></td>
                     </tr>
                     <tr>
                         <td colspan="9" class="text-right">Total No. of Respondents/Customers:</td>
@@ -374,11 +377,11 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td colspan="2"></td>
+                        <td class="text-center">{{ data.q1_csi }}</td>
+                        <td class="text-center">{{ data.q2_csi }}</td>
+                        <td class="text-center">{{ data.q3_csi }}</td>
+                        <td class="text-center">{{ data.q4_csi }}</td>
+                        <td class="text-center" colspan="2" v-if="data.csi">{{ data.csi }} </td>
                     </tr> 
                     <tr>
                         <td colspan="9"></td>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('sex');
             $table->string('age_group');
             $table->string('client_type');
@@ -22,15 +22,7 @@ return new class extends Migration
             $table->boolean('pwd')->default(0);
             $table->boolean('pregnant')->default(0);
             $table->boolean('senior_citizen')->default(0);
-            $table->foreignId('region_id')->nullable();
-            $table->foreign('region_id')
-                ->references('id')
-                ->on('regions')
-                ->onDelete('cascade');
-            $table->foreignId('unit_id')->nullable();
-            $table->foreign('unit_id')
-                ->references('id')
-                ->on('units');
+            $table->string('signature_path', 255)->nullable();
             $table->timestamps();
         });
     }
