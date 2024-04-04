@@ -13,9 +13,9 @@ import Swal from 'sweetalert2';
         sub_unit: Object,  
         unit_psto: Object,
         sub_unit_psto: Object,   
-        message: String,
         status: String,
         errors: Object,
+        captcha_img: String,
     });
 
 
@@ -169,13 +169,21 @@ const saveCSF = async () => {
 
     // Include the data URL in your form data
     form.signature = imageDataUrl;
-
+   
+    let captcha_code = Math.random(); 
+     // Function to generate a new CAPTCHA image
+    const generateCaptcha = () => {
+        const captchaImageUrl = '/captcha/flat?rand=' + captcha_code; // Construct the URL with captcha_code
+        return '<img src="' + captchaImageUrl + '" alt="CAPTCHA" style="display: block; margin: 0 auto; ">';
+    };
 
     try {
+
         Swal.fire({
-            title: '<img src="/captcha/flat" alt="CAPTCHA" style="display: block; margin: 0 auto; ">',
+            title: generateCaptcha(),
             html: '<div style="font-weight: bold; font-size:25px">Enter Captcha Code</div> ' +
-                '<input id="captcha-input" class="swal2-input text-center">',
+                '<input id="captcha-input" class="swal2-input text-center">' +
+                '<p id="invalid-captcha-text" style="color: red; font-size: 14px; margin-top: 5px; display: none;">Invalid CAPTCHA code</p>',
             inputAttributes: {
                 autocapitalize: "off"
             },
@@ -183,19 +191,20 @@ const saveCSF = async () => {
             confirmButtonText: "Submit",
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return form.captcha = document.getElementById('captcha-input').value;
+                const enteredCaptcha = document.getElementById('captcha-input').value;
+                form.captcha = enteredCaptcha;
+                return true; 
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                router.post('/csf_submission', form);
-                
+                router.post('/csf_submission', form);     
             }
         });
     } catch (error) {
         Swal.fire({
             title: 'Failed',
             icon: 'error',
-            text: message,
+            text: "Something went wrong pease check",
         })
     }
 };
@@ -225,31 +234,15 @@ const clearSignature = () => {
     new SignaturePad(signaturePad.value);
 };
 
-const reset = () => {
-    Object.keys(form.value).forEach(key => {
-        form.value[key] = null;
-    });
-};
-
-
 watch(
     () => props.errors.captcha,
     (value) => {
         if(value){
             Swal.fire({
                 title: "Error Captcha",
-                text: "The page will reload please fill up the form again!" ,
-                icon: "error",
-                
-            }).then((result) => {
-                // If the user clicks OK, reload the page
-                if (result.isConfirmed) {
-                    window.location.reload();
-                    reset();
- 
-                }
-            });
-
+                text: "Wrong captcha code!" ,
+                icon: "error",         
+            })
         }
     }
      

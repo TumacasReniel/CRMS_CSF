@@ -50,7 +50,6 @@ class SurveyFormController extends Controller
         $unit_psto = UnitPSTOResource::collection($unit_psto);
         $sub_unit_psto = SubUnitPSTOResource::collection($sub_unit_psto);
 
-
         return Inertia::render('Survey-Forms/Index')
             ->with('cc_questions', $cc_questions)
             ->with('dimensions', $dimensions)
@@ -59,7 +58,6 @@ class SurveyFormController extends Controller
             ->with('unit_psto', $unit_psto)
             ->with('sub_unit_psto', $sub_unit_psto);  
     }
-
 
 
 
@@ -125,6 +123,7 @@ class SurveyFormController extends Controller
                 ->with('status', "success")
                 ->with('current_url', $request->current_url);
             
+            return Inertia::redirect('msg_index');
 
         } catch (\Exception $e) {
             DB::rollBack();
