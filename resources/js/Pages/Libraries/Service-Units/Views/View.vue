@@ -19,6 +19,8 @@
         selected_sub_unit: '',
         selected_unit_psto: '',
         selected_sub_unit_psto: '',
+        driving_type: '',
+        client_type: ''
 
     });
 
@@ -43,6 +45,17 @@
         );
     };
 
+    
+    const driving_types = [
+        { id: '1', type: 'APL (RO)' },
+        { id: '2', type: 'LDC (RO)' },
+        { id: '3', type: 'RRD (PSTO-ZDN)' },
+        { id: '4', type: 'AAF (PSTO-ZDS)' },
+        { id: '5', type: 'CJB (PSTO-ZS)' },
+        { id: '6', type: 'ATP (CSTC-ZCIC)' },
+        { id: '7', type: 'JRE (CSTC-ZCIC)' },
+    ];
+
      watch(
         () => form.selected_sub_unit,
         (value) => {
@@ -54,7 +67,19 @@
 
     const qr_link_type = ref(null);
     const generateURL = async (sub_unit, unit_psto , sub_unit_psto) =>{
-      if(unit_psto){
+          console.log(props.unit.id);
+
+        if(props.unit.id == 8){
+            qr_link_type.value = 4;
+            form.generated_url = baseURL + '/services/csf?' +
+                            'region_id=' + props.user.region_id + 
+                            '&service_id=' + props.service.id + 
+                            '&unit_id=' +  props.unit.id +
+                            '&client_type=' + form.client_type;
+
+        }
+        
+      else if(unit_psto){
         qr_link_type.value = 3;
         form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
@@ -74,13 +99,26 @@
       }
 
       else if(sub_unit){
-            qr_link_type.value = 1;
-            form.generated_url = baseURL + '/services/csf?' +
+            if(form.driving_type){
+                qr_link_type.value = 1.1;
+                form.generated_url = baseURL + '/services/csf?' +
+                                'region_id=' + props.user.region_id + 
+                                '&service_id=' + props.service.id + 
+                                '&unit_id=' +  props.unit.id +
+                                '&sub_unit_id=' + sub_unit +
+                                 '&driving_type=' + form.driving_type;
+
+            }
+            else{
+                qr_link_type.value = 1.2;
+                form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.id +
                                 '&sub_unit_id=' + sub_unit;
-
+            }
+          
+           
       }
 
       else{
@@ -94,9 +132,8 @@
   
   }
 
-  
-    const baseURL = window.location.origin;
-    const copied = ref(false);
+  const baseURL = window.location.origin;
+const copied = ref(false);
     // Function to copy text to clipboard
   const copyToClipboard = () => {
     // Create a temporary textarea element
@@ -182,8 +219,31 @@
                             ></v-select>                          
                         </v-col>
 
+                        <v-col class="my-auto" v-if="form.selected_sub_unit == 3" >
+                            <v-select
+                            variant="outlined"
+                            v-model="form.driving_type"
+                            :items="driving_types"
+                            item-title="type"
+                            label="Select Driving Type"
+                            :readonly="generated"
+                            ></v-select>
+                        </v-col>
+
+                         <v-col class="my-auto" v-if="unit.id == 8" >
+                            <v-select
+                            variant="outlined"
+                            v-model="form.client_type"
+                            :items="['Internal', 'External']"
+                            label="Client Type"
+                            :readonly="generated"
+                            ></v-select>
+                        </v-col>
+
                         <v-col class="my-auto text-right" >
-                            <v-btn :disabled="sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  " prepend-icon="mdi-plus" @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto)" >Generate URL </v-btn>           
+                            <v-btn 
+                            :disabled="sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == '' || unit.id == 8 && form.client_type == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
+                            @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto)" >Generate URL </v-btn>           
                         </v-col>
                         </v-row>
                     </v-card>
@@ -220,9 +280,24 @@
                                 "
                             />
                             <QrcodeVue
-                                v-if="qr_link_type == 1"
+                                v-if="qr_link_type == 1.1"
                                 :render-as="'svg'"
                                 :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}&sub_unit_id=${form.selected_sub_unit.id}`"
+                                :size="145"
+                                :foreground="'#000'"
+                                level="L"
+                                style="
+                                border: 3px #ffffff solid;
+                                width: 300px;
+                                height: 300px;
+                      
+                                "
+                            />
+
+                             <QrcodeVue
+                                v-if="qr_link_type == 1.2"
+                                :render-as="'svg'"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}&sub_unit_id=${form.selected_sub_unit.id}&driving_type=${form.driving_type.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"

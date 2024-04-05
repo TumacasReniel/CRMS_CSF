@@ -267,6 +267,7 @@ watch(
     
 
     <v-card
+        class="container"
         data-aos="fade-up" 
         data-aos-duration="2000" 
         data-aos-delay="500" 
@@ -649,8 +650,9 @@ watch(
     </v-card>
 
 </template>
-<style scoped>
-canvas {
-  border: 1px solid #000;
-}
+<style>
+    canvas {
+    border: 1px solid #000;
+    }
+
 </style>

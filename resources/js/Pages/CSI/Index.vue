@@ -629,6 +629,17 @@ const view_form = reactive({
   generated_url: null,
 });
 
+
+const driving_types = [
+    { id: '1', type: 'APL (RO)' },
+    { id: '2', type: 'LDC (RO)' },
+    { id: '3', type: 'RRD (PSTO-ZDN)' },
+    { id: '4', type: 'AAF (PSTO-ZDS)' },
+    { id: '5', type: 'CJB (PSTO-ZS)' },
+    { id: '6', type: 'ATP (CSTC-ZCIC)' },
+    { id: '7', type: 'JRE (CSTC-ZCIC)' },
+];
+
 const generated = ref(false);
 
 //get year
@@ -830,10 +841,11 @@ const currentYear = ref(getCurrentYear());
                                               :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
                                               </v-select>
                                           </v-col>
-                                            <v-col class="my-auto"  v-if="unit.id == 8" >
+                                          <v-col class="my-auto"  v-if="unit.id == 8" >
                                               <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
                                               :items="['Internal', 'External']" border="none"> </v-combobox>
                                           </v-col>
+
                                           <v-col class="my-auto" v-if="sub_units.length > 0" >
                                               <v-select
                                                 variant="outlined"
@@ -867,6 +879,18 @@ const currentYear = ref(getCurrentYear());
                                                   item-value="id"
                                                   label="Select Sub Unit PSTO"
                                               ></v-select>                          
+                                          </v-col>
+
+                                            <v-col class="my-auto" v-if="form.selected_sub_unit == 3" >
+                                              <v-select
+                                                variant="outlined"
+                                                v-model="form.driving_type"
+                                                :items="driving_types"
+                                                item-title="type"
+                                                item-value="id"
+                                                label="Select Driving Type"
+                                                :readonly="generated"
+                                              ></v-select>
                                           </v-col>
                                       </v-row>
                                 </v-card>

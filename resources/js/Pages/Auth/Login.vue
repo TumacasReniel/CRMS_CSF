@@ -32,16 +32,21 @@ const submit = () => {
 <template>
     <Head title="Log in" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+    <AuthenticationCard id="AuthenticationCard">
+        <div class="text-center">
+               <AuthenticationCardLogo />
+
+        </div>     
+     
+        <h1 class="text-center">SIGNIN</h1>     
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        
+
+        <form @submit.prevent="submit"  >
             <div>
                 <InputLabel for="email" value="Email" />
                 <TextInput
@@ -88,3 +93,24 @@ const submit = () => {
         </form>
     </AuthenticationCard>
 </template>
+
+<style>
+    #AuthenticationCard {
+        background: url(https://cdn.dribbble.com/users/6117646/screenshots/14975149/media/8f26446e227baeb76f1ae01e8dc1c558.gif);
+         width: 100vw;
+         height: 100vh;
+         z-index:1;
+         margin: 0;
+        padding: 0;
+        background-color: black;
+        display: flex;
+        justify-content: contain;
+        align-items: center;
+    }
+
+    #email, #password{
+        padding:10px
+    }
+
+</style>
+

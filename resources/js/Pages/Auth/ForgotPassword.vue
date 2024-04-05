@@ -23,10 +23,12 @@ const submit = () => {
 <template>
     <Head title="Forgot Password" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
+    <AuthenticationCard id="AuthenticationCard">
+        <div class="text-center">
+               <AuthenticationCardLogo />
+        </div>  
+        
+        <h1 class="text-center">FORGOT PASSWORD</h1>     
 
         <div class="mb-4 text-sm text-gray-600">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
@@ -59,3 +61,19 @@ const submit = () => {
         </form>
     </AuthenticationCard>
 </template>
+
+<style>
+    #AuthenticationCard {
+        background: url(https://cdn.dribbble.com/users/6117646/screenshots/14975149/media/8f26446e227baeb76f1ae01e8dc1c558.gif);
+         width: 100vw;
+         height: 100vh;
+         z-index:1;
+         margin: 0;
+        padding: 0;
+        background-color: black;
+        display: flex;
+        justify-content: contain;
+        align-items: center;
+    }
+
+</style>

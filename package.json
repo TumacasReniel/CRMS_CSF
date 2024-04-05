@@ -23,6 +23,7 @@
     "signature_pad": "^4.1.7",
     "swal": "^0.1.0",
     "sweetalert2": "^11.6.13",
+    "three": "^0.163.0",
     "vue-signature-pad": "^3.0.2",
     "webfontloader": "^1.0.0",
     "wkhtmltopdf": "^0.4.0"
