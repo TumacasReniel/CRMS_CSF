@@ -5,11 +5,12 @@
     import QrcodeVue from "qrcode.vue";
    
     const props = defineProps({
-         service: Object, 
+        service: Object, 
         unit: Object,
         sub_units: Object,
         unit_pstos: Object,
         sub_unit_pstos: Object,
+        sub_unit_types: Object,
         user: Object,
 
     });
@@ -44,17 +45,6 @@
             }
         );
     };
-
-    
-    const driving_types = [
-        { id: '1', type: 'APL (RO)' },
-        { id: '2', type: 'LDC (RO)' },
-        { id: '3', type: 'RRD (PSTO-ZDN)' },
-        { id: '4', type: 'AAF (PSTO-ZDS)' },
-        { id: '5', type: 'CJB (PSTO-ZS)' },
-        { id: '6', type: 'ATP (CSTC-ZCIC)' },
-        { id: '7', type: 'JRE (CSTC-ZCIC)' },
-    ];
 
      watch(
         () => form.selected_sub_unit,
@@ -164,6 +154,7 @@ const copied = ref(false);
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                <!-- <v-breadcrumbs :items="['Dashboard', 'Service Units', unit.unit_name]"></v-breadcrumbs> -->
                View
+             
             </h2>
         </template>
         <div class="py-10"  style="margin-left:80px; margin-right:80px">
@@ -207,7 +198,7 @@ const copied = ref(false);
                             ></v-select>
     
                         </v-col>
-                        <v-col class="my-auto"  v-if="sub_unit_pstos.length > 0" >
+                        <v-col class="my-auto"  v-if="sub_unit_pstos.length > 0 && form.selected_sub_unit" >
                             <v-select
                                 v-if="form.selected_sub_unit"
                                 variant="outlined"
@@ -219,13 +210,13 @@ const copied = ref(false);
                             ></v-select>                          
                         </v-col>
 
-                        <v-col class="my-auto" v-if="form.selected_sub_unit == 3" >
+                        <v-col class="my-auto" v-if="sub_unit_types.length > 0 && form.selected_sub_unit" >
                             <v-select
                             variant="outlined"
                             v-model="form.driving_type"
-                            :items="driving_types"
-                            item-title="type"
-                            label="Select Driving Type"
+                            :items="sub_unit_types"
+                            item-title="type_name"
+                            label="Select Type"
                             :readonly="generated"
                             ></v-select>
                         </v-col>

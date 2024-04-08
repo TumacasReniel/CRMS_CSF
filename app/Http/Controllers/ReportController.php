@@ -12,6 +12,7 @@ use App\Models\Services;
 use App\Models\UnitPsto;
 use App\Models\Dimension;
 use App\Models\SubUnitPsto;
+use App\Models\SubUnitType;
 use App\Models\UnitSubUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,9 @@ class ReportController extends Controller
 
         $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
+        $sub_unit_types = SubUnitType::where('sub_unit_id',  $request->sub_unit_id)->get();
+        
+
         return Inertia::render('CSI/Index')
             ->with('dimensions', $dimensions)
             ->with('service', $service)
@@ -62,7 +66,9 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('user', $user);
+          
     
     }
 
@@ -96,6 +102,8 @@ class ReportController extends Controller
 
         $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
+        $sub_unit_types = SubUnitType::where('sub_unit_id',  $request->sub_unit_id)->get();
+
         return Inertia::render('Libraries/Service-Units/Views/View')
             ->with('dimensions', $dimensions)
             ->with('service', $service)
@@ -103,6 +111,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('user', $user);
     
     }
@@ -156,6 +165,8 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
+        
 
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
@@ -436,6 +447,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -476,6 +488,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -766,6 +779,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -805,6 +819,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -1263,6 +1278,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -1343,6 +1359,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -1818,6 +1835,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -1899,6 +1917,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -2373,6 +2392,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -2453,6 +2473,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -2928,6 +2949,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -3008,6 +3030,7 @@ class ReportController extends Controller
         $sub_units = $this->getSubUnits($request); 
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
         $date_range = [];
         $q1_date_range = [];
@@ -3570,6 +3593,7 @@ class ReportController extends Controller
             ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
             ->with('dimensions', $dimensions)
             ->with('service', $request->service)
             ->with('unit', $request->unit)
@@ -3692,6 +3716,16 @@ class ReportController extends Controller
        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
        return $sub_unit_pstos;
+    
+    }
+
+    public function getSubUnitTypes($request)
+    {
+        //get sub unit pstos
+ 
+       $sub_unit_types = SubUnitType::where('sub_unit_id', $request->selected_sub_unit)->get(); 
+
+       return $sub_unit_types;
     
     }
 

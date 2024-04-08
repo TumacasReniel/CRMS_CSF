@@ -24,6 +24,7 @@ const props = defineProps({
     sub_units: Object,
     unit_pstos: Object,
     sub_unit_pstos: Object,
+    sub_unit_types: Object,
 
     dimensions: Object,
     respondents_list: Object,
@@ -630,16 +631,6 @@ const view_form = reactive({
 });
 
 
-const driving_types = [
-    { id: '1', type: 'APL (RO)' },
-    { id: '2', type: 'LDC (RO)' },
-    { id: '3', type: 'RRD (PSTO-ZDN)' },
-    { id: '4', type: 'AAF (PSTO-ZDS)' },
-    { id: '5', type: 'CJB (PSTO-ZS)' },
-    { id: '6', type: 'ATP (CSTC-ZCIC)' },
-    { id: '7', type: 'JRE (CSTC-ZCIC)' },
-];
-
 const generated = ref(false);
 
 //get year
@@ -682,7 +673,16 @@ const currentYear = ref(getCurrentYear());
    form.unit = unit;
   //  console.log(form,990);
     if(form.csi_type == 'By Date'){
-      router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+      if(form.date_from && form.date_to){
+            router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+      }
+      else{ 
+        Swal.fire({
+              title: "Error",
+              icon: "error",
+              text: "Please fill up Date From and Date To field."           
+          });
+      }
     }
     else if(form.csi_type == 'By Month'){
           form.selected_quarter = "";
@@ -870,7 +870,7 @@ const currentYear = ref(getCurrentYear());
                                               ></v-select>
                         
                                           </v-col>
-                                            <v-col class="my-auto" v-if="sub_unit_pstos.length > 0">
+                                            <v-col class="my-auto" v-if="sub_unit_pstos.length > 0 && form.selected_sub_unit">
                                               <v-select
                                                   variant="outlined"
                                                   v-model="form.selected_sub_unit_psto"
@@ -881,12 +881,12 @@ const currentYear = ref(getCurrentYear());
                                               ></v-select>                          
                                           </v-col>
 
-                                            <v-col class="my-auto" v-if="form.selected_sub_unit == 3" >
+                                            <v-col class="my-auto" v-if="sub_unit_types.length > 0 && form.selected_sub_unit" >
                                               <v-select
                                                 variant="outlined"
-                                                v-model="form.driving_type"
-                                                :items="driving_types"
-                                                item-title="type"
+                                                v-model="form.sub_unit_type"
+                                                :items="sub_unit_types"
+                                                item-title="type_name"
                                                 label="Select Driving Type"
                                                 :readonly="generated"
                                               ></v-select>
@@ -1019,7 +1019,7 @@ const currentYear = ref(getCurrentYear());
                                 </v-card>
 
                                 <!-- Content Preview-->
-                                <MonthlyContent v-if="form.csi_type == 'By Month' || form.csi_type == 'By Date'" :form="form"  :data="props" />
+                                <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true && form.date_from && form.date_to  || form.csi_type == 'By Date' && generated == true && form.date_from && form.date_to" :form="form"  :data="props" />
                                 <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true "  :form="form"  :data="props" />
                                 <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
                                 <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
