@@ -151,18 +151,6 @@ class ReportController extends Controller
     }
 
 
-    public function all_units()
-    {
-        //$user = Auth::user();
-        $service_units = Services::all();
-
-        //all Services and its units
-        $data = ServiceResource::collection($service_units);
-        return Inertia::render('CSI/AllServicesUnits/Index')
-            ->with('service_units', $data);
-    
-    }
-
     public function generateCSIByUnitByDate($request, $region_id, $psto_id)
     {
         $sub_units = $this->getSubUnits($request); 
@@ -172,9 +160,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
 
         $date_range = CustomerAttributeRating::whereIn('customer_id',$customer_ids)
                                              ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
@@ -494,9 +484,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
           
     
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
@@ -824,9 +816,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
             
         $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
@@ -1360,9 +1354,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
             
         $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
@@ -1911,13 +1907,14 @@ class ReportController extends Controller
         $month_aug = [];
         $month_sep = [];
             
-        // store
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
 
         // Retrieve records for the specified quarter and year
         $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
@@ -2469,9 +2466,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
             
         // Retrieve records for the specified quarter and year
         $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
@@ -3018,13 +3017,14 @@ class ReportController extends Controller
         $customer_recommendation_ratings = null;
         $respondents_list = null;
           
-        // store
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
             
         // Retrieve records for the specified quarter and year
         $q1_start_date = Carbon::create($request->selected_year, 1, 1)->startOfDay();
@@ -3695,7 +3695,7 @@ class ReportController extends Controller
     
     }
 
-    public function querySearchCSF($region_id, $service_id, $unit_id , $sub_unit_id , $psto_id )
+    public function querySearchCSF($region_id, $service_id, $unit_id , $sub_unit_id , $psto_id, $client_type, $driving_type )
     {
         $customer_ids = CSFForm::when($region_id, function ($query, $region_id) {
             $query->where('region_id', $region_id);
@@ -3707,7 +3707,18 @@ class ReportController extends Controller
             $query->where('sub_unit_id', $sub_unit_id);
         })->when($psto_id, function ($query, $psto_id) {
             $query->where('psto_id', $psto_id);
-        })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
+        })->when($client_type, function ($query, $client_type) {
+            if($client_type == "Internal"){
+                $query->where('client_type', "Internal Employees");
+            }
+            else if($client_type == "External"){
+                $query->where('client_type', "General Public")
+                      ->orWhere('client_type', "Government Employees")
+                      ->orWhere('client_type', "Business/Organization");
+            }        
+        })->when($driving_type, function ($query, $driving_type) {
+            $query->where('driving_type', $driving_type);
+       })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
         ->get();
 
         return  $customer_ids;
@@ -3721,10 +3732,11 @@ class ReportController extends Controller
         $service_id = $request->service['id'];
         $unit_id = $request->unit['id'];
         $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $driving_type = $request->driving_type; 
 
        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id );
-          
+       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $driving_type );
     
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                              ->whereMonth('created_at', $month)->get();
@@ -3971,11 +3983,23 @@ class ReportController extends Controller
 
 
 
+    public function all_units()
+    {
+        //$user = Auth::user();
+        $service_units = Services::all();
+
+        //all Services and its units
+        $data = ServiceResource::collection($service_units);
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('service_units', $data);
     
+    }
  
       
      
 
    
+
+
 
 }

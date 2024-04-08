@@ -887,7 +887,6 @@ const currentYear = ref(getCurrentYear());
                                                 v-model="form.driving_type"
                                                 :items="driving_types"
                                                 item-title="type"
-                                                item-value="id"
                                                 label="Select Driving Type"
                                                 :readonly="generated"
                                               ></v-select>

@@ -71,7 +71,7 @@ defineProps({
                  data-aos="zoom-out" 
                 data-aos-duration="500" 
                 data-aos-delay="500" >
-        <h1 style="font-size: 70px; font-weight: bold; text-shadow: -2px -2px 4px black, 5px 5px 10px black;text-align:center; margin-left: 10%;margin-right: 10%; ">Customer Relationship Management System</h1>
+        <h1 style="font-size: 70px; font-weight: bold; text-shadow: -2px -2px 4px black, 5px 5px 10px black;text-align:center; margin-left: 10%;margin-right: 10%; ">Customer Relation Management System</h1>
     </div>
 
 

@@ -139,16 +139,16 @@ class SurveyFormController extends Controller
     }
 
     public function saveCSFForm($request, $customer){
-        $csf_form = CSFForm::create(
-            [
-                'customer_id' => $customer->id,
-                'region_id' => $request->region_id,
-                'service_id' => $request->service_id,
-                'unit_id' => $request->unit_id,
-                'sub_unit_id' => $request->sub_unit_id,
-                'psto_id' => $request->psto_id,
-            ]
-        );
+        $csf_form = new CSFForm();
+        $csf_form->customer_id = $customer->id;
+        $csf_form->region_id = $request->region_id;
+        $csf_form->service_id = $request->service_id;
+        $csf_form->unit_id = $request->unit_id;
+        $csf_form->sub_unit_id = $request->sub_unit_id;
+        $csf_form->psto_id = $request->psto_id;
+        $csf_form->client_type = $request->client_type;
+        $csf_form->driving_type = $request->driving_type;
+        $csf_form->save();
 
         return $csf_form;
     }

@@ -230,19 +230,11 @@ const copied = ref(false);
                             ></v-select>
                         </v-col>
 
-                         <v-col class="my-auto" v-if="unit.id == 8" >
-                            <v-select
-                            variant="outlined"
-                            v-model="form.client_type"
-                            :items="['Internal', 'External']"
-                            label="Client Type"
-                            :readonly="generated"
-                            ></v-select>
-                        </v-col>
+
 
                         <v-col class="my-auto text-right" >
                             <v-btn 
-                            :disabled="sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == '' || unit.id == 8 && form.client_type == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
+                            :disabled="sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
                             @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto)" >Generate URL </v-btn>           
                         </v-col>
                         </v-row>

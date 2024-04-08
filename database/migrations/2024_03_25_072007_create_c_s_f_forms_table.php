@@ -37,6 +37,8 @@ return new class extends Migration
             $table->foreign('psto_id')
                     ->references('id')
                     ->on('pstos');
+            $table->string('client_type')->nullable();
+            $table->string('driving_type')->nullable();
             $table->timestamps();
         });
     }

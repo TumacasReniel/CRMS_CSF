@@ -71,9 +71,10 @@ const form = reactive({
     unit_id: null,
     sub_unit_id: null,
     psto_id: null,
+    client_type: null,
+    driving_type: null,
     email: null,
     name: null,
-    client_type: null,
     sex: null,
     age_group: null,
     pwd: 0,
@@ -148,6 +149,7 @@ onMounted(() => {
     form.unit_id = searchParams.get("unit_id");
     form.sub_unit_id = searchParams.get("sub_unit_id");
     form.psto_id = searchParams.get("psto_id");
+    form.driving_type = searchParams.get("driving_type");
     form.current_url =currentURL; 
 
     Swal.fire({
@@ -319,7 +321,8 @@ watch(
                                     <span> {{ unit.data[0].unit_name }} </span> <br>
                                     <span v-if="sub_unit.data.length > 0"> {{ sub_unit.data[0].sub_unit_name }}</span>
                                     <span v-if="unit_psto.data.length > 0"> {{ unit_psto.data[0].psto['psto_name'] }} </span>  
-                                    <span v-if="sub_unit_psto.data.length > 0" class="ml-3"> {{ sub_unit_psto.data[0].psto['psto_name'] }} </span>
+                                    <span v-if="sub_unit_psto.data.length > 0" class="ml-3"> {{ sub_unit_psto.data[0].psto['psto_name'] }}</span>
+                                    <span v-if="form.driving_type" class="ml-3"> {{ form.driving_type }}</span>
                                 </h5>
                             </a>
                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
