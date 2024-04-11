@@ -21,7 +21,6 @@ import Swal from 'sweetalert2'
 const props = defineProps({
     service: Object, 
     unit: Object,
-    sub_units: Object,
     unit_pstos: Object,
     sub_unit_pstos: Object,
     sub_unit_types: Object,
@@ -679,7 +678,7 @@ const currentYear = ref(getCurrentYear());
   //  console.log(form,990);
     if(form.csi_type == 'By Date'){
       if(form.date_from && form.date_to){
-            router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+            router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
       }
       else{ 
         Swal.fire({
@@ -691,12 +690,12 @@ const currentYear = ref(getCurrentYear());
     }
     else if(form.csi_type == 'By Month'){
           form.selected_quarter = "";
-          router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+          router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
     }
     else if(form.csi_type == 'By Quarter'){
           form.selected_month = "";
           if(form.selected_quarter){
-              router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+              router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
           }
           else{ 
             Swal.fire({
@@ -709,7 +708,7 @@ const currentYear = ref(getCurrentYear());
       else if(form.csi_type == 'By Year/Annual'){
           form.selected_quarter = "";
           if(form.selected_year ){
-             router.get('/csi/generate?', form , { preserveState: true, preserveScroll: true})
+             router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
           }
           else{         
               Swal.fire({
@@ -783,10 +782,29 @@ const currentYear = ref(getCurrentYear());
     (value) => {
           if(value){
             generated.value = false;
+            getSubUnit(value);
             getSubUnitPSTO(value);
           }
     }
 );
+
+  watch(
+    () => form.csi_type,
+    (value) => {
+          if(value == ''){
+            form.selected_sub_unit = null;
+          }
+    }
+);
+
+  watch(
+      () => form.csi_type,
+      (value) => {
+            if(!value){
+              form.selected_sub_unit = null;
+            }
+      }
+  );
 
 
   const getSubUnitPSTO = async (sub_unit_id) => {
@@ -808,6 +826,10 @@ const currentYear = ref(getCurrentYear());
         preserveScroll: true,
       }
   );
+
+  const getSubUnit = (sub_unit_id) => {
+    router.get('/sub-units' , sub_unit_id);
+  };
 
 };
 
@@ -833,7 +855,7 @@ const currentYear = ref(getCurrentYear());
                               </div>
                               <v-divider class="border-opacity-100"></v-divider>
                               <div v-if="unit">
-                                  SERVICE UNIT :    {{ unit.unit_name }}
+                                  SERVICE UNIT :    {{ unit.data[0].unit_name }}
                               </div>
                           </v-card-title>
                       </v-card>
@@ -851,11 +873,11 @@ const currentYear = ref(getCurrentYear());
                                               :items="['Internal', 'External']" border="none"> </v-combobox>
                                           </v-col>
 
-                                          <v-col class="my-auto" v-if="sub_units.length > 0" >
+                                          <v-col class="my-auto" v-if="unit.data[0].sub_units.length > 0" >
                                               <v-select
                                                 variant="outlined"
                                                 v-model="form.selected_sub_unit"
-                                                :items="sub_units"
+                                                :items="unit.data[0].sub_units"
                                                 item-title="sub_unit_name"
                                                 item-value="id"
                                                 label="Select Sub Unit"
@@ -871,7 +893,6 @@ const currentYear = ref(getCurrentYear());
                                                 item-title="psto_name"
                                                 item-value="id"
                                                 label="Select Unit PSTO"
-                                                :readonly="generated"
                                               ></v-select>
                         
                                           </v-col>
@@ -933,20 +954,20 @@ const currentYear = ref(getCurrentYear());
 
                                     <v-row class="p-3" v-if="form.csi_type == 'By Month'">
                                         <v-col class="my-auto">
-                                              <v-combobox v-model="form.selected_month" 
+                                              <v-select v-model="form.selected_month" 
                                                     class="m-3" label="Select Month" 
                                                     variant="outlined" 
                                                     :items="months" 
                                                     outlined="none"> 
-                                              </v-combobox>
+                                              </v-select>
                                         </v-col> 
                                         <v-col class="my-auto">
-                                            <v-combobox v-model="form.selected_year" 
+                                            <v-select v-model="form.selected_year" 
                                                     class="m-3" label="Select Year" 
                                                     variant="outlined" 
                                                     :items="years" 
                                                     outlined="none"> 
-                                              </v-combobox>
+                                              </v-select>
                                         </v-col>   
 
                                         <v-col class="ml-5 mt-3">

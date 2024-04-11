@@ -21,8 +21,8 @@
                        
                     </div>
                     <div style="font-size: 12px">  
-                        Services Unit : <u>{{ data.unit.unit_name }}</u><br>
-                                        <!-- <u style="margin-left:80px" v-if="form.selected_sub_unit && data.sub_units.length > 0">{{ data.sub_units[form.selected_sub_unit-1].sub_unit_name }}</u> -->
+                        Services Unit : <u>{{ data.unit.data[0].unit_name }}</u><br>
+                                        <u style="margin-left:80px" >{{ form.selected_sub_unit }}</u>
                     </div>
                     
                 </div>
