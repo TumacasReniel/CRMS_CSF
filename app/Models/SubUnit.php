@@ -13,4 +13,12 @@ class SubUnit extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    public function sub_unit_types(){
+        return $this->hasMany(SubUnitType::class);
+    }
+
+    public function sub_unit_pstos(){
+        return $this->hasMany(SubUnitPSTO::class);
+    }
+
 }

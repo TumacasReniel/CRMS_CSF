@@ -20,4 +20,10 @@ class Unit extends Model
         return $this->hasMany(SubUnit::class);
     }
 
+    
+    public function unit_pstos(){
+        return $this->hasMany(UnitPsto::class);
+    }
+
+
 }

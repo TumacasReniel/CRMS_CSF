@@ -84,6 +84,11 @@ const props = defineProps({
     //Percentage of Detractors
     percentage_detractors: Number,
 
+    //comment and complaints
+    comments: Object,
+    total_comments: Number,
+    total_complaints: Number,
+
   // --- QUARTER 1 ----
 
     //First Quarter  quality attributes totals
@@ -835,7 +840,7 @@ const currentYear = ref(getCurrentYear());
                     <v-card>
                         <v-divider class="border-opacity-100"></v-divider>
                                 <v-card class="p-5 mb-3">
-                                      <v-row class="p-3" >
+                                      <v-row class="p-3" style="margin-bottom:-35px">
                                           <v-col class="my-auto" >
                                               <v-select v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
                                               :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
@@ -1019,7 +1024,7 @@ const currentYear = ref(getCurrentYear());
                                 </v-card>
 
                                 <!-- Content Preview-->
-                                <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true && form.date_from && form.date_to  || form.csi_type == 'By Date' && generated == true && form.date_from && form.date_to" :form="form"  :data="props" />
+                                <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true  || form.csi_type == 'By Date' && generated == true" :form="form"  :data="props" />
                                 <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true "  :form="form"  :data="props" />
                                 <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
                                 <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />

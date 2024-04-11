@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class psto extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'psto_name', 
+    ];
 }

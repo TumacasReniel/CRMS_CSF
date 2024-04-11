@@ -377,9 +377,6 @@
                 </table>   
             </v-card> 
         
-
-
-
             <v-card class="mb-3">
                 <v-card-title>
                     COMMENTS AND COMPLAINTS: 
@@ -388,18 +385,24 @@
                         <v-row>
                         <div class="ml-10">Comments
                         <v-chip color="primary">
-                            0
+                            {{ data.total_comments }}
                         </v-chip>
                         </div>
                         <div class="">Complaints
                             <v-chip color="red">
-                                0
+                            {{ data.total_complaints }}
                             </v-chip>
                         </div>
+
+                        <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
+                            <table style="margin-left: 40px" >
+                            <p>[{{ index +1 }}] {{ comment }}</p>
+                            </table>
+                        </template>
                     </v-row>
                 </v-card-content>
             </v-card>
-
+            
             <v-card class="mb-3">
                 <v-card-title>
                     ANALYSIS:

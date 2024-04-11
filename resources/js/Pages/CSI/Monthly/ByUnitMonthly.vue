@@ -21,8 +21,10 @@
                        
                     </div>
                     <div style="font-size: 12px">  
-                        Service Unit : <u>{{ data.unit.unit_name }}</u>
+                        Services Unit : <u>{{ data.unit.unit_name }}</u><br>
+                                        <!-- <u style="margin-left:80px" v-if="form.selected_sub_unit && data.sub_units.length > 0">{{ data.sub_units[form.selected_sub_unit-1].sub_unit_name }}</u> -->
                     </div>
+                    
                 </div>
 
                 <div style="margin-top: 5px; margin-bottom: 20px">
@@ -252,7 +254,16 @@
 
                 <div style="margin-top: 20px;  font-size: 13px">
                     COMMENTS/COMPLAINTS : 
-                    <span>none</span>
+                    <span v-if="data.comments">       
+                        <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
+                            <table>
+                            <p style="margin-bottom:-10px">[{{ index +1 }}] {{ comment }}</p>
+                            </table>
+                        </template>
+                    </span>
+                    <span v-else>       
+                        none
+                    </span>
                     <p></p>
                 </div>
 

@@ -66,6 +66,8 @@ Route::middleware([
     Route::get('/csi', [ReportController::class , 'index']);
     Route::get('/csi/view', [ReportController::class , 'view']);
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
+   
+    Route::get('/csi/generate/all-units', [ReportController::class, 'generateAllUnitReports']);
     Route::get('/csi/generate', [ReportController::class, 'generateReports']);
     Route::resource('/regions', RegionController::class);
 

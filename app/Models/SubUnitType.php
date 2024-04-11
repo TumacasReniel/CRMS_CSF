@@ -13,9 +13,11 @@ class SubUnitType extends Model
         'type_name',
     ];
 
-    public function sub_unit()
-    {
-        return $this->belongsTo(SubUnit::class);
-    }
+    // public function sub_unit()
+    // {
+    //     return $this->belongsTo(SubUnit::class);
+    // }
+
+    
 
 }

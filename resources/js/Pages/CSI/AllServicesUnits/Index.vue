@@ -5,14 +5,7 @@ import Q1Content from '@/Pages/CSI/Quarterly/Contents/Q1Content.vue';
 import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
 import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
 import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
-import YearlyContent from '@/Pages/CSI/Yearly/Content.vue';
 import AllUnitMonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
-import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
-import ByUnitQ1Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter1.vue';
-import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
-import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
-import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
-import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
 import { reactive, ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
@@ -26,14 +19,13 @@ const props = defineProps({
 const form = reactive({
   date_from: null,
   date_to: null,
-  service: null,
-  unit:  null,
   csi_type: null,
   selected_month: null,
   selected_quarter: null,
   comments_complaints: null,
   analysis: null,
-  generated: false,
+
+  service: [],
 })
 
 //get year
@@ -63,22 +55,21 @@ function getCurrentMonth() {
     return months[currentDate.getMonth()];
 }
 
+const generated = ref(false); 
 onMounted(() => {
     form.selected_month = currentMonth.value;
     form.selected_year = currentYear.value;
-    form.generated == false;
+    generated.value = false;
 });
 
 
 const generateCSIReport = async () => {
-   form.generated = true;
-   form.service = service;
-   form.unit = unit;
+   generated.value = true;
   //  console.log(form,990);
 
      if(form.csi_type == 'By Month'){
             form.selected_quarter = "";
-            router.get('/csi/generate/ByUnit/Monthly', form , { preserveState: true, preserveScroll: true})
+            router.get('/csi/generate/all-units', form , { preserveState: true, preserveScroll: true});
       }
       else if(form.csi_type == 'By Quarter'){
             form.selected_month = "";
@@ -172,17 +163,18 @@ const generateCSIReport = async () => {
                      <v-divider class="border-opacity-100"></v-divider>
                     <v-card class="p-5 mb-3">
                    
-                         <v-row class="p-3">
+                         <v-row class="p-3" style="margin-bottom:-35px">
                              <v-col class="my-auto">
                                 <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
                                 :items="['By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
                             </v-col>
                         </v-row>
+                      
                     </v-card>
                    
                      <v-card class="mb-3 my-auto">
                         
-                        <v-row class="p-3" v-if="form.csi_type == 'By Date'">
+                        <v-row class="p-3" v-if="form.csi_type == 'By Date'" >
                             <v-col class="my-auto">
                                  <v-text-field
                                     label="Select Date From"
@@ -233,7 +225,7 @@ const generateCSIReport = async () => {
                               <v-btn @click="generateCSIReport()" >Generate</v-btn>
                             </v-col>
                            <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                            </v-col>
                         </v-row>
 
@@ -301,7 +293,7 @@ const generateCSIReport = async () => {
 
 
                     <!-- Content Preview-->
-                    <AllUnitMonthlyContent v-if="form.csi_type == 'By Month'"  :form="form"  :data="props" />
+                    <AllUnitMonthlyContent v-if="form.csi_type == 'By Month' && generated == true"  :form="form"  :data="props" />
                     
                       <!-- End Content Preview-->
                 </div>

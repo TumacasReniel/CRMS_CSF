@@ -389,10 +389,15 @@
             </div> 
         
 
-            <div style="margin-top: 5px;  font-size: 13px">
+              <div style="margin-top: 20px; font-size: 13px">
                     COMMENTS/COMPLAINTS : 
-                    <span>none</span>
-                    <p></p>
+                    <span v-if="data.comments.length > 0">       
+                        <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
+                            <table>
+                            <p>[{{ index +1 }}] {{ comment  }}</p>
+                            </table>
+                        </template>
+                    </span>
                 </div>
 
                <div style="margin-top: 5px ; font-size: 13px">
