@@ -16,11 +16,13 @@ import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
 import { reactive, ref, computed, onMounted, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import VueMultiselect from "vue-multiselect";
 
 const props = defineProps({
     service: Object, 
     unit: Object,
+    sub_unit: Object,
     unit_pstos: Object,
     sub_unit_pstos: Object,
     sub_unit_types: Object,
@@ -604,9 +606,9 @@ const form = reactive({
   service: null,
   unit:  null,
 
-  selected_sub_unit: null,
-  selected_unit_psto: null,
-  selected_sub_unit_psto: null,
+  selected_sub_unit: [],
+  selected_unit_psto: [],
+  selected_sub_unit_psto: [],
 
   // form type if all or per unit
   form_type: null,
@@ -780,11 +782,8 @@ const currentYear = ref(getCurrentYear());
   watch(
     () => form.selected_sub_unit,
     (value) => {
-          if(value){
-            generated.value = false;
-            getSubUnit(value);
-            getSubUnitPSTO(value);
-          }
+        generated.value = false;;
+        getSubUnitPSTO(value.id);
     }
 );
 
@@ -827,9 +826,6 @@ const currentYear = ref(getCurrentYear());
       }
   );
 
-  const getSubUnit = (sub_unit_id) => {
-    router.get('/sub-units' , sub_unit_id);
-  };
 
 };
 
@@ -837,18 +833,19 @@ const currentYear = ref(getCurrentYear());
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Dashboard" class="overflow-visible">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Customer Satisfaction Index 
+
             </h2>
         </template>
 
         
-        <div class="py-10"  style="margin-left:80px; margin-right:80px" >
-            <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                   <v-card class="mb-3" v-if="service && unit">
+        <div class="py-10 overflow-visible"  style="margin-left:80px; margin-right:80px" >
+            <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8  overflow-visibl">
+                <div class="bg-white shadow-xl sm:rounded-lg overflow-visible">
+                   <v-card class="mb-5 overflow-visible" v-if="service && unit">
                       <v-card-title class="m-3" >
                               <div v-if="service">
                                   SERVICES :   {{ service.services_name }}
@@ -858,191 +855,217 @@ const currentYear = ref(getCurrentYear());
                                   SERVICE UNIT :    {{ unit.data[0].unit_name }}
                               </div>
                           </v-card-title>
-                      </v-card>
-                    <v-card>
-                        <v-divider class="border-opacity-100"></v-divider>
-                                <v-card class="p-5 mb-3">
-                                      <v-row class="p-3" style="margin-bottom:-35px">
-                                          <v-col class="my-auto" >
-                                              <v-select v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
-                                              :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
-                                              </v-select>
-                                          </v-col>
-                                          <v-col class="my-auto"  v-if="unit.id == 8" >
-                                              <v-combobox v-model="form.client_type" class="m-3" label="Select Client Type" variant="outlined" 
-                                              :items="['Internal', 'External']" border="none"> </v-combobox>
-                                          </v-col>
 
-                                          <v-col class="my-auto" v-if="unit.data[0].sub_units.length > 0" >
-                                              <v-select
-                                                variant="outlined"
-                                                v-model="form.selected_sub_unit"
-                                                :items="unit.data[0].sub_units"
-                                                item-title="sub_unit_name"
-                                                item-value="id"
-                                                label="Select Sub Unit"
-                                                :readonly="generated"
-                                              ></v-select>
-                                          </v-col>
-                                                          
-                                          <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
-                                            <v-select
-                                                variant="outlined"
-                                                v-model="form.selected_unit_psto"
-                                                :items="unit_pstos"
-                                                item-title="psto_name"
-                                                item-value="id"
-                                                label="Select Unit PSTO"
-                                              ></v-select>
-                        
-                                          </v-col>
-                                            <v-col class="my-auto" v-if="sub_unit_pstos.length > 0 && form.selected_sub_unit">
-                                              <v-select
-                                                  variant="outlined"
-                                                  v-model="form.selected_sub_unit_psto"
-                                                  :items="sub_unit_pstos"
-                                                  item-title="psto_name"
-                                                  item-value="id"
-                                                  label="Select Sub Unit PSTO"
-                                              ></v-select>                          
-                                          </v-col>
+                    </v-card>
+                    <v-card class="overflow-visible mb-5">   
+                          <v-divider class="border-opacity-100"></v-divider>
+                          <v-row class="p-3 overflow-visible" >
+                              <v-col class="my-auto overflow-visible">
+                                  <!-- <v-select style="padding:-20px" size="x-small" v-model="form.csi_type" class="m-3 p-0" label="Select Type" 
+                                      :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
+                                  </v-select> -->
+                                <div class="my-auto overflow-visible"> 
+                                   <vue-multiselect
+                                      v-model="form.csi_type"
+                                      prepend-icon="mdi-account"
+                                      :options="['By Date','By Month', 'By Quarter', 'By Year/Annual']"
+                                      :multiple="false"
+                                      placeholder="Select Type*"
+                                      :allow-empty="false"
+                                    >         
+                                    </vue-multiselect>        
 
-                                            <v-col class="my-auto" v-if="sub_unit_types.length > 0 && form.selected_sub_unit" >
-                                              <v-select
-                                                variant="outlined"
-                                                v-model="form.sub_unit_type"
-                                                :items="sub_unit_types"
-                                                item-title="type_name"
-                                                label="Select Driving Type"
-                                                :readonly="generated"
-                                              ></v-select>
-                                          </v-col>
-                                      </v-row>
-                                </v-card>
+                                  </div>
+                              </v-col>
                               
-                                <v-card class="mb-3 my-auto">
-                                    
-                                    <v-row class="p-3" v-if="form.csi_type == 'By Date'">
-                                        <v-col class="my-auto">
-                                            <v-text-field
-                                                label="Select Date From"
-                                                placeholder="Date From"
-                                                variant="outlined"
-                                                size="x-small"
-                                                type="date"
-                                                v-model="form.date_from"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col>
-                                            <v-text-field
-                                                label="Select Date To"
-                                                placeholder="Date To"
-                                                variant="outlined"
-                                                size="x-small"
-                                                type="date"
-                                                v-model="form.date_to"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col class="ml-5">
-                                          <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                        </v-col>
-                                      <!-- <v-col class="text-end mr-5">
-                                        <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                      </v-col> -->
-                                    </v-row>
+                              <v-col class="my-auto"  v-if="unit.data[0].id == 8" >
+                                  <v-select v-model="form.client_type" class="m-3" label="Select Client Type"
+                                  :items="['Internal', 'External']" border="none"> </v-select>
+                              </v-col>
 
-                                    <v-row class="p-3" v-if="form.csi_type == 'By Month'">
-                                        <v-col class="my-auto">
-                                              <v-select v-model="form.selected_month" 
-                                                    class="m-3" label="Select Month" 
-                                                    variant="outlined" 
-                                                    :items="months" 
-                                                    outlined="none"> 
-                                              </v-select>
-                                        </v-col> 
-                                        <v-col class="my-auto">
-                                            <v-select v-model="form.selected_year" 
-                                                    class="m-3" label="Select Year" 
-                                                    variant="outlined" 
-                                                    :items="years" 
-                                                    outlined="none"> 
-                                              </v-select>
-                                        </v-col>   
 
-                                        <v-col class="ml-5 mt-3">
-                                          <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                        </v-col>
-                                      <v-col class="text-end mr-5 m-3">
-                                        <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                      </v-col>
-                                    </v-row>
+                              <v-col class="my-auto ml-5" v-if="unit.data[0].sub_units.length > 0" >
+                                    <vue-multiselect
+                                      v-model="form.selected_sub_unit"
+                                      prepend-icon="mdi-account"
+                                      :options="unit.data[0].sub_units"
+                                      :multiple="false"
+                                      placeholder="Select Sub Unit*"
+                                      label="sub_unit_name"
+                                      track-by="sub_unit_name"
+                                      :allow-empty="false"
+                                      :disabled="generated"
+                                    >         
+                                    </vue-multiselect>           
+                              </v-col>
 
-                                      <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
-                                        <v-col class="my-auto">
-                                              <v-combobox v-model="form.selected_quarter" 
-                                                    class="m-3" label="Select Quarter" 
-                                                    variant="outlined" 
-                                                    :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
-                                                    outlined="none"> 
-                                              </v-combobox>
-                                        </v-col> 
-                                        <v-col class="my-auto">
-                                            <v-combobox v-model="form.selected_year" 
-                                                    class="m-3" label="Select Year" 
-                                                    variant="outlined" 
-                                                    :items="years" 
-                                                    outlined="none"> 
-                                              </v-combobox>
-                                        </v-col>   
+                                <v-col class="my-auto mr-5 ml-5" v-if="unit_pstos.length > 0" >
+                                    <vue-multiselect
+                                      v-model="form.selected_unit_psto"
+                                      :options="unit_pstos"
+                                      :multiple="false"
+                                      placeholder="Select Unit PSTO"
+                                      label="psto_name"
+                                      track-by="psto_name"
+                                      :allow-empty="false"
+                                    >
+                                    </vue-multiselect>          
+                              </v-col>
 
-                                        <v-col class="ml-5 mt-3">
-                                          <v-btn  @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                        </v-col>
-                                      <v-col class="text-end mr-5 m-3">
-                                        <v-btn :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                      </v-col>
-                                    </v-row>
-                                      <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
-                                        <v-col class="my-auto">
-                                            <v-combobox v-model="form.selected_year" 
-                                                    class="m-3" label="Select Year" 
-                                                    variant="outlined" 
-                                                    :items="years" 
-                                                    outlined="none"> 
-                                              </v-combobox>
-                                        </v-col>   
+                                <v-col class="my-auto mr-5" v-if="sub_unit_pstos.length > 0" >
+                                    <vue-multiselect
+                                      v-model="form.selected_sub_unit_psto"
+                                      :options="sub_unit_pstos"
+                                      :multiple="false"
+                                      placeholder="Select Sub Unit PSTO"
+                                      label="psto_name"
+                                      track-by="psto_name"
+                                      :allow-empty="false"
+                                    >
+                                    </vue-multiselect>          
+                              </v-col>      
 
-                                        <v-col class="ml-5 mt-3">
-                                          <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                          <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                        </v-col>
-                                      <v-col class="text-end mr-5 m-3">
-                                        <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                      </v-col>
-                                    </v-row>
+                                <v-col class="my-auto" v-if="sub_unit_types.length > 0 && form.selected_sub_unit" >
+                                    <vue-multiselect
+                                      v-model="form.sub_unit_type"
+                                      :options="sub_unit_types"
+                                      :multiple="false"
+                                      placeholder="Select Driving Type"
+                                      label="type_name"
+                                      track-by="type_name"
+                                      :allow-empty="false"
+                                    >
+                                    </vue-multiselect>          
+                              </v-col>
+                                
+                          </v-row>
 
-                                      <v-row class="p-3" v-if="form.csi_type == 'By Employee'">
-                                        <v-col class="my-auto">
-                                            <v-combobox v-model="form.selected_employee" 
-                                                    class="m-3" label="Select Employee" 
-                                                    variant="outlined" 
-                                                    :items="['']" 
-                                                    outlined="none"> 
-                                              </v-combobox>
-                                        </v-col>   
+                          <v-divider class="border-opacity-100"></v-divider>
 
-                                        <v-col class="ml-5 mt-3">
-                                          <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                            <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                        </v-col>
-                                      <v-col class="text-end mr-5 m-3">
-                                        <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                      </v-col>
-                                    </v-row>
-                                </v-card>
+                          <v-card-body class="overflow-visible mb-5">
+                            
+                              <v-row class="p-3" v-if="form.csi_type == 'By Date'">
+                                  <v-col class="my-auto">
+                                      <v-text-field
+                                          label="Select Date From"
+                                          placeholder="Date From"
+                                          variant="outlined"
+                                          size="x-small"
+                                          type="date"
+                                          v-model="form.date_from"
+                                      ></v-text-field>
+                                  </v-col>
+                                  <v-col>
+                                      <v-text-field
+                                          label="Select Date To"
+                                          placeholder="Date To"
+                                          variant="outlined"
+                                          size="x-small"
+                                          type="date"
+                                          v-model="form.date_to"
+                                      ></v-text-field>
+                                  </v-col>
+                                  <v-col class="ml-5">
+                                    <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                    <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                  </v-col>
+                                <!-- <v-col class="text-end mr-5">
+                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                </v-col> -->
+                              </v-row>
+
+                              <v-row class="p-3" v-if="form.csi_type == 'By Month'">
+                                  <v-col class="my-auto">
+                                        <v-select v-model="form.selected_month" 
+                                              class="m-3" label="Select Month" 
+                                              variant="outlined" 
+                                              :items="months" 
+                                              outlined="none"> 
+                                        </v-select>
+                                  </v-col> 
+                                  <v-col class="my-auto">
+                                      <v-select v-model="form.selected_year" 
+                                              class="m-3" label="Select Year" 
+                                              variant="outlined" 
+                                              :items="years" 
+                                              outlined="none"> 
+                                        </v-select>
+                                  </v-col>   
+
+                                  <v-col class="ml-5 mt-3">
+                                    <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                    <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                  </v-col>
+                                <v-col class="text-end mr-5 m-3">
+                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                </v-col>
+                              </v-row>
+
+                                <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
+                                  <v-col class="my-auto">
+                                        <v-combobox v-model="form.selected_quarter" 
+                                              class="m-3" label="Select Quarter" 
+                                              variant="outlined" 
+                                              :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
+                                              outlined="none"> 
+                                        </v-combobox>
+                                  </v-col> 
+                                  <v-col class="my-auto">
+                                      <v-combobox v-model="form.selected_year" 
+                                              class="m-3" label="Select Year" 
+                                              variant="outlined" 
+                                              :items="years" 
+                                              outlined="none"> 
+                                        </v-combobox>
+                                  </v-col>   
+
+                                  <v-col class="ml-5 mt-3">
+                                    <v-btn  @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                    <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                  </v-col>
+                                <v-col class="text-end mr-5 m-3">
+                                  <v-btn :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                </v-col>
+                              </v-row>
+                                <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
+                                  <v-col class="my-auto">
+                                      <v-combobox v-model="form.selected_year" 
+                                              class="m-3" label="Select Year" 
+                                              variant="outlined" 
+                                              :items="years" 
+                                              outlined="none"> 
+                                        </v-combobox>
+                                  </v-col>   
+
+                                  <v-col class="ml-5 mt-3">
+                                    <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                    <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                  </v-col>
+                                <v-col class="text-end mr-5 m-3">
+                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                </v-col>
+                              </v-row>
+
+                                <v-row class="p-3" v-if="form.csi_type == 'By Employee'">
+                                  <v-col class="my-auto">
+                                      <v-combobox v-model="form.selected_employee" 
+                                              class="m-3" label="Select Employee" 
+                                              variant="outlined" 
+                                              :items="['']" 
+                                              outlined="none"> 
+                                        </v-combobox>
+                                  </v-col>   
+
+                                  <v-col class="ml-5 mt-3">
+                                    <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                      <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                  </v-col>
+                                <v-col class="text-end mr-5 m-3">
+                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                </v-col>
+                              </v-row>
+                              </v-card-body>
+                          </v-card>
 
                                 <!-- Content Preview-->
                                 <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true  || form.csi_type == 'By Date' && generated == true" :form="form"  :data="props" />
@@ -1061,15 +1084,16 @@ const currentYear = ref(getCurrentYear());
                                 <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
                                 <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
                                 <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-                    </v-card>
 
                 </div>
             </div>
         </div>
 
-     
-        
     </AppLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css">
+
+</style>
+
 
 

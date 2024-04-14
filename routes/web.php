@@ -69,7 +69,6 @@ Route::middleware([
    
     Route::get('/csi/generate/all-units', [ReportController::class, 'generateAllUnitReports']);
     Route::post('/csi/generate', [ReportController::class, 'generateReports']);
-    Route::get('/sub-units', [SubUnitController::class, 'getSubUnit']);
     Route::resource('/regions', RegionController::class);
 
 

@@ -21,6 +21,7 @@ use App\Models\CustomerComment;
 use App\Http\Resources\Unit as UnitResource;
 use App\Models\CustomerRecommendationRating;
 use App\Http\Resources\Services as ServiceResource;
+use App\Http\Resources\SubUnit as SubUnitResource;
 use App\Http\Resources\UnitPSTO as UnitPSTOResource;
 use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
 use App\Http\Resources\UnitSubUnit as UnitSubUnitResource;
@@ -29,6 +30,52 @@ use App\Http\Resources\CustomerAttributeRatings as CARResource;
 class ReportController extends Controller
 {
     public function index(Request $request )
+    {
+         //dd($request->all());
+        //get user
+        $user = Auth::user();
+
+        $dimensions = Dimension::all();
+        $service = Services::findOrFail($request->service_id);
+
+        $units = Unit::where('id',$request->unit_id)->get();
+        $unit = UnitResource::collection($units);
+
+        //get unit pstos
+        $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
+        $unit_pstos = UnitPSTOResource::collection($unit_pstos);
+
+        $unit_pstos = $unit_pstos->pluck('psto');
+ 
+        //get sub unit pstos
+
+        $sub_unit_pstos = SubUnitPsto::where('sub_unit_id',$request->sub_unit_id)->get(); 
+        $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
+
+        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
+
+        $sub_unit_types = SubUnitType::where('sub_unit_id', $request->sub_unit_id)->get();
+
+        $sub_unit= [];
+        $sub_unit =  SubUnit::when($request->sub_unit_id, function ($query, $sub_unit_id) {
+            $query->where('id', $sub_unit_id);
+        })->get();
+
+        return Inertia::render('CSI/Index')
+            ->with('dimensions', $dimensions)
+            ->with('service', $service)
+            ->with('unit', $unit)
+            ->with('unit_pstos', $unit_pstos)
+            ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
+            ->with('user', $user)
+            ->with('sub_unit', $sub_unit);
+          
+    
+    }
+
+
+    public function view(Request $request )
     {
         //dd($request->all());
         //get user
@@ -54,57 +101,11 @@ class ReportController extends Controller
         $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
         $sub_unit_types = SubUnitType::where('sub_unit_id',  $request->sub_unit_id)->get();
-        
-
-        return Inertia::render('CSI/Index')
-            ->with('dimensions', $dimensions)
-            ->with('service', $service)
-            ->with('unit', $unit)
-            ->with('unit_pstos', $unit_pstos)
-            ->with('sub_unit_pstos', $sub_unit_pstos)
-            ->with('sub_unit_types', $sub_unit_types)
-            ->with('user', $user);
-          
-    
-    }
-
-
-    public function view(Request $request )
-    {
-        //dd($request->all());
-        //get user
-        $user = Auth::user();
-
-        $dimensions = Dimension::all();
-        $service = Services::findOrFail($request->service_id);
-        $unit = Unit::findOrFail($request->unit_id);
-
-        //get unit sub units
-        $unit_sub_units = UnitSubUnit::where('unit_id',$request->unit_id)->get();
-        $unit_sub_units = UnitSubUnitResource::collection($unit_sub_units);
-
-        $sub_units = $unit_sub_units->pluck('sub_unit');
-
-        //get unit pstos
-        $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
-        $unit_pstos = UnitPSTOResource::collection($unit_pstos);
-
-        $unit_pstos = $unit_pstos->pluck('psto');
- 
-        //get sub unit pstos
-
-        $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get(); 
-        $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
-
-        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
-
-        $sub_unit_types = SubUnitType::where('sub_unit_id',  $request->sub_unit_id)->get();
 
         return Inertia::render('Libraries/Service-Units/Views/View')
             ->with('dimensions', $dimensions)
             ->with('service', $service)
             ->with('unit', $unit)
-            ->with('sub_units', $sub_units)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -476,6 +477,7 @@ class ReportController extends Controller
     public function generateCSIByUnitMonthly($request, $region_id, $psto_id)
     {
         $unit_pstos = $this->getUnitPSTOs($request);
+        $sub_unit = $this->getSubUnit($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
 
@@ -775,6 +777,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -3740,6 +3743,14 @@ class ReportController extends Controller
             ->with('comments', $comments);
     }
 
+    
+    public function getSubUnit($request)
+    {
+         //get unit pstos
+         $sub_unit = SubUnit::where('id',$request->selected_sub_unit)->get();
+         return $sub_unit;
+    
+    }
 
     public function getUnitPSTOs($request)
     {

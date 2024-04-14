@@ -1,5 +1,6 @@
 <script setup>
     import AppLayout from '@/Layouts/AppLayout.vue';
+    import VueMultiselect from "vue-multiselect";
     import { router } from '@inertiajs/vue3';
     import { reactive , ref, watch} from 'vue';
     import QrcodeVue from "qrcode.vue";
@@ -7,7 +8,6 @@
     const props = defineProps({
         service: Object, 
         unit: Object,
-        sub_units: Object,
         unit_pstos: Object,
         sub_unit_pstos: Object,
         sub_unit_types: Object,
@@ -57,14 +57,14 @@
 
     const qr_link_type = ref(null);
     const generateURL = async (sub_unit, unit_psto , sub_unit_psto) =>{
-          console.log(props.unit.id);
+        //console.log(props.unit.data[0].id);
 
         if(props.unit.id == 8){
             qr_link_type.value = 4;
             form.generated_url = baseURL + '/services/csf?' +
                             'region_id=' + props.user.region_id + 
                             '&service_id=' + props.service.id + 
-                            '&unit_id=' +  props.unit.id +
+                            '&unit_id=' +  props.unit.data[0].id +
                             '&client_type=' + form.client_type;
 
         }
@@ -74,7 +74,7 @@
         form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
-                                '&unit_id=' +  props.unit.id +
+                                '&unit_id=' +  props.unit.data[0].id +
                                 '&psto_id=' + unit_psto;
       }
       else if(sub_unit_psto && sub_unit_psto){
@@ -82,7 +82,7 @@
             form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
-                                '&unit_id=' +  props.unit.id +
+                                '&unit_id=' +  props.unit.data[0].id +
                                 '&sub_unit_id=' + sub_unit + 
                                 '&psto_id=' + sub_unit_psto;
 
@@ -94,7 +94,7 @@
                 form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
-                                '&unit_id=' +  props.unit.id +
+                                '&unit_id=' +  props.unit.data[0].id +
                                 '&sub_unit_id=' + sub_unit +
                                  '&driving_type=' + form.driving_type;
 
@@ -104,7 +104,7 @@
                 form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
-                                '&unit_id=' +  props.unit.id +
+                                '&unit_id=' +  props.unit.data[0].id +
                                 '&sub_unit_id=' + sub_unit;
             }
           
@@ -116,7 +116,7 @@
         form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
-                                '&unit_id=' +  props.unit.id;
+                                '&unit_id=' +  props.unit.data[0].id;
       }
       
   
@@ -168,23 +168,25 @@ const copied = ref(false);
                             </div>
                             <v-divider class="border-opacity-100"></v-divider>
                             <div v-if="unit">
-                                SERVICE UNIT :    {{ unit.unit_name }}
+                                SERVICE UNIT :    {{ props.unit.data[0].unit_name }}
                             </div>
                         </v-card-title>
                     </v-card>
 
                       <v-card>
                         <v-row class="p-5">
-                        <v-col class="my-auto" v-if="sub_units.length > 0" >
-                            <v-select
-                            variant="outlined"
-                            v-model="form.selected_sub_unit"
-                            :items="sub_units"
-                            item-title="sub_unit_name"
-                            item-value="id"
-                            label="Select Sub Unit"
-                            :readonly="generated"
-                            ></v-select>
+                        <v-col class="my-auto ml-5" v-if="unit.data[0].sub_units.length > 0" >
+                            <vue-multiselect
+                                v-model="form.selected_sub_unit"
+                                prepend-icon="mdi-account"
+                                :options="unit.data[0].sub_units"
+                                :multiple="false"
+                                placeholder="Select Sub Unit*"
+                                label="sub_unit_name"
+                                track-by="sub_unit_name"
+                                :allow-empty="false"
+                            >         
+                            </vue-multiselect>           
                         </v-col>
                                         
                         <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
@@ -225,7 +227,7 @@ const copied = ref(false);
 
                         <v-col class="my-auto text-right" >
                             <v-btn 
-                            :disabled="sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
+                            :disabled="unit.data[0].sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
                             @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto)" >Generate URL </v-btn>           
                         </v-col>
                         </v-row>
@@ -251,7 +253,7 @@ const copied = ref(false);
                              <QrcodeVue
                                 v-if="qr_link_type == 0"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.data[0].id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -265,7 +267,7 @@ const copied = ref(false);
                             <QrcodeVue
                                 v-if="qr_link_type == 1.1"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}&sub_unit_id=${form.selected_sub_unit.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_idk=${unit.data[0].id }&sub_unit_id=${form.selected_sub_unit.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -280,7 +282,7 @@ const copied = ref(false);
                              <QrcodeVue
                                 v-if="qr_link_type == 1.2"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}&sub_unit_id=${form.selected_sub_unit.id}&driving_type=${form.driving_type.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${unit.data[0].id }&sub_unit_id=${form.selected_sub_unit.id}&driving_type=${form.driving_type.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -295,7 +297,7 @@ const copied = ref(false);
                               <QrcodeVue
                                 v-if="qr_link_type == 2"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}&sub_unit_id=${form.selected_sub_unit.id}&psto_id=${form.selected_sub_unit_psto.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${unit.data[0].id }&sub_unit_id=${form.selected_sub_unit.id}&psto_id=${form.selected_sub_unit_psto.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -310,7 +312,7 @@ const copied = ref(false);
                               <QrcodeVue
                                 v-if="qr_link_type == 3"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${props.unit.id}psto_id=${form.selected_unit_psto.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${unit.data[0].id}&psto_id=${form.selected_unit_psto.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -333,6 +335,7 @@ const copied = ref(false);
     
     </AppLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style scoped>
    table {
     border-collapse: collapse;
