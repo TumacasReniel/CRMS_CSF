@@ -20,7 +20,7 @@
         selected_sub_unit: '',
         selected_unit_psto: '',
         selected_sub_unit_psto: '',
-        driving_type: '',
+        sub_unit_type: '',
         client_type: ''
 
     });
@@ -49,17 +49,15 @@
      watch(
         () => form.selected_sub_unit,
         (value) => {
-                if(value){
-                    getSubUnitPSTO(value);
-                }
+            getSubUnitPSTO(value.id);
         });
 
 
     const qr_link_type = ref(null);
-    const generateURL = async (sub_unit, unit_psto , sub_unit_psto) =>{
+    const generateURL = async (sub_unit, unit_psto , sub_unit_psto, sub_unit_type) =>{
         //console.log(props.unit.data[0].id);
 
-        if(props.unit.id == 8){
+        if(props.unit.data[0].id == 8){
             qr_link_type.value = 4;
             form.generated_url = baseURL + '/services/csf?' +
                             'region_id=' + props.user.region_id + 
@@ -75,7 +73,7 @@
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.data[0].id +
-                                '&psto_id=' + unit_psto;
+                                '&psto_id=' + unit_psto.id;
       }
       else if(sub_unit_psto && sub_unit_psto){
             qr_link_type.value = 2;
@@ -83,20 +81,20 @@
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.data[0].id +
-                                '&sub_unit_id=' + sub_unit + 
-                                '&psto_id=' + sub_unit_psto;
+                                '&sub_unit_id=' + sub_unit.id + 
+                                '&psto_id=' + sub_unit_psto.id;
 
       }
 
       else if(sub_unit){
-            if(form.driving_type){
+            if(sub_unit_type){
                 qr_link_type.value = 1.1;
                 form.generated_url = baseURL + '/services/csf?' +
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.data[0].id +
-                                '&sub_unit_id=' + sub_unit +
-                                 '&driving_type=' + form.driving_type;
+                                '&sub_unit_id=' + sub_unit.id +
+                                 '&sub_unit_type=' + form.sub_unit_type.type_name;
 
             }
             else{
@@ -105,7 +103,7 @@
                                 'region_id=' + props.user.region_id + 
                                 '&service_id=' + props.service.id + 
                                 '&unit_id=' +  props.unit.data[0].id +
-                                '&sub_unit_id=' + sub_unit;
+                                '&sub_unit_id=' + sub_unit.id;
             }
           
            
@@ -172,9 +170,9 @@ const copied = ref(false);
                             </div>
                         </v-card-title>
                     </v-card>
-
-                      <v-card>
-                        <v-row class="p-5">
+                    <v-card class="mb-3" height="600px" >
+                      <v-card-body  class="overflow-visible">
+                        <v-row class="p-5 " key="">
                         <v-col class="my-auto ml-5" v-if="unit.data[0].sub_units.length > 0" >
                             <vue-multiselect
                                 v-model="form.selected_sub_unit"
@@ -188,52 +186,53 @@ const copied = ref(false);
                             >         
                             </vue-multiselect>           
                         </v-col>
-                                        
-                        <v-col class="my-auto"  v-if="unit_pstos.length > 0" >
-                        <v-select
-                            variant="outlined"
-                            v-model="form.selected_unit_psto"
-                            :items="unit_pstos"
-                            item-title="psto_name"
-                            item-value="id"
-                            label="Select Unit PSTO"
-                            ></v-select>
-    
+
+                        <v-col class="my-auto mr-5 ml-5" v-if="unit_pstos.length > 0" >
+                            <vue-multiselect
+                                v-model="form.selected_unit_psto"
+                                :options="unit_pstos"
+                                :multiple="false"
+                                placeholder="Select Unit PSTO"
+                                label="psto_name"
+                                track-by="psto_name"
+                                :allow-empty="false"
+                            >
+                            </vue-multiselect>          
                         </v-col>
-                        <v-col class="my-auto"  v-if="sub_unit_pstos.length > 0 && form.selected_sub_unit" >
-                            <v-select
-                                v-if="form.selected_sub_unit"
-                                variant="outlined"
+
+                        <v-col class="my-auto mr-5" v-if="sub_unit_pstos.length > 0" >
+                            <vue-multiselect
                                 v-model="form.selected_sub_unit_psto"
-                                :items="sub_unit_pstos"
-                                item-title="psto_name"
-                                item-value="id"
-                                label="Select Sub Unit PSTO"
-                            ></v-select>                          
-                        </v-col>
+                                :options="sub_unit_pstos"
+                                :multiple="false"
+                                placeholder="Select Sub Unit PSTO"
+                                label="psto_name"
+                                track-by="psto_name"
+                                :allow-empty="false"
+                            >
+                            </vue-multiselect>          
+                        </v-col>      
 
                         <v-col class="my-auto" v-if="sub_unit_types.length > 0 && form.selected_sub_unit" >
-                            <v-select
-                            variant="outlined"
-                            v-model="form.driving_type"
-                            :items="sub_unit_types"
-                            item-title="type_name"
-                            label="Select Type"
-                            :readonly="generated"
-                            ></v-select>
+                            <vue-multiselect
+                                v-model="form.sub_unit_type"
+                                :options="sub_unit_types"
+                                :multiple="false"
+                                placeholder="Select Sub Unit Type"
+                                label="type_name"
+                                track-by="type_name"
+                                :allow-empty="false"
+                            >
+                            </vue-multiselect>          
                         </v-col>
-
 
 
                         <v-col class="my-auto text-right" >
                             <v-btn 
-                            :disabled="unit.data[0].sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.driving_type == '' " prepend-icon="mdi-plus"
-                            @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto)" >Generate URL </v-btn>           
+                            :disabled="unit.data[0].sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.sub_unit_type == '' " prepend-icon="mdi-plus"
+                            @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto, form.sub_unit_type)" >Generate URL </v-btn>           
                         </v-col>
                         </v-row>
-                    </v-card>
-
-                    <v-card class="mt-5">
                         
                         <div class="p-5 m-5" label="URL">
                             <v-row>
@@ -282,7 +281,7 @@ const copied = ref(false);
                              <QrcodeVue
                                 v-if="qr_link_type == 1.2"
                                 :render-as="'svg'"
-                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${unit.data[0].id }&sub_unit_id=${form.selected_sub_unit.id}&driving_type=${form.driving_type.id}`"
+                                :value="`${baseURL}/services/csf?region_id=${user.region_id}&service_id=${props.service.id}&unit_id=${unit.data[0].id }&sub_unit_id=${form.selected_sub_unit.id}&sub_unit_type=${form.sub_unit_type.id}`"
                                 :size="145"
                                 :foreground="'#000'"
                                 level="L"
@@ -325,7 +324,8 @@ const copied = ref(false);
                             />
                         </div>
                         
-                    </v-card>
+                    </v-card-body>
+                       </v-card>
 
             
                 

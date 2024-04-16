@@ -1065,7 +1065,7 @@ const currentYear = ref(getCurrentYear());
                                 </v-col>
                               </v-row>
                               </v-card-body>
-                          </v-card>
+                    </v-card>
 
                                 <!-- Content Preview-->
                                 <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true  || form.csi_type == 'By Date' && generated == true" :form="form"  :data="props" />

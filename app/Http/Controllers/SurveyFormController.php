@@ -64,7 +64,6 @@ class SurveyFormController extends Controller
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
     {       
-      
         try{
             DB::beginTransaction();    
            
@@ -147,7 +146,7 @@ class SurveyFormController extends Controller
         $csf_form->sub_unit_id = $request->sub_unit_id;
         $csf_form->psto_id = $request->psto_id;
         $csf_form->client_type = $request->client_type;
-        $csf_form->driving_type = $request->driving_type;
+        $csf_form->sub_unit_type = $request->sub_unit_type;
         $csf_form->save();
 
         return $csf_form;
