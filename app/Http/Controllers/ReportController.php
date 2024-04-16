@@ -166,7 +166,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -490,7 +490,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -836,7 +836,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -1387,7 +1387,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -1958,7 +1958,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -2528,7 +2528,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -3096,7 +3096,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
@@ -3810,7 +3810,7 @@ class ReportController extends Controller
                       ->orWhere('client_type', "Business/Organization");
             }        
         })->when($sub_unit_type, function ($query, $sub_unit_type) {
-            $query->where('sub_unit_type', $sub_unit_type);
+            $query->where('sub_unit_type', $sub_unit_type['type_name']);
        })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
         ->get();
 
@@ -3826,7 +3826,7 @@ class ReportController extends Controller
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type['type_name']; 
+        $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
