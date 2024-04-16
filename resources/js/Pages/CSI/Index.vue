@@ -857,7 +857,7 @@ const currentYear = ref(getCurrentYear());
                           </v-card-title>
 
                     </v-card>
-                    <v-card class="overflow-visible mb-5">   
+                    <v-card class="overflow-visible mb-5" >   
                           <v-divider class="border-opacity-100"></v-divider>
                           <v-row class="p-3 overflow-visible" >
                               <v-col class="my-auto overflow-visible">
@@ -942,9 +942,9 @@ const currentYear = ref(getCurrentYear());
 
                           <v-divider class="border-opacity-100"></v-divider>
 
-                          <v-card-body class="overflow-visible mb-5">
+                          <v-card-body class="overflow-visible mb-5" >
                             
-                              <v-row class="p-3" v-if="form.csi_type == 'By Date'">
+                              <v-row class="p-3" v-if="form.csi_type == 'By Date'" >
                                   <v-col class="my-auto">
                                       <v-text-field
                                           label="Select Date From"
