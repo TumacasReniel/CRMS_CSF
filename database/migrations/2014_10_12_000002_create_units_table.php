@@ -16,11 +16,13 @@ return new class extends Migration
             $table->foreignId('services_id');
             $table->foreign('services_id')
                     ->references('id')
-                    ->on('services');
+                    ->on('services')
+                    ->onDelete('restrict');
             $table->string('unit_name');
             $table->string('unit_url')->nullable();
             $table->boolean('is_disabled')->default(0);
             $table->timestamps();
+
         });
     }
 

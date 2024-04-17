@@ -1,5 +1,7 @@
 <script setup>
+import VueMultiselect from "vue-multiselect";
 import AppLayout from '@/Layouts/AppLayout.vue';
+import ModalForm from '@/Pages/Libraries/Service-Units/Form/Modal.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { reactive ,ref, watch} from 'vue'
 
@@ -26,12 +28,27 @@ const all_service_unit_rating = async () => {
    router.get('/csi/all-units', form , { preserveState: true })
 };
 
+const show_modal = ref(false);
+const action_clicked = ref('');
+const selected_service = ref({});
 
-const showViewModal = async (service_id, unit_id) => {
-    form.service_id = service_id;
+
+const goViewPage = async (service_id, unit_id) => {
+   form.service_id = service_id;
    form.unit_id = unit_id;
    router.get('/csi/view', form , { preserveState: true });
+
 };
+
+const showServiceModal = async (is_show, action , service) => {
+    show_modal.value =is_show;
+    action_clicked.value = action;
+    if(service){
+        selected_service.value = service;
+        console.log(service, 77);
+    }
+};
+
 
 
 
@@ -52,13 +69,13 @@ const showViewModal = async (service_id, unit_id) => {
                     <v-card>
                       
                         <v-row>
-                            <!-- <v-col class="text-left m-5 mb-1">
-                                <v-btn @click="addNewService()" prepend-icon="mdi-plus" color="primary" style="margin-right:120px">
+                            <v-col class="text-left m-5 mb-1" v-if="user.account_type == 'admin'">
+                                <v-btn @click="showServiceModal(true, 'add_new_service', null)" prepend-icon="mdi-plus" color="primary"  size="small">
                                        Add New Service
                                 </v-btn>
-                            </v-col> -->
+                            </v-col>
                             <v-col class="text-right m-5 mb-1">
-                                <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:120px">
+                                <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:100px">
                                         All Unit Ratings
                                 </v-btn>
                             </v-col>
@@ -74,8 +91,13 @@ const showViewModal = async (service_id, unit_id) => {
                             
                             <template v-if="service_units" v-for="(service_unit, index) in service_units.data" :key="service_unit.id">
                                 <tr class="border border-solid bg-blue-100">                
-                                    <td class="m5 p-5  border border-solid font-black" colspan="3" >
+                                    <td class="m5 p-5  border border-solid font-black" colspan="2" >
                                          {{ service_unit.services_name }}
+                                    </td>  
+                                    <td class="m5 p-5  border border-solid font-black text-center" colspan="3" v-if="user.account_type == 'admin'">
+                                         <v-btn @click="showServiceModal(true, 'add_new_unit', service_unit )" prepend-icon="mdi-plus" color="primary" size="small">
+                                            Add New Unit
+                                        </v-btn>
                                     </td>  
                                 </tr>       
 
@@ -90,7 +112,7 @@ const showViewModal = async (service_id, unit_id) => {
                                      >
 
                                        <div>
-                                         <v-btn prepend-icon="mdi-eye" class="mr-3" size="small" @click="showViewModal(service_unit.id, unit.id)"
+                                         <v-btn prepend-icon="mdi-eye" class="mr-3" size="small" @click="goViewPage(service_unit.id, unit.id)"
                                             :disabled="user.account_type == 'user' && user.unit_id != unit.id"
                                         >
                                             View 
@@ -115,8 +137,20 @@ const showViewModal = async (service_id, unit_id) => {
             </div>
         </div>
 
+      <ModalForm 
+          :value="show_modal"
+          :action_clicked="action_clicked"
+          :account="account"
+          :selected_service="selected_service"
+          :data="props"
+          @input="showServiceModal"
+          @reloadAccounts="reloadAccounts"
+      ></ModalForm>
     </AppLayout>
+
+
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style scoped>
    table {

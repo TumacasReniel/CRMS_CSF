@@ -6,18 +6,18 @@ import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
 import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
 import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
 import YearlyContent from '@/Pages/CSI/Yearly/Content.vue';
-import AllUnitMonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
 import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
 import ByUnitQ1Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter1.vue';
 import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
 import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
 import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
 import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
+import VueMultiselect from "vue-multiselect";
 import { reactive, ref, computed, onMounted, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
 import Swal from 'sweetalert2';
-import VueMultiselect from "vue-multiselect";
+
 
 const props = defineProps({
     service: Object, 
@@ -861,9 +861,6 @@ const currentYear = ref(getCurrentYear());
                           <v-divider class="border-opacity-100"></v-divider>
                           <v-row class="p-3 overflow-visible" >
                               <v-col class="my-auto overflow-visible">
-                                  <!-- <v-select style="padding:-20px" size="x-small" v-model="form.csi_type" class="m-3 p-0" label="Select Type" 
-                                      :items="['By Date','By Month', 'By Quarter', 'By Year/Annual']" border="none"> 
-                                  </v-select> -->
                                 <div class="my-auto overflow-visible"> 
                                    <vue-multiselect
                                       v-model="form.csi_type"
@@ -1090,6 +1087,8 @@ const currentYear = ref(getCurrentYear());
         </div>
 
     </AppLayout>
+
+   
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css">
 

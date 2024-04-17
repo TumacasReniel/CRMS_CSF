@@ -8,10 +8,11 @@ use App\Models\Services;
 use App\Models\UnitPsto;
 use App\Models\SubUnitPsto;
 use App\Models\UnitSubUnit;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Services as ServicesUnitsResource;
 use App\Http\Resources\UnitPSTO as UnitPSTOResource;
+use App\Http\Resources\Services as ServicesUnitsResource;
 use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
 use App\Http\Resources\UnitSubUnit as UnitSubUnitResource;
 
@@ -28,6 +29,25 @@ class ServiceUnitController extends Controller
         return Inertia::render('Libraries/Service-Units/Index')
             ->with('service_units', $data)
             ->with('user',  $user);
+    }
+
+
+    public function store(Request $request)
+    {
+        //dd($request->all());
+        $service = new Services();
+        $service->services_name = strtoupper($request->service_name);
+        $service->slug = Str::slug($request->service_name, '-');
+        $service->save();
+    }
+
+    
+    public function storeUnit(Request $request)
+    {
+        $unit = new Unit();
+        $unit->services_id = $request->service_id;
+        $unit->unit_name = strtoupper($request->unit_name);
+        $unit->save();
     }
 
 

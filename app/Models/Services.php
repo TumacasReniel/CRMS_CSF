@@ -10,7 +10,7 @@ class Services extends Model
     use HasFactory;
     protected $fillable = [
         'services_name',
-        'services_url',
+        'slug',
     ];
 
     public function units()

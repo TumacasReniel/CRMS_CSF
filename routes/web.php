@@ -59,6 +59,9 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    Route::post('/services/add', [ServiceUnitController::class, 'store']);
+    Route::post('/services/unit/add', [ServiceUnitController::class, 'storeUnit']);
+    
     Route::get('/service_unit/unit', [ServiceUnitController::class , 'unit_index'])->name('units');
     Route::get('/service_unit/psto', [ServiceUnitController::class , 'psto_index'])->name('psto');
     Route::get('/service_unit/unit-psto', [ServiceUnitController::class , 'unit_psto_index'])->name('unit_psto');

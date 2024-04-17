@@ -1,11 +1,5 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import MonthlyContent from '@/Pages/CSI/Monthly/Content.vue';
-import Q1Content from '@/Pages/CSI/Quarterly/Contents/Q1Content.vue';
-import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
-import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
-import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
-import AllUnitMonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
 import { reactive, ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
@@ -161,153 +155,31 @@ const generateCSIReport = async () => {
                     </v-card>
                     
                      <v-divider class="border-opacity-100"></v-divider>
-                    <v-card class="p-5 mb-3">
-                   
-                         <v-row class="p-3" style="margin-bottom:-35px">
-                             <v-col class="my-auto">
-                                <v-combobox v-model="form.csi_type" class="m-3" label="Select Type" variant="outlined" 
-                                :items="['By Month', 'By Quarter', 'By Year/Annual', 'By Employee']" border="none"> </v-combobox>
-                            </v-col>
-                        </v-row>
-                      
-                    </v-card>
                    
                      <v-card class="mb-3 my-auto">
-                        
-                        <v-row class="p-3" v-if="form.csi_type == 'By Date'" >
-                            <v-col class="my-auto">
-                                 <v-text-field
-                                    label="Select Date From"
-                                    placeholder="Date From"
-                                    variant="outlined"
-                                    size="x-small"
-                                    type="date"
-                                    v-model="form.date_from"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col>
-                                 <v-text-field
-                                    label="Select Date To"
-                                    placeholder="Date To"
-                                    variant="outlined"
-                                    size="x-small"
-                                    type="date"
-                                     v-model="form.date_to"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col class="ml-5">
-                              <v-btn @click="generateCSIReport()" >Generate</v-btn>
-                            </v-col>
-                           <!-- <v-col class="text-end mr-5">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col> -->
-                        </v-row>
-
-                         <v-row class="p-3" v-if="form.csi_type == 'By Month'">
-                            <v-col class="my-auto">
-                                  <v-combobox v-model="form.selected_month" 
-                                        class="m-3" label="Select Month" 
-                                        variant="outlined" 
-                                        :items="months" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col> 
-                            <v-col class="my-auto">
-                                <v-combobox v-model="form.selected_year" 
-                                        class="m-3" label="Select Year" 
-                                        variant="outlined" 
-                                        :items="years" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col>   
-
-                            <v-col class="ml-5 mt-3">
-                              <v-btn @click="generateCSIReport()" >Generate</v-btn>
-                            </v-col>
-                           <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col>
-                        </v-row>
-
-                          <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
-                            <v-col class="my-auto">
-                                  <v-combobox v-model="form.selected_quarter" 
-                                        class="m-3" label="Select Quarter" 
-                                        variant="outlined" 
-                                        :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col> 
-                            <v-col class="my-auto">
-                                <v-combobox v-model="form.selected_year" 
-                                        class="m-3" label="Select Year" 
-                                        variant="outlined" 
-                                        :items="years" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col>   
-
-                            <v-col class="ml-5 mt-3">
-                              <v-btn  @click="generateCSIReport()" >Generate</v-btn>
-                            </v-col>
-                           <v-col class="text-end mr-5 m-3">
-                             <v-btn :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col>
-                        </v-row>
-                          <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
-                            <v-col class="my-auto">
-                                <v-combobox v-model="form.selected_year" 
-                                        class="m-3" label="Select Year" 
-                                        variant="outlined" 
-                                        :items="years" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col>   
-
-                            <v-col class="ml-5 mt-3">
-                              <v-btn @click="generateCSIReport()" >Generate</v-btn>
-                            </v-col>
-                           <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col>
-                        </v-row>
-
-                          <v-row class="p-3" v-if="form.csi_type == 'By Employee'">
-                            <v-col class="my-auto">
-                                <v-combobox v-model="form.selected_employee" 
-                                        class="m-3" label="Select Employee" 
-                                        variant="outlined" 
-                                        :items="['']" 
-                                        outlined="none"> 
-                                  </v-combobox>
-                            </v-col>   
-
-                            <v-col class="ml-5 mt-3">
-                              <v-btn @click="generateCSIReport()" >Generate</v-btn>
-                            </v-col>
-                           <v-col class="text-end mr-5 m-3">
-                             <v-btn  :disabled="form.generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                           </v-col>
-                        </v-row>
+                       <v-card-text class="ml-5">
+                         <span class="font-black">PLEASE DO THE TRADITIONAL MANUAL REPORT ON EXCEL FOR ALL UNITS REPORT </span><br>
+                          <span class="ml-10">
+                            <p>-By Monthly</p>
+                            <p>-By First Quarter</p>
+                            <p>-By Second Quarter</p>
+                            <p>-By Third Quarter</p>
+                            <p>-By Fourth Quarter</p>
+                            <p>-By Yearly/Annual</p>
+        
+                            <b>THANK YOU!</b>
+                          </span>
+                         </v-card-text>
+                          <v-divider class="border-opacity-100"></v-divider>
                      </v-card>
 
+                     
 
-                    <!-- Content Preview-->
-                    <AllUnitMonthlyContent v-if="form.csi_type == 'By Month' && generated == true"  :form="form"  :data="props" />
-                    
-                      <!-- End Content Preview-->
                 </div>
             </div>
         </div>
 
-         <!-- Printouts-->
-        <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
-        <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && form.generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-        
+              
     </AppLayout>
 </template>
 
