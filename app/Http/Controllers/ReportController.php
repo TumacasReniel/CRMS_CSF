@@ -31,7 +31,6 @@ class ReportController extends Controller
 {
     public function index(Request $request )
     {
-         //dd($request->all());
         //get user
         $user = Auth::user();
 
@@ -77,7 +76,6 @@ class ReportController extends Controller
 
     public function view(Request $request )
     {
-        //dd($request->all());
         //get user
         $user = Auth::user();
 
@@ -4091,7 +4089,6 @@ class ReportController extends Controller
 
     public function generateAllUnitReports(Request $request)
     {
-       //dd($request->all());
        
         if($request->csi_type == 'By Date'){
             return $this->generateCSIAllUnitByDate($request );

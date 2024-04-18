@@ -20,11 +20,11 @@ class CcQuestionSeeder extends Seeder
             ],
             [
                 'title' => 'CC2',
-                'question' => 'If aware of CC (anwered 1-3 in CC1), would say that the CC of this was...?',
+                'question' => 'If aware of CC (answered 1-3 in CC1), would say that the CC of this was...?',
             ],
             [
                 'title' => 'CC3',
-                'question' => 'If aware of CC (anwered 1-3 in CC1), how much did the CC help you in your transaction?',
+                'question' => 'If aware of CC (answered 1-3 in CC1), how much did the CC help you in your transaction?',
             ],
 
         ];

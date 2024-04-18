@@ -14,10 +14,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $user = new User();
-        $user->name = 'Test User';
-        $user->email = 'test@example.com';
+        $user->name = 'SUPER ADMIN';
+        $user->email = 'dost.ro9@gamil.com';
         $user->account_type = 'admin';
-        $user->password = bcrypt('*1234#');
+        $user->password = bcrypt('dost-superadmin');
         $user->region_id = 9;
         $user->save();
     }

@@ -49,9 +49,13 @@ const showServiceModal = async (is_show, action , service) => {
     }
 };
 
-
-
-
+const openPDF = () => {
+    // Replace 'path/to/your/pdf/file.pdf' with the actual path to your PDF file
+    const pdfPath = 'https://drive.google.com/file/d/1YHbyz0GnrXOTilE8Kpae1ZriNQQ2FVNh/view?usp=sharing';
+    
+    // Open the PDF in a new tab or window
+    window.open(pdfPath, '_blank');
+};
 </script>
 
 <template>
@@ -78,8 +82,16 @@ const showServiceModal = async (is_show, action , service) => {
                                 <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:100px">
                                         All Unit Ratings
                                 </v-btn>
-                            </v-col>
-                        </v-row>
+
+                                <v-btn 
+                                    prepend-icon="mdi-printer" 
+                                    class="mr-5"
+                                    color="success"
+                                    @click="openPDF()"
+                                        >CSF Form(manual)
+                                </v-btn>   
+                                </v-col>
+                            </v-row>
                         
                        
                         <table class="w-full">

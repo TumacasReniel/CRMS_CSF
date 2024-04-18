@@ -500,7 +500,7 @@ watch(
                                             <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
                                         </div>
                                         <div class="overflow-hidden mb-3">
-                                            <div>How important is this attibute?</div>
+                                            <div>How important is this attribute?</div>
                                             <div>
                                                 <div class="ml-2 mb-3">
                                                     <v-btn-toggle  v-model="form.dimension_form.importance_rate_score[index]"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>

@@ -107,8 +107,6 @@ class ServiceUnitController extends Controller
 
     public function sub_unit_psto_index(Request $request)
     {
-        //dd($request->all());
-
         //get user
         $user = Auth::user();
 
@@ -139,8 +137,6 @@ class ServiceUnitController extends Controller
 
     public function unit_psto_index(Request $request)
     {
-        //dd($request->all());
-
         //get user
         $user = Auth::user();
 

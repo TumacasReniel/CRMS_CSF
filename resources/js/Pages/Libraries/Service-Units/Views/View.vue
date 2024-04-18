@@ -4,6 +4,8 @@
     import { router } from '@inertiajs/vue3';
     import { reactive , ref, watch} from 'vue';
     import QrcodeVue from "qrcode.vue";
+    import { Printd } from "printd";
+    import CSFPrint from '@/Pages/Libraries/Service-Units/Form/PrintCSF.vue';
    
     const props = defineProps({
         service: Object, 
@@ -54,8 +56,10 @@
 
 
     const qr_link_type = ref(null);
+    const generated = ref(false);
     const generateURL = async (sub_unit, unit_psto , sub_unit_psto, sub_unit_type) =>{
         //console.log(props.unit.data[0].id);
+        generated.value=true;
 
         if(props.unit.data[0].id == 8){
             qr_link_type.value = 4;
@@ -144,6 +148,69 @@ const copied = ref(false);
       }, 2000);
 
   };
+
+
+  const is_printing = ref(false);
+  const printCSFForm = async () => {
+      is_printing.value = true;
+      //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
+      //Create an instance of Printd
+        let d = await new Printd();
+        let css = ` 
+          @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+          * {
+              font-family: 'Time New Roman'
+          }
+          .new-page {
+              page-break-before: always;
+          }
+          .th-color{
+              background-color: #8fd1e8;
+          }
+          .text-center{
+            text-align: center;
+          }
+          .text-right{
+            text-align:end
+          }
+          table {
+            border-collapse: collapse;
+            width: 100%; /* Optional: Set a width for the table */
+          }
+
+          tr, th, td {
+            border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
+            padding: 3px; /* Optional: Add padding for better spacing */
+          }
+          .page-break {
+            page-break-before: always; /* or page-break-after: always; */
+          }
+
+          /* Styles for v-text-field */
+            .v-text-field {
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            padding: 0.625rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: rgba(0, 0, 0, 0.87);
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+
+           
+
+        `;
+
+       d.print(document.querySelector(".print-id"), [css]);
+};
+
+
 </script>
 
 <template>
@@ -227,9 +294,13 @@ const copied = ref(false);
                         </v-col>
 
 
-                        <v-col class="my-auto text-right" >
+                        <v-col class="my-auto text-right" >                            
                             <v-btn 
-                            :disabled="unit.data[0].sub_units.length > 0  && form.selected_sub_unit == '' || sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || unit_pstos.length > 0 && form.selected_unit_psto == ''  || form.selected_sub_unit == 3 && form.sub_unit_type == '' " prepend-icon="mdi-plus"
+                            :disabled="unit.data[0].sub_units.length > 0  && form.selected_sub_unit == '' || 
+                            sub_unit_pstos.length > 0 && form.selected_sub_unit_psto == '' || 
+                            unit_pstos.length > 0 && form.selected_unit_psto == ''  || 
+                            form.selected_sub_unit == 3 && form.sub_unit_type == '' " 
+                            prepend-icon="mdi-plus"
                             @click="generateURL(form.selected_sub_unit, form.selected_unit_psto , form.selected_sub_unit_psto, form.sub_unit_type)" >Generate URL </v-btn>           
                         </v-col>
                         </v-row>
@@ -332,7 +403,7 @@ const copied = ref(false);
                 </div>
             </div>
         </div>
-    
+        <CSFPrint v-if="generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
     </AppLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
