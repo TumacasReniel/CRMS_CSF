@@ -156,6 +156,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitByDate($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -436,6 +437,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -475,8 +477,8 @@ class ReportController extends Controller
 
     public function generateCSIByUnitMonthly($request, $region_id, $psto_id)
     {
-        $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit = $this->getSubUnit($request);
+        $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
 
@@ -819,6 +821,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitFirstQuarter($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -1287,6 +1290,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -1370,6 +1374,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitSecondQuarter($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -1857,6 +1862,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -1941,6 +1947,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitThirdQuarter($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -2426,6 +2433,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -2509,6 +2517,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitFourthQuarter($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -2995,6 +3004,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
@@ -3078,6 +3088,7 @@ class ReportController extends Controller
 
     public function generateCSIByUnitYearly($request, $region_id, $psto_id)
     {
+        $sub_unit = $this->getSubUnit($request);
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
@@ -3649,6 +3660,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
