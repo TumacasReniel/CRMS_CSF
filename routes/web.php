@@ -1,17 +1,19 @@
 <?php
 
 use Inertia\Inertia;
+use App\Http\Middleware\CheckAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\PDFController;
+use App\Http\Controllers\PstoController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\SubUnitController;
+use App\Http\Controllers\UnitPstoController;
 use App\Http\Controllers\SurveyFormController;
 use App\Http\Controllers\ServiceUnitController;
 use App\Http\Controllers\SubUnitPstoController;
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\RegionController;
-use App\Http\Middleware\CheckAdmin;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,14 @@ Route::middleware([
         Route::get('/libraries', function () {
             return Inertia::render('Libraries/Services/Index');
         })->name('libraries');
+        Route::get('/regions', [RegionController::class, 'index'])->name('regions');
+        Route::post('/regions/add', [RegionController::class, 'store']);
+        Route::post('/regions/update', [RegionController::class, 'update']);
+        Route::get('/pstos', [PstoController::class, 'index'])->name('pstos');
+        Route::post('/pstos/add', [PstoController::class, 'store']);
+        Route::post('/pstos/update', [PstoController::class, 'update']);
+        Route::post('/pstos/delete', [PstoController::class, 'destroy']);
+        Route::get('/unit-pstos', [UnitPstoController::class, 'index'])->name('unitPstos');
     });
 
     Route::get('/dashboard', function () {
@@ -72,7 +82,8 @@ Route::middleware([
    
     Route::get('/csi/generate/all-units', [ReportController::class, 'generateAllUnitReports']);
     Route::post('/csi/generate', [ReportController::class, 'generateReports']);
-    Route::resource('/regions', RegionController::class);
+
+
 
 
 

@@ -75,6 +75,13 @@
     const reloadAccounts = async () => {
         account.value = {};
     };
+
+    let page_number = 1;
+    const getAccounts = async (page) => {
+       router.visit('/accounts?page=' + page , { preserveState: true});
+       page_number = page;
+    };
+
 </script>
 
 
@@ -199,9 +206,10 @@
                                     </span>
                                     <div class="text-center">
                                         <v-pagination
+                                            v-model="page_number"
                                             :length="accounts.meta.last_page"
                                             circle
-                                            @click="getAccounts"
+                                            @click="getAccounts(page_number)"
                                         ></v-pagination>
                                     </div>   
                                 </div>           

@@ -1090,9 +1090,7 @@ const currentYear = ref(getCurrentYear());
 
    
 </template>
-<style src="vue-multiselect/dist/vue-multiselect.css">
-
-</style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 
 

@@ -63,7 +63,7 @@ const logout = () => {
                                    Service Units
                                 </NavLink>
 
-                                 <NavLink :href="route('libraries')" :active="route().current('libraries')" v-if="$page.props.auth.user.account_type  == 'admin'">
+                                 <NavLink :href="route('libraries')" :active="route().current('libraries')" >
                                     Libraries 
                                 </NavLink>
                                 

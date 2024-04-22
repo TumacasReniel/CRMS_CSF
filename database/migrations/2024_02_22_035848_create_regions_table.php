@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->string('short_name')->unique();
-            $table->string('order');
+            $table->string('order')->unique();
             $table->timestamps();
         });
     }
