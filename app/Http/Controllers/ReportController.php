@@ -3754,7 +3754,7 @@ class ReportController extends Controller
     public function getUnitPSTOs($request)
     {
          //get unit pstos
-         $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
+         $unit_pstos = UnitPsto::where('unit_id',$request->unit)->get();
          $unit_pstos = UnitPSTOResource::collection($unit_pstos);
    
          $unit_pstos = $unit_pstos->pluck('psto');

@@ -184,7 +184,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 2px">
-                                    {{ data.net_promotion_score }}
+                                    {{ data.net_promoter_score }}
                                 </div>
                             </td>
 
