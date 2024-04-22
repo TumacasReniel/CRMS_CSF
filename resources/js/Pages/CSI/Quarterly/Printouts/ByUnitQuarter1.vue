@@ -30,11 +30,12 @@
                     
                 </div>
                  <div style="font-size: 12px">  
-                    Services Unit : <u v-if="data.unit.data.length > 0">{{ data.unit.data[0].unit_name }}</u><br>
-                                    <u v-if="data.sub_unit > 0" style="margin-left: 75px">{{ data.sub_unit[0].sub_unit_name }}</u>
-                                    <u v-if="form.sub_unit_type" style="margin-left: 5px">{{ form.sub_unit_type.type_name }}</u>
-                                    <u v-if="form.client_type" style="margin-left: 75px">{{ form.client_type }}</u>
-                                    <u v-if="form.selected_sub_unit_psto" style="margin-left: 75px">{{ form.selected_sub_unit_psto.id }}</u>
+                   Services Unit : <u v-if="data.unit.data.length > 0">{{ data.unit.data[0].unit_name }}</u><br>
+                                        <u v-if="form.selected_unit_psto">{{ form.selected_unit_psto.psto_name }}</u><br v-if="form.selected_unit_psto.length > 0">
+                                        <u v-if="data.sub_unit" style="margin-left: 75px">{{ data.sub_unit[0].sub_unit_name }}</u>
+                                         <u v-if="form.sub_unit_type" style="margin-left: 5px">{{ form.sub_unit_type.type_name }}</u>
+                                        <u v-if="form.client_type" style="margin-left: 75px">{{ form.client_type }}</u> <br v-if="form.client_type">
+                                        <u v-if="form.selected_sub_unit_psto" style="margin-left: 75px">{{ form.selected_sub_unit_psto.psto_name }}</u>
                 </div>
             </div>
             <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:-5px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
