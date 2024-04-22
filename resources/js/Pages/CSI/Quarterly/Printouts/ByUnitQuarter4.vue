@@ -407,13 +407,15 @@
               <div style="margin-top: 5px ; font-size: 13px">
                     ANALYSIS : 
                     <div  style="text-align: justify; margin: 5px">
-                        The  <span>{{ data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF, 
-                        and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated 
-                        the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.unit_name }}</span> unit had a 
-                        <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.ave_net_promoter_score }}%</span>. 
-                        The Customer Satisfaction Rating for the <span>{{ data.unit.unit_name }}</span> 
-                        unit is <span>{{ data.customer_satisfaction_rating }}</span>%, 
-                        which achieved its functional objective of 95% of customer surveyed are at least satisfied with the S&T services of DOST-IX
+                        The <span>{{ data.unit.unit_name }}</span> Unit for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span> 
+                        had a total of <span>{{ data.total_respondents }}</span> respondents who filled out and rated the Customer Satisfaction Feedback. 
+                        <span>{{ data.total_vss_respondents }}</span> (out of <span>{{ data.total_respondents }}</span>%, or <span>{{ data.percentage_vss_respondents }}</span>%) of the respondents rated the CSF as either very satisfied (VS) or satisfied (S), 
+                        which resulted in an overall average Customer Satisfaction Index (CSI) of <span>{{ data.customer_satisfaction_index }}</span>%, 
+                        a Net Promoter Score of {{ data.ave_net_promoter_score }}%, and an average Likert Scale Rating of <span>{{ data.ave_net_promoter_score }}%</span>, which translates to "very satisfied" for 
+                        the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>.
+
+                        The <span>{{ data.unit.unit_name }}</span> unit's Customer Satisfaction Survey resulted in an Overall Customer Satisfaction Score Rating of <span>{{ data.customer_satisfaction_rating }}</span>% 
+                        for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>, which achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
                     </div>
                 </div>
         </div> 
