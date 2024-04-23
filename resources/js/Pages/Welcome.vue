@@ -86,7 +86,7 @@ defineProps({
          z-index:1;
          margin: 0;
         padding: 0;
-        background-color: black;
+        background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
