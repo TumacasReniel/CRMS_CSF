@@ -876,8 +876,15 @@ const currentYear = ref(getCurrentYear());
                               </v-col>
                               
                               <v-col class="my-auto"  v-if="unit.data[0].id == 8" >
-                                  <v-select v-model="form.client_type" class="m-3" label="Select Client Type"
-                                  :items="['Internal', 'External']" border="none"> </v-select>
+                                   <vue-multiselect
+                                      v-model="form.client_type"
+                                      prepend-icon="mdi-account"
+                                      :options="['Internal', 'External']"
+                                      :multiple="false"
+                                      placeholder="Select Client Type"
+                                      :allow-empty="false"
+                                    >         
+                                    </vue-multiselect>       
                               </v-col>
 
 

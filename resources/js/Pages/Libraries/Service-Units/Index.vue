@@ -79,7 +79,7 @@ const openPDF = () => {
                                 </v-btn>
                             </v-col>
                             <v-col class="text-right m-5 mb-1">
-                                <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:100px">
+                                <v-btn @click="all_service_unit_rating()" prepend-icon="mdi-file" color="yellow" style="margin-right:100px"  size="small">
                                         All Unit Ratings
                                 </v-btn>
 
@@ -87,6 +87,7 @@ const openPDF = () => {
                                     prepend-icon="mdi-printer" 
                                     class="mr-5"
                                     color="success"
+                                    size="small"
                                     @click="openPDF()"
                                         >CSF Form(manual)
                                 </v-btn>   
