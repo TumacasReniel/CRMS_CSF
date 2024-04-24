@@ -25,11 +25,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ServicesSeeder::class);
         $this->call(UnitSeeder::class);
         $this->call(SubUnitSeeder::class);
+        $this->call(RegionSeeder::class);
         $this->call(PSTOSeeder::class);
         $this->call(UnitPSTOSeeder::class);
         $this->call(SubUnitPSTOSeeder::class);
         $this->call(SubUnitTypeSeeder::class);
-        $this->call(RegionSeeder::class);
+     
     }
 
     
