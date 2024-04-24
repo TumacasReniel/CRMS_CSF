@@ -605,6 +605,7 @@ const props = defineProps({
 const form = reactive({
   service: null,
   unit:  null,
+  unit_id: null,
 
   selected_sub_unit: [],
   selected_unit_psto: [],
@@ -677,6 +678,7 @@ const currentYear = ref(getCurrentYear());
    generated.value = true;
    form.service = service;
    form.unit = unit;
+   form.unit_id = unit.data[0].id;
   //  console.log(form,990);
     if(form.csi_type == 'By Date'){
       if(form.date_from && form.date_to){
@@ -770,13 +772,6 @@ const currentYear = ref(getCurrentYear());
        d.print(document.querySelector(".print-id"), [css]);
 };
 
-
-  const report_header = reactive({
-    unit: null,
-    sub_unit: null,
-    unit_psto: null,
-    sub_unit_psto: null,
-  });
 
 
   watch(

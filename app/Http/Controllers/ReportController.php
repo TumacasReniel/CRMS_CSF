@@ -494,7 +494,7 @@ class ReportController extends Controller
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-          
+
     
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
         //$date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
@@ -3818,7 +3818,7 @@ class ReportController extends Controller
                 $query->where('client_type', "General Public")
                       ->orWhere('client_type', "Government Employees")
                       ->orWhere('client_type', "Business/Organization");
-            }        
+            }     
         })->when($sub_unit_type, function ($query, $sub_unit_type) {
             $query->where('sub_unit_type', $sub_unit_type['type_name']);
        })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
