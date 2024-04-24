@@ -49,11 +49,13 @@ class SubUnitPstoController extends Controller
             $psto_ids =   $sub_unit_pstos->pluck('psto_id');
 
             //dd($psto_ids);
-            $sub_unit_pstos = psto::whereIn('id',  $psto_ids)->get() ;
+            $sub_unit_pstos = psto::whereIn('id',  $psto_ids)
+                                    ->where('region_id', $user->region_id)
+                                    ->get();
             $sub_unit_pstos = ResourcesPSTO::collection($sub_unit_pstos);
         }
 
-        $pstos = psto::all(); // for options when assigning unit pstos
+        $pstos = psto::where('region_id', $user->region_id)->get(); // for options when assigning unit pstos
         $pstos = ResourcesPSTO::collection($pstos);
 
 
@@ -69,10 +71,16 @@ class SubUnitPstoController extends Controller
     public function assignSubUnitPSTOs(Request $request)
     {
         // dd($request->all());
-        $sub_unit_psto = SubUnit::findOrFail($request->sub_unit_id);
-        $psto_ids = collect($request->pstos)->pluck('id')->toArray();
-        $sub_unit_psto->pstos()->sync($psto_ids);
-        $sub_unit_psto->update();
+         //get user
+         $user = Auth::user();
+         $sub_unit_psto = SubUnit::findOrFail($request->sub_unit_id);
+ 
+         //get all pstos with specified region of user
+         $all_psto_ids = psto::pstosWithRegion($user->region_id)->select('id')->get();
+         $sub_unit_psto->pstos()->detach($all_psto_ids);
+ 
+         $psto_ids = collect($request->pstos)->pluck('id')->toArray();
+         $sub_unit_psto->pstos()->attach($psto_ids);
 
         return Redirect::back();
     }

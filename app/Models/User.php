@@ -63,4 +63,6 @@ class User extends Authenticatable
     public function region(){
         return $this->HasOne(Region::class, 'id', 'region_id');
     }
+
+
 }

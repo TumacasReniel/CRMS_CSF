@@ -32,6 +32,7 @@ watch(
             form.id = value.id;
             form.name = value.name;
             form.email = value.email;
+            form.selected_account_type = value.account_type;
             form.selected_region = value.region;
         }
     }

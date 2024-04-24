@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('pstos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('region_id');
+            $table->foreign('region_id')
+                    ->references('id')
+                    ->on('regions');
             $table->string('psto_name')->unique();
             $table->string('slug')->unique();
             $table->timestamps();

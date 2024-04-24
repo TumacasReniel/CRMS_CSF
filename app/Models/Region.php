@@ -14,4 +14,9 @@ class Region extends Model
         'short_name',  
         'order', 
     ];
+
+    public function pstos()
+    {
+        return $this->hasMany(Psto::class);
+    }
 }

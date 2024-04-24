@@ -15,13 +15,14 @@ class PstoController extends Controller
         //get user
         $user = Auth::user();
 
-        $search = $request->search;
+        //dd($user->region_id);
 
-        $pstos = psto::all();
+        $search = $request->search;
 
         $pstos = psto::when($search, function ($query,  $search) {
             $query->where('psto_name', 'like', '%' . $search . '%');
         })
+        ->where('region_id', $user->region_id)
         ->orderByDesc('created_at')
         ->paginate(10);
 
@@ -32,9 +33,14 @@ class PstoController extends Controller
 
     public function store(Request $request)
     {
+        //get user
+        $user = Auth::user();
+
         $psto = new psto();
+        $psto->region_id = $user->region_id;
         $psto->psto_name = $request->psto_name;
         $psto->slug = Str::slug($request->psto_name, '-');
+
         $psto->save();
 
         return Redirect::back();

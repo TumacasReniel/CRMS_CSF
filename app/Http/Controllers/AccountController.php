@@ -64,6 +64,7 @@ class AccountController extends Controller
         $account->email = $request->email;
         $account->password = Hash::make('*1234#');
         $account->region_id = $request->selected_region;
+        $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;
         $account->unit_id = $request->selected_unit;
         $account->save();
@@ -78,7 +79,8 @@ class AccountController extends Controller
         $account = User::findorFail($request->id);
         $account->name = $request->name;
         $account->email = $request->email;
-        $account->region_id = $request->selected_region['id'];
+        $account->region_id = $request->selected_region;
+        $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;
         $account->unit_id = $request->selected_unit;
         $account->update();

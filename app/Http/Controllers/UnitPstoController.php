@@ -27,8 +27,6 @@ class UnitPstoController extends Controller
         if($request->form){
             $selected_unit_id = $request->form['unit_id'];
         }
-        
-
 
         $units = Unit::all();
 
@@ -41,20 +39,21 @@ class UnitPstoController extends Controller
         $unit_pstos =[];
         if($selected_unit_id){
             $unit_pstos = UnitPsto::where('unit_id', $selected_unit_id)
-            ->orderByDesc('created_at')
-            ->get();   
+                                    ->orderByDesc('created_at')
+                                    ->get();   
             
             
             $psto_ids =   $unit_pstos->pluck('psto_id');
 
             //dd($psto_ids);
-            $unit_pstos = psto::whereIn('id',  $psto_ids)->get() ;
+            $unit_pstos = psto::whereIn('id',  $psto_ids)
+                                ->where('region_id', $user->region_id)
+                                ->get() ;
             $unit_pstos = ResourcesPSTO::collection($unit_pstos);
         }
 
-        $pstos = psto::all(); // for options when assigning unit pstos
+        $pstos = psto::where('region_id', $user->region_id)->get(); // for options when assigning unit pstos
         $pstos = ResourcesPSTO::collection($pstos);
-
 
 
         return Inertia::render('Libraries/UnitPSTOs/Index')
@@ -68,10 +67,16 @@ class UnitPstoController extends Controller
     public function assignUnitPSTOs(Request $request)
     {
         // dd($request->all());
+        //get user
+        $user = Auth::user();
         $unit_psto = Unit::findOrFail($request->unit_id);
+
+        //get all pstos with specified region of user
+        $all_psto_ids = psto::pstosWithRegion($user->region_id)->select('id')->get();
+        $unit_psto->pstos()->detach($all_psto_ids);
+
         $psto_ids = collect($request->pstos)->pluck('id')->toArray();
-        $unit_psto->pstos()->sync($psto_ids);
-        $unit_psto->update();
+        $unit_psto->pstos()->attach($psto_ids);
 
         return Redirect::back();
     }
