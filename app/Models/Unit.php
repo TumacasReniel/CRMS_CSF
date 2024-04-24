@@ -21,9 +21,15 @@ class Unit extends Model
     }
 
     
-    public function unit_pstos(){
-        return $this->hasMany(UnitPsto::class);
+    // public function unit_pstos(){
+    //     return $this->hasMany(UnitPsto::class);
+    // }
+
+    
+    public function pstos(){ 
+        return $this->belongsToMany(psto::class, 'unit_pstos', 'unit_id', 'psto_id');
     }
+
 
 
 }

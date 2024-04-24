@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use Inertia\Inertia;
 use App\Models\UnitPsto;
+use App\Models\psto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Resources\UnitPSTO as ResourcesUnitPSTO;
+use App\Http\Resources\PSTO as ResourcesPSTO;
 
 class UnitPstoController extends Controller
 {
@@ -22,7 +23,12 @@ class UnitPstoController extends Controller
         $user = Auth::user();
 
         $search = $request->search;
-        $selected_unit = $request->selected_unit;
+        $selected_unit_id = null;
+        if($request->form){
+            $selected_unit_id = $request->form['unit_id'];
+        }
+        
+
 
         $units = Unit::all();
 
@@ -33,43 +39,43 @@ class UnitPstoController extends Controller
         ->paginate(10);
 
         $unit_pstos =[];
-        if($selected_unit){
-            $unit_pstos = UnitPsto::where('unit_id', $selected_unit->id)
+        if($selected_unit_id){
+            $unit_pstos = UnitPsto::where('unit_id', $selected_unit_id)
             ->orderByDesc('created_at')
-            ->get();
-            // dd($request->all());
+            ->get();   
+            
+            
+            $psto_ids =   $unit_pstos->pluck('psto_id');
+
+            //dd($psto_ids);
+            $unit_pstos = psto::whereIn('id',  $psto_ids)->get() ;
+            $unit_pstos = ResourcesPSTO::collection($unit_pstos);
         }
 
-    
+        $pstos = psto::all(); // for options when assigning unit pstos
+        $pstos = ResourcesPSTO::collection($pstos);
+
+
+
         return Inertia::render('Libraries/UnitPSTOs/Index')
                     ->with('units', $units)
                     ->with('unit_pstos', $unit_pstos)
+                    ->with('pstos', $pstos)
                     ->with('user', $user);
     }
 
-    public function store(Request $request)
+
+    public function assignUnitPSTOs(Request $request)
     {
-        $region = new UnitPSTO();
-        $region->name = $request->name;
-        $region->code = $request->code;
-        $region->short_name = $request->short_name;
-        $region->order = $request->order;
-        $region->save();
+        // dd($request->all());
+        $unit_psto = Unit::findOrFail($request->unit_id);
+        $psto_ids = collect($request->pstos)->pluck('id')->toArray();
+        $unit_psto->pstos()->sync($psto_ids);
+        $unit_psto->update();
 
         return Redirect::back();
-       
     }
 
-    public function update(Request $request)
-    {
-        $region = UnitPSTO::findorFail($request->id);
-        $region->name = $request->name;
-        $region->code = $request->code;
-        $region->short_name = $request->short_name;
-        $region->order = $request->order;
-        $region->update();
-
-        return Redirect::back();
-       
-    }
+    
+    
 }

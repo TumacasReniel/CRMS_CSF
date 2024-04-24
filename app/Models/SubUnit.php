@@ -17,8 +17,11 @@ class SubUnit extends Model
         return $this->hasMany(SubUnitType::class);
     }
 
-    public function sub_unit_pstos(){
-        return $this->hasMany(SubUnitPSTO::class);
-    }
+    // public function sub_unit_pstos(){
+    //     return $this->hasMany(SubUnitPSTO::class);
+    // }
 
+    public function pstos(){ 
+        return $this->belongsToMany(psto::class, 'sub_unit_pstos', 'sub_unit_id', 'psto_id');
+    }
 }

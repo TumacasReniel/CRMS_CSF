@@ -63,6 +63,9 @@ Route::middleware([
         Route::post('/pstos/update', [PstoController::class, 'update']);
         Route::post('/pstos/delete', [PstoController::class, 'destroy']);
         Route::get('/unit-pstos', [UnitPstoController::class, 'index'])->name('unitPstos');
+        Route::get('/sub-unit-pstos', [SubUnitPstoController::class, 'index'])->name('subunitPstos');
+        Route::post('/unit-pstos/assign', [UnitPstoController::class, 'assignUnitPSTOs']);
+        Route::post('/sub-unit-pstos/assign', [SubUnitPstoController::class, 'assignSubUnitPSTOs']);
     });
 
     Route::get('/dashboard', function () {

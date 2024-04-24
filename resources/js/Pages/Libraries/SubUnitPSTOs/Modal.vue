@@ -2,13 +2,13 @@
 import { reactive, watch, ref, onMounted } from "vue";
 import { Head, Link, router } from '@inertiajs/vue3';
 import VueMultiselect from "vue-multiselect";
-const emit = defineEmits(["reloadUnitPSTOs", "input"]);
+const emit = defineEmits(["reloadSubUnitPSTOs", "input"]);
 const props = defineProps({
-    unit: {
+    sub_unit: {
         type: Object,
         default: null,
     },
-    unit_pstos: {
+    sub_unit_pstos: {
         type: Object,
         default: null,
     },
@@ -31,19 +31,19 @@ const props = defineProps({
 });
 
 watch(
-    () => props.unit,
+    () => props.sub_unit,
     (value) => {
         if(value){
-            form.unit_id = value.id;
-            form.unit_name = value.unit_name;
-            router.get('/unit-pstos?page='+ props.page_number ,{ form },{preserveState:true} );
+            form.sub_unit_id = value.id;
+            form.sub_unit_name = value.sub_unit_name;
+            router.get('/sub-unit-pstos?page='+ props.page_number ,{ form },{preserveState:true} );
         }
     }
      
 );
 
 watch(
-    () => props.unit_pstos,
+    () => props.sub_unit_pstos,
     (value) => {
         if(value){
             form.pstos = value.data;
@@ -53,8 +53,8 @@ watch(
 );
 
 const form = reactive({
-    unit_id: null,
-    unit_name:null,
+    sub_unit_id: null,
+    sub_unit_name:null,
     pstos:null,
 });
 
@@ -79,7 +79,7 @@ watch(
 watch(
     () => form.selected_service,
     (value) => {
-        form.selected_unit = null;
+        form.selected_sub_unit = null;
     }
 );
 
@@ -89,12 +89,12 @@ watch(
 
 const savePSTO = async () => {
    
-    router.post('/unit-pstos/assign', form );
+    router.post('/sub-unit-pstos/assign', form );
 
     emit("input", false);
-    emit("reloadUnitPSTOs");
+    emit("reloadSubUnitPSTOs");
 
-    form.id= '';
+    form.sub_unit_id= null;
     form.pstos = null;
 };
 
@@ -102,9 +102,9 @@ const savePSTO = async () => {
 
 const closeDialog = (value) => {
     emit("input", value);
-    emit("reloadUnitPSTOs");
+    emit("reloadSubUnitPSTOs");
 
-    form.id= '';
+    form.sub_unit_id= null;
     form.pstos = null;
 };
 
@@ -117,7 +117,7 @@ const closeDialog = (value) => {
     <v-dialog v-model="show_form_modal" width="600" height="800" scrollable persistent>
         <v-card>
             <v-card-title class="bg-indigo mb-5">
-                <span class="text-h5">{{ props.action }} Unit PSTO</span>
+                <span class="text-h5">{{ props.action }} SubUnit PSTO</span>
             </v-card-title>
             <v-card-body>
 
@@ -125,18 +125,18 @@ const closeDialog = (value) => {
                     <v-col cols="11" class="m-3 " style="margin-bottom:-20px">
                         <v-text-field
                             label="Name*"
-                            v-model="form.unit_name"
+                            v-model="form.sub_unit_name"
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
 
-                  <v-col class="my-auto mr-5 ml-5"  v-if="unit_pstos.data">
+                  <v-col class="my-auto mr-5 ml-5"  v-if="sub_unit_pstos.data">
                     <label>PSTOs</label>
                     <vue-multiselect
                         v-model="form.pstos"
                         :options="pstos.data"
                         :multiple="true"
-                        placeholder="Select Unit PSTO"
+                        placeholder="Select SubUnit PSTO"
                         label="psto_name"
                         track-by="psto_name"
                         :allow-empty="false"

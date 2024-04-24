@@ -11,4 +11,6 @@ class psto extends Model
     protected $fillable = [
         'psto_name', 
     ];
+
+
 }
