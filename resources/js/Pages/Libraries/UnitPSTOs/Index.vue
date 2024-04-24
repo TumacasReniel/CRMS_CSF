@@ -89,7 +89,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <v-row style="margin-bottom:-30px">
-                       <v-col>
+                       <v-col cols="6">
                          <div class="w-full m-5 text-right">
                             <v-text-field
                                 :loading="loading"
