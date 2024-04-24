@@ -134,7 +134,7 @@
                                      <td>{{ unit.id }}</td>
                                     <td>{{ unit.unit_name }}</td>
                                     <td class="text-center">
-                                        <v-btn @click="showUnitPSTOModal(true, 'Update' , unit)" size="small" prepend-icon="mdi-update" color="primary">     
+                                        <v-btn @click="showUnitPSTOModal(true, 'Assign' , unit)" size="small" prepend-icon="mdi-update" color="primary">     
                                             Assign                         
                                         </v-btn>
                                     </td>
