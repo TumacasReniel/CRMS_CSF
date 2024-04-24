@@ -579,6 +579,7 @@ watch(
                                 v-if="form.is_complaint == true"
                                 v-model="form.comment"
                                 placeholder="Input here!"
+                                :rules="[ (v) => !!v || formSubmitted && !form.comment ||  'This field is required',]"
                             ></v-textarea>     
                             <v-textarea
                                 v-else-if="form.is_complaint == false"
@@ -587,7 +588,7 @@ watch(
                             ></v-textarea>                         
                         </v-container>
 
-                        <div class="text-red-800 p-5" v-if="formSubmitted && form.is_complaint == true">{{ 'This selection is required because you rate low to our services with the options above.' }}<br>
+                        <div class="text-red-800 p-5" v-if="formSubmitted && form.is_complaint == true ">{{ 'This selection is required because you rate low to our services with the options above.' }}<br>
                         Please input the reason/s why you have rated low.</div>
                     </v-card>
 
@@ -639,7 +640,7 @@ watch(
                     >
                         <div     
                             style="margin-left: 280px; margin-right: 280px;" class="mt-5 mb-5 text-center">
-                            <v-btn color="success" type="submit" class="mr-2" prepend-icon="mdi-send" :disabled="form.processing">Submit</v-btn>
+                            <v-btn color="success" type="submit" class="mr-2" prepend-icon="mdi-send" :disabled="form.processing || form.is_complaint && !form.comment">Submit</v-btn>
                             <a href="/" class="btn bg-secondary">
                                 <v-btn class="bg-secondary">Back</v-btn>
                             </a>
