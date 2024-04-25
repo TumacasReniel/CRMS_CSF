@@ -15,9 +15,17 @@
 
         <div class="print-id print">
             <div style="width: 100%;">
-               <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
-                    CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR 
-                    <u><span>{{ form.selected_month }}</span>  {{ form.selected_year }}</u>
+               <h5 style="text-transform:capitalize; text-align:center; margin-top: -8px">
+                    <div style="display:flex;justify-content:center;align-items:center;">
+                        <img
+                        data-aos="zoom-in" 
+                        data-aos-duration="500" 
+                        data-aos-delay="500"
+                        style="width:40px; height:40px; margin-right:10px" 
+                        src="../../../../../public/images/dost-logo.jpg" 
+                        alt="..">
+                        <span style="text-align:center">CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR   <u><span>{{ form.selected_month }}</span>  {{ form.selected_year }}</u></span>
+                    </div>                  
                 </h5><br>
                 <div style="display: flex; justify-content: space-between;" v-if="data.service && data.unit">
                     <div style="font-size: 12px;">
@@ -39,8 +47,8 @@
                 <div style="margin-top: 5px; margin-bottom: 20px">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
                     <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
-                        <tr style="border: 1px solid #333; text-align: center;">
-                            <td style="border: 1px solid #333; padding:2px; " rowspan="2">Service Quality Attributes</td>
+                        <tr style="border: 1px solid #333; text-align: center; background-color:blue">
+                            <td style="border: 1px solid #333; padding:2px;" rowspan="2">Service Quality Attributes</td>
                             <td style="border: 1px solid #333;">5</td>
                             <td style="border: 1px solid #333;">4</td>
                             <td style="border: 1px solid #333;">3</td>
@@ -50,7 +58,7 @@
                             <td style="border: 1px solid #333; padding:2px" rowspan="2">Likert Scale Rating</td>
                             <td style="border: 1px solid #333; padding:2px" rowspan="2">GAP</td>
                         </tr>
-                        <tr style="border: 1px solid #333; text-align: center;">               
+                        <tr style="border: 1px solid #333; text-align: center;background-color:blue">               
                             <td style="border: 1px solid #333; padding:2px">Very Satisfied</td>
                             <td style="border: 1px solid #333;padding:2px">Satisfied </td>
                             <td style="border: 1px solid #333; padding:2px">Neither </td>
