@@ -5,6 +5,7 @@ import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
 
 const props = defineProps({
     message: String,
+    status: String,
     current_url: String,
 });
 
@@ -12,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Thank you" />
+    <Head title="CSF Submission" />
      <nav 
         class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600 mb-10">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -31,21 +32,37 @@ const props = defineProps({
         width="100%"
         style="margin-top: 200px"
     >
-        <v-icon
-        class="mb-5"
-        color="success"
-        icon="mdi-check-circle"
-        size="112"
-        ></v-icon>
+     
+        <div v-if="status == 'success'">
+            <v-icon
+                class="mb-5"
+                color="success"
+                icon="mdi-check-circle"
+                size="112"
+            ></v-icon>
+            <h2 class="text-h5 mb-6">{{ messsage }}</h2>
 
-        <h2 class="text-h5 mb-6">{{ messsage ? message: "Submitted Successfully, Thank you." }}</h2>
+            <p class="mb-4 text-medium-emphasis text-body-2">
+            Thank you for your feedback.
+            <br>
+            Have a good day!
+            </p>
+        </div>
+        <div v-else-if="status == 'error'">
+            <v-icon
+                class="mb-5"
+                color="red"
+                icon="mdi-alert-circle"
+                size="112"
+            ></v-icon>
+            <h2 class="text-h5 mb-6">{{ messsage }}</h2>
 
-        <p class="mb-4 text-medium-emphasis text-body-2">
-        Thank you for your feedback.
-        <br>
-
-        Have a good day!
-        </p>
+            <p class="mb-4 text-medium-emphasis text-body-2">
+            Please Check, Thank you.
+            <br>
+            
+            </p>
+        </div>
         <v-divider class="mb-4"></v-divider>
 
         <div class="text-end">
