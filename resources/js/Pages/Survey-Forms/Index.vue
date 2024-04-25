@@ -253,7 +253,7 @@ watch(
 
 <template>
     <Head title="Survey Form" />
-<div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
+
      <nav 
         data-aos="fade-down" 
         data-aos-duration="500" 
@@ -273,7 +273,7 @@ watch(
             data-aos-delay="500" 
         >
             <v-row justify="center" class="py-3 bg-gray-200">
-                <v-form  @submit.prevent="saveCSF">
+                <v-form class="max-w" @submit.prevent="saveCSF">
                     <div class="py-20 bg-gray-200 ">
                         <v-card class="mb-5" >
                     <v-card-title class="m-5 font-black flex flex-col items-center">

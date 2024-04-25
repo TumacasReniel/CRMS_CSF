@@ -7,9 +7,6 @@
         form: {
             type: Object,
         },
-        is_printing: {
-            type:Boolean,
-        }
     });
     const calculate = (ndvd_grand_total_score ,grand_total_score) => {
         const result = (ndvd_grand_total_score / grand_total_score) * 100;
@@ -18,7 +15,7 @@
 
 </script>
 <template>
-    <div class="print-id print" v-if="is_printing">
+    <div class="print-id print">
         <div style="width: 100%;">
             <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
                 CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR
@@ -426,3 +423,15 @@
         </div> 
     </div>
 </template>
+<style scoped>
+    .print {
+        display: none;
+    }
+    @media print {
+        .print-id {
+            display: block;
+        }
+    
+    }
+
+</style>

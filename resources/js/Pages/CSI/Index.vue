@@ -1078,11 +1078,11 @@ const currentYear = ref(getCurrentYear());
 
                                   <!-- Printouts-->
                                 <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
-                                <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-                                <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-                                <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-                                <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
-                                <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && generated == true" :is_printing="is_printing"  :form="form"  :data="props" />
+                                <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER'  && generated == true" :form="form"  :data="props" />
+                                <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true"  :form="form"  :data="props" />
+                                <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
+                                <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true"  :form="form"  :data="props" />
+                                <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props" />
 
                 </div>
             </div>
