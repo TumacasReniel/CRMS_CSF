@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('dimension_id');
             $table->foreign('dimension_id')
                 ->references('id')
-                ->on('users');
+                ->on('dimensions');
             $table->integer('rate_score');
             $table->integer('importance_rate_score');    
             $table->timestamps();
