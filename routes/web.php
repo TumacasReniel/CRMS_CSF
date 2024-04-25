@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PstoController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\AssignatoreesController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\SubUnitController;
@@ -66,6 +67,10 @@ Route::middleware([
         Route::get('/sub-unit-pstos', [SubUnitPstoController::class, 'index'])->name('subunitPstos');
         Route::post('/unit-pstos/assign', [UnitPstoController::class, 'assignUnitPSTOs']);
         Route::post('/sub-unit-pstos/assign', [SubUnitPstoController::class, 'assignSubUnitPSTOs']);
+        Route::get('/assignatorees', [AssignatoreesController::class, 'index'])->name('assignatorees');
+        Route::post('/assignatorees/add', [AssignatoreesController::class, 'store']);
+        Route::post('/assignatorees/update', [AssignatoreesController::class, 'update']);
+        Route::post('/assignatorees/delete', [AssignatoreesController::class, 'destroy']);
     });
 
     Route::get('/dashboard', function () {

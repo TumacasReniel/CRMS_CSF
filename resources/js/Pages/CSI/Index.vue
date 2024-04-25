@@ -6,17 +6,17 @@ import Q2Content from '@/Pages/CSI/Quarterly/Contents/Q2Content.vue';
 import Q3Content from '@/Pages/CSI/Quarterly/Contents/Q3Content.vue';
 import Q4Content from '@/Pages/CSI/Quarterly/Contents/Q4Content.vue';
 import YearlyContent from '@/Pages/CSI/Yearly/Content.vue';
-import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
 import ByUnitQ1Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter1.vue';
 import ByUnitQ2Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter2.vue';
 import ByUnitQ3Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter3.vue';
 import ByUnitQ4Report from '@/Pages/CSI/Quarterly/Printouts/ByUnitQuarter4.vue';
 import ByUnitYearlyReport from '@/Pages/CSI/Yearly/ByUnitYearly.vue';
+import ModalForm from '@/Pages/CSI/Modal.vue';
 import VueMultiselect from "vue-multiselect";
 import { reactive, ref, computed, onMounted, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { Printd } from "printd";
 import Swal from 'sweetalert2';
+import { Printd } from "printd";
 
 
 const props = defineProps({
@@ -597,6 +597,9 @@ const props = defineProps({
 
     //get current user
     user: Object,
+
+    //get assignatorees
+    assignatorees:Object,
     
 
 });
@@ -731,6 +734,51 @@ const currentYear = ref(getCurrentYear());
   }
 
 
+
+
+
+  watch(
+    () => form.selected_sub_unit,
+    (value) => {
+        generated.value = false;;
+        getSubUnitPSTO(value.id);
+    }
+);
+
+  watch(
+    () => form.csi_type,
+    (value) => {
+          if(value == ''){
+            form.selected_sub_unit = null;
+          }
+    }
+);
+
+
+
+  const getSubUnitPSTO = async (sub_unit_id) => {
+    // Get the current query parameters
+    const currentQueryParams = new URLSearchParams(window.location.search);
+
+    // Add or update the 'sub_unit_id' parameter
+    currentQueryParams.set('sub_unit_id', sub_unit_id);
+
+    // Construct the new URL with updated query parameters
+    const newUrl = `/csi?${currentQueryParams.toString()}`;
+
+    // Navigate to the new URL
+    await router.visit(
+      newUrl,
+      {
+        //preserveQuery: true, 
+        preserveState: true,
+        preserveScroll: true,
+      }
+  );
+
+
+};
+
   const is_printing = ref(false);
   const printCSIReport = async () => {
       is_printing.value = true;
@@ -770,60 +818,14 @@ const currentYear = ref(getCurrentYear());
         `;
 
        d.print(document.querySelector(".print-id"), [css]);
-};
-
-
-
-  watch(
-    () => form.selected_sub_unit,
-    (value) => {
-        generated.value = false;;
-        getSubUnitPSTO(value.id);
-    }
-);
-
-  watch(
-    () => form.csi_type,
-    (value) => {
-          if(value == ''){
-            form.selected_sub_unit = null;
-          }
-    }
-);
-
-  watch(
-      () => form.csi_type,
-      (value) => {
-            if(!value){
-              form.selected_sub_unit = null;
-            }
-      }
-  );
-
-
-  const getSubUnitPSTO = async (sub_unit_id) => {
-    // Get the current query parameters
-    const currentQueryParams = new URLSearchParams(window.location.search);
-
-    // Add or update the 'sub_unit_id' parameter
-    currentQueryParams.set('sub_unit_id', sub_unit_id);
-
-    // Construct the new URL with updated query parameters
-    const newUrl = `/csi?${currentQueryParams.toString()}`;
-
-    // Navigate to the new URL
-    await router.visit(
-      newUrl,
-      {
-        //preserveQuery: true, 
-        preserveState: true,
-        preserveScroll: true,
-      }
-  );
-
 
 };
 
+ const show_modal = ref(false);
+//For Modal Print Preview
+ const showPrintPreviewModal = async(is_show) => {
+      show_modal.value = is_show;
+  };
   
 </script>
 
@@ -852,6 +854,7 @@ const currentYear = ref(getCurrentYear());
                           </v-card-title>
 
                     </v-card>
+
                     <v-card class="overflow-visible mb-5" >   
                           <v-divider class="border-opacity-100"></v-divider>
                           <v-row class="p-3 overflow-visible" >
@@ -938,7 +941,7 @@ const currentYear = ref(getCurrentYear());
                               </v-col>
                                 
                           </v-row>
-
+    
                           <v-divider class="border-opacity-100"></v-divider>
 
                           <v-card-body class="overflow-visible mb-5" >
@@ -968,9 +971,7 @@ const currentYear = ref(getCurrentYear());
                                     <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
                                     <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                   </v-col>
-                                <!-- <v-col class="text-end mr-5">
-                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                </v-col> -->
+
                               </v-row>
 
                               <v-row class="p-3" v-if="form.csi_type == 'By Month'">
@@ -996,7 +997,7 @@ const currentYear = ref(getCurrentYear());
                                     <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
                                   </v-col>
                                 <v-col class="text-end mr-5 m-3">
-                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="showPrintPreviewModal(true)">Print</v-btn>
                                 </v-col>
                               </v-row>
 
@@ -1066,24 +1067,36 @@ const currentYear = ref(getCurrentYear());
                               </v-card-body>
                     </v-card>
 
-                                <!-- Content Preview-->
-                                <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true  || form.csi_type == 'By Date' && generated == true" :form="form"  :data="props" />
-                                <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true "  :form="form"  :data="props" />
-                                <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
-                                <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
-                                <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :form="form"  :data="props" />
-                                <YearlyContent v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props"  />
-                                
-                                  <!-- End Content Preview-->
+                  <!-- Content Preview-->
+                  <MonthlyContent v-if="form.csi_type == 'By Month' && generated == true  || form.csi_type == 'By Date' && generated == true" :form="form"  :data="props" />
+                  <Q1Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER' && generated == true "  :form="form"  :data="props" />
+                  <Q2Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true" :form="form"  :data="props" />
+                  <Q3Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
+                  <Q4Content v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true" :form="form"  :data="props" />
+                  <YearlyContent v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props"  />
+                  
+                    <!-- End Content Preview-->
 
-                                  <!-- Printouts-->
-                                <ByUnitMonthlyReport v-if="form.csi_type == 'By Month'" :form="form"  :data="props" />
-                                <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER'  && generated == true" :form="form"  :data="props" />
-                                <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER' && generated == true"  :form="form"  :data="props" />
-                                <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER' && generated == true"  :form="form"  :data="props" />
-                                <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER' && generated == true"  :form="form"  :data="props" />
-                                <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual' && generated == true"  :form="form"  :data="props" />
 
+                  <!-- QUATER AND YEARLY PRINTOUTS Preview-->
+                  <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER'" :form="form"  :data="props" />
+                  <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER'"  :form="form"  :data="props" />
+                  <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER'"  :form="form"  :data="props" />
+                  <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER'"  :form="form"  :data="props" />
+                  <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual'"  :form="form"  :data="props"/>
+                 
+                  <!-- Modal for Print Preview -->
+                  <ModalForm 
+                      v-if="generated" 
+                      :value="show_modal"
+                      :form="form"  
+                      :assignatorees="assignatorees"
+                      :user="user"
+                      @input="showPrintPreviewModal"  
+                      :data="props"
+                     />
+                  
+                 
                 </div>
             </div>
         </div>

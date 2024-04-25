@@ -74,21 +74,6 @@ const savePSTO = async () => {
     else if(action_clicked.value == 'Update'){
         router.post('/pstos/update', form );
     }
-    else if(action_clicked.value == 'Delete'){
-            Swal.fire({
-                html: '<div style="font-weight: bold; font-size:25px">Are you sure you want to delete this record?</div> ',
-                icon:'warning',
-                
-                showCancelButton: true,
-                confirmButtonText: "Yes, I'm sure",
-                showLoaderOnConfirm: true,
-            }).then((result) => {
-                if (result.isConfirmed) {            
-                    router.post('/pstos/delete', form );
-                }
-            });
-
-    }
     emit("input", false);
     emit("reloadAccounts");
 

@@ -261,57 +261,6 @@
                 </v-card-content>
             </v-card>
 
-            <!-- <v-card class="mb-3">
-                <v-card-title class="bg-gray-500 text-white">
-                    RESPONDENTS/CUSTOMERS LIST
-                </v-card-title>
-                <v-card-content>
-                        <table class="w-full border">
-                        <tr class="text-left font-bold text-center">
-                            <th >#</th>
-                            <th >Name</th>
-                            <th >Email</th>
-                            <th >Sex</th>
-                            <th >is PWD?</th>
-                            <th >is Pregnant?</th>
-                            <th >is Senior Citizen?</th>
-                            <th >Attribute Rate Score</th>
-                            <th >Importance</th>
-                        </tr>
-
-                        <tr v-if="respondents_list" v-for="(respondent, index) in respondents_list.data" :key="respondent.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100"> 
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ index + 1 }}
-                                </td>  
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.name }}
-                                </td>           
-                                    <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.email }}
-                                </td>         
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.sex }}
-                                </td>   
-                                    <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.pwd }}
-                                </td>       
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.pregnant }}
-                                </td>  
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.customer.senior_citizen }}
-                                </td>  
-                                    <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.rate_score }}
-                                </td>  
-                                <td  class="border-t p-5 w-1/8 text-center mr-10">
-                                    {{ respondent.importance_rate_score }}
-                                </td>
-                        </tr>                                           
-                    </table>
-                </v-card-content>
-
-            </v-card>               -->
 </template>
 
 <style scoped>

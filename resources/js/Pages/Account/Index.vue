@@ -132,6 +132,9 @@
                                     Name
                                 </th>
                                 <th class="text-left">
+                                    Designation
+                                </th>
+                                <th class="text-left">
                                     Email
                                 </th>
                                     <th class="text-left">
@@ -159,6 +162,7 @@
                                 <template v-if="user">
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ user.name }}</td>
+                                    <td>{{ user.designation}}</td>
                                     <td>{{ user.email }}</td>
                                     <td>{{ user.region.order }}</td>
                                     <td class="text-center">

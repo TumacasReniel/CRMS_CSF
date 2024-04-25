@@ -31,7 +31,7 @@
         psto.value = psto_data;
     };
 
-    const deleteRecord = async (data) => {
+    const deleteRecord = async (id) => {
 
         Swal.fire({
             html: '<div style="font-weight: bold; font-size:25px">Are you sure you want to delete this record?</div> ',
@@ -42,7 +42,7 @@
             showLoaderOnConfirm: true,
         }).then((result) => {
             if (result.isConfirmed) {            
-                router.post('/pstos/delete', data );
+                router.post('/pstos/delete', { id } );
             }
         });
 
@@ -125,7 +125,7 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ psto.psto_name }}</td>
                                     <td class="text-center">
-                                         <v-btn class="mr-3" @click="deleteRecord(psto)" size="small" prepend-icon="mdi-delete" color="red">     
+                                         <v-btn class="mr-3" @click="deleteRecord(psto.id)" size="small" prepend-icon="mdi-delete" color="red">     
                                             Delete                         
                                         </v-btn>
                                         <v-btn @click="showPSTOModal(true, 'Update' , psto)" size="small" prepend-icon="mdi-update" color="primary">     

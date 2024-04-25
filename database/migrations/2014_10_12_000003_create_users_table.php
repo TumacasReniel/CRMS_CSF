@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('account_type')->default('user');
+            $table->string('designation')->nullable();
             $table->foreignId('region_id')->nullable();
             $table->foreignId('service_id')->nullable();
             $table->foreign('service_id')

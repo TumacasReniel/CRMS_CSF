@@ -31,6 +31,7 @@ watch(
         if(value){
             form.id = value.id;
             form.name = value.name;
+            form.designation = value.designation;
             form.email = value.email;
             form.selected_account_type = value.account_type;
             form.selected_region = value.region;
@@ -43,6 +44,7 @@ const form = reactive({
     id: null,
     name:null,
     email: null,
+    designation:'',
     selected_region: [],
     selected_account_type: null,
     selected_service: null,
@@ -119,6 +121,7 @@ const closeDialog = (value) => {
                         ></v-text-field>
                     </v-col>
                 </v-row>
+                
 
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
@@ -162,6 +165,19 @@ const closeDialog = (value) => {
                     </v-col>
                 </v-row>
 
+                <v-row style="margin-bottom:-30px;">
+                    <v-col cols="12" >
+                        <v-text-field
+                            v-if="form.selected_account_type == 'user'"
+                            prepend-icon="mdi-account"
+                            label="Designation*"
+                            v-model="form.designation"
+                            variant="outlined"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                
+
                   <v-row style="margin-bottom:-30px;">
                    <v-col cols="12">
                         <v-select
@@ -178,6 +194,8 @@ const closeDialog = (value) => {
                         
                     </v-col>
                 </v-row>
+
+                
 
                 <v-row style="margin-bottom:-30px;">
                    <v-col cols="12">

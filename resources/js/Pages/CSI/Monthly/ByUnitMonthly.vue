@@ -6,9 +6,13 @@
         form: {
             type: Object,
         },
+        form_assignatorees: {
+            type: Object, 
+        }
     });
 </script>
 <template>
+
         <div class="print-id print">
             <div style="width: 100%;">
                <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
@@ -30,6 +34,7 @@
                     </div>
                     
                 </div>
+
 
                 <div style="margin-top: 5px; margin-bottom: 20px">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
@@ -286,10 +291,20 @@
 
                 <div style="margin-top: 40px; display: flex;  font-size: 13px">
                    <div>
-                     Prepared by : 
+                     Prepared by : <br>
+                    <div style="margin-left:70px">
+                        <span v-if="form_assignatorees.prepared_by['name'] "><u>{{ form_assignatorees.prepared_by['name'] }}</u></span><br>
+                        <span v-if="form_assignatorees.prepared_by['designation'] ">{{ form_assignatorees.prepared_by['designation'] }}</span>
+                    </div>
                    </div>
                    <div style="margin: auto; margin-left: 200px;  ">
                      Noted by : 
+                    <div style="margin-left:60px">
+                        <span v-if="form_assignatorees.noted_by['name'] "><u>{{ form_assignatorees.noted_by['name'] }}</u></span><br>
+                        <span v-if="form_assignatorees.noted_by['designation'] ">{{ form_assignatorees.noted_by['designation'] }}</span>
+                    </div>
+
+                    <span></span>
                    </div>
                 </div>
 

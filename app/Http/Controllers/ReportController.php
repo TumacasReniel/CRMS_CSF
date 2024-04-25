@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\psto;
 use App\Models\Unit;
 use Inertia\Inertia;
+use App\Models\Assignatorees;
 use App\Models\CSFForm;
 use App\Models\SubUnit;
 use App\Models\Services;
@@ -34,6 +35,9 @@ class ReportController extends Controller
         //get user
         $user = Auth::user();
 
+        //get assignatoree list
+        $assignatorees = Assignatorees::all();
+
         $dimensions = Dimension::all();
         $service = Services::findOrFail($request->service_id);
 
@@ -61,6 +65,7 @@ class ReportController extends Controller
         })->get();
 
         return Inertia::render('CSI/Index')
+            ->with('assignatorees', $assignatorees)
             ->with('dimensions', $dimensions)
             ->with('service', $service)
             ->with('unit', $unit)
@@ -160,6 +165,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+        //get assignatoree list
+        $assignatorees = Assignatorees::all();
         
         $service_id = $request->service['id'];
         $unit_id = $request->unit_id;
@@ -436,7 +446,9 @@ class ReportController extends Controller
 
 
         //send response to front end
-        return Inertia::render('CSI/Index')
+        return Inertia::render('CSI/Index')    
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -481,6 +493,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+         //get assignatoree list
+         $assignatorees = Assignatorees::all();
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -778,6 +795,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -825,6 +844,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+        //get assignatoree list
+        $assignatorees = Assignatorees::all();
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -1290,6 +1314,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -1378,6 +1404,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+         //get assignatoree list
+        $assignatorees = Assignatorees::all();
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -1862,6 +1893,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -1951,6 +1984,12 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+        //get assignatoree list
+        $assignatorees = Assignatorees::all();
+        
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -2433,6 +2472,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -2521,6 +2562,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+         //get assignatoree list
+         $assignatorees = Assignatorees::all();
 
         $date_range = null;
         $customer_recommendation_ratings = null;
@@ -3004,6 +3050,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -3092,6 +3140,11 @@ class ReportController extends Controller
         $unit_pstos = $this->getUnitPSTOs($request);
         $sub_unit_pstos = $this->getSubUnitPSTOs($request);
         $sub_unit_types = $this->getSubUnitTypes($request);
+
+        //get user
+        $user = Auth::user();
+         //get assignatoree list
+         $assignatorees = Assignatorees::all();
 
         $date_range = [];
         $q1_date_range = [];
@@ -3660,6 +3713,8 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)

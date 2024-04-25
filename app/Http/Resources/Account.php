@@ -17,6 +17,7 @@ class Account extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'designation' => $this->designation,
             'email' => $this->email,
             'region'=> $this->region ? new Region( $this->region) : null,
             'is_active' => $this->is_active,
