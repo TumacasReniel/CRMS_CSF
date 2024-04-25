@@ -74,7 +74,7 @@ const props = defineProps({
                     width="90"
                     rounded
                 >
-                    Done
+                    Okay
                 </v-btn>
             </Link>
         </div>

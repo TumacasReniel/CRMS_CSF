@@ -274,13 +274,13 @@
                  <div style="margin-top: 20px ; font-size: 13px">
                     ANALYSIS : 
                     <div v-if="data.unit && data.service"  style="text-align: justify; margin: 5px">
-                        The  <span>{{ data.unit.unit_name }}</span> unit had 15 respondents who rated the CSF, 
+                        The  <span>{{ data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF, 
                         and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated 
                         the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.unit_name }}</span> unit had a 
                         <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.net_promotion_score }}</span>. 
                         The Customer Satisfaction Rating for the <span>{{ data.unit.unit_name }}</span> 
                         unit is <span>{{ data.customer_satisfaction_rating }}</span>%, 
-                        which achieved its functional objective of 95% of customer surveyed are at least satisfied with the S&T services of DOST-IX
+                        which achieved its functional objective of 95% of customer surveyed are at least satisfied with the S&T services.
                     </div>
                 </div>
 
