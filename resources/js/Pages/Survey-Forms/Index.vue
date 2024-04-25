@@ -469,7 +469,7 @@ watch(
                         data-aos-delay="500" 
                         class="mb-5 mx-auto" width="1000">
                         <v-card-title class="text-lg text-white bg-blue_grey p-3 ">
-                            HOW WOULD YOU RATE OUR INFORMATION COMMUNICATION TECHNOLOGY SERVICES?
+                            HOW WOULD YOU RATE OUR <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span> SERVICES?
                         </v-card-title>
                         <div>
     
