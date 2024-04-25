@@ -58,7 +58,7 @@ const props = defineProps({
             <h2 class="text-h5 mb-6">{{ messsage }}</h2>
 
             <p class="mb-4 text-medium-emphasis text-body-2">
-            Please Check, Thank you.
+            Something went wrong please check, Thank you.
             <br>
             
             </p>
