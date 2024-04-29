@@ -76,12 +76,12 @@ class AccountController extends Controller
 
     public function update(Request $request)
     {
-        //dd($request->designation);
+        //dd($request->all());
         $account = User::findorFail($request->id);
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
         $account->email = $request->email;
-        $account->region_id = $request->selected_region;
+        $account->region_id = $request->selected_region['id'];
         $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;
         $account->unit_id = $request->selected_unit;

@@ -139,7 +139,6 @@ const closeDialog = (value) => {
                         placeholder="Select SubUnit PSTO"
                         label="psto_name"
                         track-by="psto_name"
-                        :allow-empty="false"
                     >
                     </vue-multiselect>          
                 </v-col>
