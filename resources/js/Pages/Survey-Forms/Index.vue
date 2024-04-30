@@ -417,18 +417,22 @@ watch(
                             >
 
                                 <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-10" >
-                                    <v-card-title class=" m-5 font-black mb-10">
-                                    {{ cc_question.title }}. {{ cc_question.question }}
-                                    </v-card-title>
+                                    <div class=" m-5 font-black mb-10">
+                                      <h2>
+                                         {{ cc_question.title }}. {{ cc_question.question }}
+                                      </h2>
+                                    </div>
 
                                     <div v-if="i == 0" v-for="(option, index) in cc1_options" :key="index">
-                                        <v-checkbox 
-                                            @click="getCC(i ,cc_question.id, option.value)"
-                                            v-model="form.cc1" color="primary" 
-                                            style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" 
-                                            :label="option.label"
-                                            :value = "option.label" 
-                                        ></v-checkbox>                      
+                                        <h5>
+                                            <v-checkbox 
+                                                @click="getCC(i ,cc_question.id, option.value)"
+                                                v-model="form.cc1" color="primary" 
+                                                style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" 
+                                                :label="option.label"
+                                                :value = "option.label" 
+                                            ></v-checkbox>      
+                                         </h5>                
                                     </div>
 
                                     <div v-if="i == 1" v-for="(option, index) in cc2_options" :key="index">
@@ -463,9 +467,9 @@ watch(
                                 data-aos-duration="1000" 
                                 data-aos-delay="500" 
                                 class="mb-5 mx-auto">
-                                <v-card-title class="text-lg text-white bg-blue_grey p-3 ">
-                                    HOW WOULD YOU RATE OUR <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span> SERVICES?
-                                </v-card-title>
+                                <div class=" text-white bg-blue_grey p-3 ">
+                                    <h3>HOW WOULD YOU RATE OUR <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span> SERVICES?</h3>
+                                </div>
                                 <div>
             
                                         <v-card
