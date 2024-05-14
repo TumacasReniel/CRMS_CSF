@@ -283,8 +283,8 @@ watch(
                                         data-aos="zoom-in" 
                                         data-aos-duration="500" 
                                         data-aos-delay="500"
-                                        class="mx-auto lg:mb-5 sm:mb-0" 
-                                        style="width:200px; height:30%" 
+                                        class="mx-auto sm:mb-0" 
+                                        style="width:150px; height:150px" 
                                         src="../../../../public/images/dost-logo.jpg" 
                                         alt="..">
                                     </div>
