@@ -284,7 +284,7 @@ watch(
                                         data-aos-duration="500" 
                                         data-aos-delay="500"
                                         class="mx-auto lg:mb-5 sm:mb-0" 
-                                        style="width:30%; height:30%" 
+                                        style="width:200px; height:30%" 
                                         src="../../../../public/images/dost-logo.jpg" 
                                         alt="..">
                                     </div>
