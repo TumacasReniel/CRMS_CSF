@@ -267,12 +267,12 @@ watch(
         </div>
     </nav>
         <v-card
-            class="container"
+            class="w-full"
             data-aos="fade-up" 
             data-aos-duration="2000" 
             data-aos-delay="500" 
         >
-            <v-row justify="center" class="py-3 bg-gray-200">
+            <v-row justify="center" class="py-3 bg-gray-200 w-full">
                 <v-col cols="12" md="8" sm="6">
                     <v-form class="max-w" @submit.prevent="saveCSF">
                         <div class="py-20 bg-gray-200 ">
