@@ -19,7 +19,7 @@ defineProps({
 </script>
 
 <template >
-    <Head title="Welcome" />   
+    <Head title="Homepage" />   
      <nav 
         data-aos="fade-down" 
         data-aos-duration="500" 
@@ -32,8 +32,13 @@ defineProps({
                 <span class="self-center text-2xl font-semibold whitespace-nowrap">Department of Science and Technology</span>
             </a>
             <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <a :href="route('regions_index')">
+                        <v-btn variant="outlined" id="mega-menu-full-dropdown-button" data-collapse-toggle="mega-menu-full-dropdown" class="hover:bg-blue  flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded md:w-auto hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
+                            Get Started
+                        </v-btn>
+                    </a>
                     <a :href="route('login')">
-                        <button type="button" class="mr-3 ml-5 text-blue-800 bg-gray-200 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <button class="mr-3 ml-5 text-blue-800 bg-gray-200 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Login
                         </button>
                     </a>
@@ -45,22 +50,10 @@ defineProps({
                     </svg>
                 </button>
             </div>
-        <!-- <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-            <ul class="bg-transparent text-white flex flex-col p-4 md:p-0 pb-3 mt-4 font-medium  rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                    <li>
-                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100  md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100  md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
-                    </li>
-                </ul>
-        </div> -->
-    </div>
-
+          
+        </div>
 
     </nav> 
-
-
 
     <div style="display: flex;
                 justify-content: center;
@@ -72,7 +65,11 @@ defineProps({
                 data-aos-duration="500" 
                 data-aos-delay="500" >
         <h1 style="font-size: 70px; font-weight: bold; text-shadow: -2px -2px 4px black, 5px 5px 10px black;text-align:center; margin-left: 10%;margin-right: 10%; ">Customer Relation Management System</h1>
-    </div>
+      
+    </div><br>
+   <div>
+
+   </div>
 
 
 </template>

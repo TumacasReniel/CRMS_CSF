@@ -46,7 +46,7 @@ class UnitPstoController extends Controller
             $psto_ids =   $unit_pstos->pluck('psto_id');
 
             //dd($psto_ids);
-            $unit_pstos = psto::whereIn('id',  $psto_ids)
+            $unit_pstos = psto::whereIn('id', $psto_ids)
                                 ->where('region_id', $user->region_id)
                                 ->get() ;
             $unit_pstos = ResourcesPSTO::collection($unit_pstos);

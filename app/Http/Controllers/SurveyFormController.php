@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Unit;
 use Inertia\Inertia;
+use App\Models\Unit;
+use App\Models\Services;
+use App\Models\Region;
 use App\Models\CSFForm;
 use App\Models\SubUnit;
 use App\Models\Customer;
@@ -12,6 +13,7 @@ use App\Models\CcQuestion;
 use Illuminate\Http\Request;
 use App\Models\CustomerComment;
 use App\Models\UnitPsto;
+use App\Models\psto;
 use App\Models\CustomerCCRating;
 use Mews\Captcha\Facades\Captcha;
 use Illuminate\Support\Facades\DB;
@@ -202,6 +204,104 @@ class SurveyFormController extends Controller
        return $customer_indication;
    }
 
-  
-    
+
+   public function regions_index(Request $request){
+        $regions = Region::all();
+        return Inertia::render('Region')
+                      ->with('regions', $regions );
+   }
+
+   public function services_index(Request $request){
+        $services = Services::all();
+        return Inertia::render('Services')
+                        ->with('region_id', $request->region_id )
+                        ->with('services', $services );
+    }
+
+    public function service_units_index(Request $request){
+        // dd($request->all());
+        $service_units = Unit::where('services_id', $request->service_id)->get();
+        return Inertia::render('Units')
+                        ->with('region_id', $request->region_id)
+                        ->with('service_id', $request->service_id)
+                        ->with('service_units', $service_units);
+    }
+
+    public function getUnitSubunits(Request $request){
+        //dd($request->all());
+        $sub_units = SubUnit::where('unit_id', $request->unit_id)->get();
+
+        if(sizeof($sub_units) > 0){
+            return Inertia::render('SubUnits')
+                        ->with('region_id', $request->region_id)
+                        ->with('service_id', $request->service_id)
+                        ->with('unit_id', $request->unit_id)
+                        ->with('sub_units', $sub_units);
+        }
+        
+        else{
+            //check if this unit has psto
+            $unit_pstos = UnitPSTO::where('unit_id', $request->unit_id)->get();
+            $psto_ids = $unit_pstos->pluck('psto_id');
+            $pstos = psto::where('region_id',$request->region_id)
+                    ->whereIn('id',$psto_ids) 
+                    ->get();
+
+
+            if(sizeof($pstos) > 0){
+                return Inertia::render('PSTOs')
+                            ->with('region_id', $request->region_id)
+                            ->with('service_id', $request->service_id)
+                            ->with('unit_id', $request->unit_id)
+                            ->with('sub_unit_id', $request->sub_unit_id)
+                            ->with('pstos', $pstos);
+            }
+            
+            else{
+                // redirect to url of csf form
+                $url = '/services/csf?region_id='.$request->region_id.
+                '&service_id='.$request->service_id.
+                '&unit_id='.$request->unit_id;
+
+                return Inertia::location($url);
+            }
+
+
+        }
+
+       
+    }
+
+    public function getSubUnitPSTO(Request $request){
+        $sub_unit_pstos = SubUnitPSTO::where('sub_unit_id', $request->sub_unit_id)->get();
+        $psto_ids = $sub_unit_pstos->pluck('psto_id');
+
+        $pstos = psto::whereIn('id',$psto_ids)
+                    ->where('region_id', $request->region_id)
+                    ->get();
+
+        if(sizeof($pstos) > 0){
+            return Inertia::render('PSTOs')
+                        ->with('region_id', $request->region_id)
+                        ->with('service_id', $request->service_id)
+                        ->with('unit_id', $request->unit_id)
+                        ->with('sub_unit_id', $request->sub_unit_id)
+                        ->with('pstos', $pstos);
+        }
+        
+        else{
+            // redirect to url of csf form
+
+            $url = '/services/csf?region_id='.$request->region_id.
+                                '&service_id='.$request->service_id.
+                                '&unit_id='.$request->unit_id.
+                                '&sub_unit_id='.$request->sub_unit_id.
+                                '&psto_id='.$request->psto_id;
+
+            return Inertia::location($url);
+        }
+
+       
+    }
+
 }

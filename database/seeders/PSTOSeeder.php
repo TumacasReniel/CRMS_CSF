@@ -34,6 +34,11 @@ class PSTOSeeder extends Seeder
                 'psto_name' => 'Zamboanga City',
                 'slug' => 'zamboanga-city',
             ],  
+            [
+                'region_id' => '10',
+                'psto_name' => 'hmmm',
+                'slug' => 'hmm-hmm',
+            ],  
  
         ];
 
