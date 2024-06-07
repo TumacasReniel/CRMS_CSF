@@ -15,30 +15,26 @@ class PSTOSeeder extends Seeder
     {
         $sub_units = [
             [
-                'region_id' => '9',
+                'region_id' => '10',
                 'psto_name' => 'Zamboanga Sibugay',
                 'slug' => 'zamboanga-sibugay',
             ],
             [
-                'region_id' => '9',
+                'region_id' => '10',
                 'psto_name' => 'Zamboanga del Sur',
                 'slug' => 'zamboanga-del-sur',
             ],
             [
-                'region_id' => '9',
+                'region_id' => '10',
                 'psto_name' => 'Zamboanga del Norte',
                 'slug' => 'zamboanga-del-norte',
             ],
             [
-                'region_id' => '9',
+                'region_id' => '10',
                 'psto_name' => 'Zamboanga City',
                 'slug' => 'zamboanga-city',
             ],  
-            [
-                'region_id' => '10',
-                'psto_name' => 'hmmm',
-                'slug' => 'hmm-hmm',
-            ],  
+
  
         ];
 

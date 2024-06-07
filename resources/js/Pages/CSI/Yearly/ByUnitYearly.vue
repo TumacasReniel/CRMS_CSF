@@ -17,8 +17,19 @@
 <template>
     <div class="mb-3 print-id print">
         <h5 style="text-transform:capitalize; text-align:center; margin-top: -10px">
-            CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR 
-            <u><span>{{ form.selected_quarter }}</span>  {{ form.selected_year }}</u>
+            <div style="display:flex;justify-content:center;align-items:center;">
+                <img
+                data-aos="zoom-in" 
+                data-aos-duration="500" 
+                data-aos-delay="500"
+                style="width:40px; height:40px; margin-right:10px" 
+                src="../../../../../public/images/dost-logo.jpg" 
+                alt="..">
+                <span style="text-align:center"> 
+                    CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR
+                    <u><span>{{ form.selected_quarter }}</span>  {{ form.selected_year }}</u>
+                </span>
+            </div>  
         </h5><br>
         <div style="display: flex; justify-content: space-between; margin-top:-26px">
             <div style="font-size: 12px;">
