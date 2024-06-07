@@ -16,13 +16,13 @@ class DimensionSeeder extends Seeder
         $dimensions = [
             [
                 'name' => 'Overall',
-                'description' => 'I am satisfied with the service I availed.',
+                'description' => 'I am satisfied with the service I availed',
                 'slug' => 'Overall',
                 'is_active' => 1,
             ],
             [
                 'name' => 'Responsiveness',
-                'description' => 'I spent a reasonable amount of time for my transacton.',
+                'description' => 'I spent a reasonable amount of time for my transacton',
                 'slug' => 'responsiveness',
                 'is_active' => 1,
             ],
@@ -34,7 +34,7 @@ class DimensionSeeder extends Seeder
             ],
             [
                 'name' => 'Access & Facilities',
-                'description' => 'The steps(including payment) I needed for my transaction were easy and simple.',
+                'description' => 'The steps(including payment) I needed for my transaction were easy and simple',
                 'slug' => 'access-and-facilities',
                 'is_active' => 1,
             ],
@@ -54,7 +54,7 @@ class DimensionSeeder extends Seeder
 
             [
                 'name' => 'Integrity',
-                'description' => 'I am confident my online transaction was secure.',
+                'description' => 'I am confident my online transaction was secure',
                 'slug' => 'integrity',
                 'is_active' => 1,
             ],
@@ -67,7 +67,7 @@ class DimensionSeeder extends Seeder
             ],
             [
                 'name' => 'Outcome',
-                'description' => 'I got what I needed from the government office , or (if denied) denial of request was sufficiently explained to me. ',
+                'description' => 'I got what I needed from the government office , or (if denied) denial of request was sufficiently explained to me',
                 'slug' => 'outcome',
                 'is_active' => 1,
             ],

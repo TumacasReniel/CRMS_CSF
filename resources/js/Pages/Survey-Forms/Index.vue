@@ -357,7 +357,6 @@ watch(
                                                 >
                                                 </v-text-field>
 
-
                                                 <v-row class="mb-5"  >
                                                     <v-col cols="12" md="" sm="4" style="margin-bottom:-23px">
                                                         <v-select
@@ -506,7 +505,7 @@ watch(
                                             v-for="(dimension, index) in dimensions" :key="dimension.id"
                                         >
                                             <h5 class="mt-5 mb-3 text-left mx-5 bg-gray-200 p-3">
-                                                <span  style="font-size: 18px">{{ dimension.id }}. {{ dimension.description }}</span>
+                                                <span  style="font-size: 18px">{{ dimension.id }}. {{ dimension.description }}({{ dimension.name }})</span>
                                             </h5>
                                             
                                             <input type="hidden" :value="getDimension(index, dimension.id)" />  

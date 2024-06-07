@@ -9,6 +9,26 @@
     });
 </script>
 <template>
+    <!-- <v-card>
+        <v-card-title class="bg-gray-500 text-white">
+            PART 0: CITIZEN'S CHARTER(CC) RATING
+        </v-card-title>
+        <table style="width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 5px" >
+            <tr class="text-center">
+                <th></th>
+                <th>Number of Respondents</th>
+            </tr>
+            <tr>
+                <td>CC1</td>
+            </tr>
+            <tr>
+                <td>CC2</td>
+            </tr>
+            <tr>
+                <td>CC3</td>
+            </tr>
+        </table>
+    </v-card> -->
     <v-card class="mb-3">
                 <v-card-title class="bg-gray-500 text-white">
                     PART I: CUSTOMER RATING OF SERVICE QUALITY
