@@ -18,6 +18,7 @@ use App\Models\CustomerCCRating;
 use Mews\Captcha\Facades\Captcha;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubUnitPsto;
+use App\Models\SubUnitType;
 use App\Models\CustomerAttributeRating;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\SurveyFormRequest;
@@ -30,6 +31,8 @@ use App\Http\Resources\Unit as UnitResource;
 use App\Http\Resources\SubUnit as SubUnitResource;
 use App\Http\Resources\UnitPSTO as UnitPSTOResource;
 use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
+use App\Http\Resources\SubUnitType as SubUnitTypeResource;
+
 use App\Models\CustomerSignature;
 
 class SurveyFormController extends Controller
@@ -303,5 +306,36 @@ class SurveyFormController extends Controller
 
        
     }
+
+
+    public function getSubUnitTypes(Request $request){
+        $types = SubUnitType::where('sub_unit_id', $request->sub_unit_id)
+                    ->where('region_id', $request->region_id)->get();
+
+        if(sizeof($types) > 0){
+            return Inertia::render('SubUnitTypes')
+                        ->with('region_id', $request->region_id)
+                        ->with('service_id', $request->service_id)
+                        ->with('unit_id', $request->unit_id)
+                        ->with('sub_unit_id', $request->sub_unit_id)
+                        ->with('types', $types);
+        }
+        
+        else{
+            // redirect to url of csf form
+
+            $url = '/services/csf?region_id='.$request->region_id.
+                                '&service_id='.$request->service_id.
+                                '&unit_id='.$request->unit_id.
+                                '&sub_unit_id='.$request->sub_unit_id.
+                                '&type_id='.$request->type_id;
+
+            return Inertia::location($url);
+        }
+
+       
+    }
+
+    
 
 }

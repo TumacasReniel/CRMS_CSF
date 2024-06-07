@@ -107,6 +107,7 @@ class ServiceUnitController extends Controller
 
     public function sub_unit_psto_index(Request $request)
     {
+        dd($sub_unit);
         //get user
         $user = Auth::user();
 
@@ -115,7 +116,6 @@ class ServiceUnitController extends Controller
         $sub_unit = $request->sub_unit;
 
         if($sub_unit){
-           
             $unit_pstos = $this->unit_psto($request);
             $sub_unit_pstos = $this->sub_unit_psto($request);
             return Inertia::render('Libraries/Service-Units/Views/PSTOView')
@@ -185,13 +185,39 @@ class ServiceUnitController extends Controller
         $unit = $request->unit;
         $sub_unit = $request->sub_unit;
 
-        if($sub_unit){
+        if($sub_unit){  
             $sub_unit_pstos = SubUnitPsto::where('sub_unit_id',$request->sub_unit['id'])->get();
             $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
      
             $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
     
             return $sub_unit_pstos;
+        }
+        else{
+            return [];
+        }
+
+       
+    }
+
+    public function sub_unit_type($request)
+    {
+        //dd($request->all());
+
+        //get user
+        $user = Auth::user();
+
+        $service = $request->service;
+        $unit = $request->unit;
+        $sub_unit = $request->sub_unit;
+
+        if($sub_unit){  
+            $sub_unit_types = SubUnitType::where('sub_unit_id',$request->sub_unit['id'])->get();
+            $sub_unit_types = SubUnitTypeResource::collection($sub_unit_types);
+     
+            $sub_unit_types = $sub_unit_types->pluck('type_name');
+    
+            return $sub_unit_types;
         }
         else{
             return [];

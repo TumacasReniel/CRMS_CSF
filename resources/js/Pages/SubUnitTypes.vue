@@ -12,37 +12,23 @@ defineProps({
     region_id: Number,
     service_id: Number,
     unit_id: Number,
-    sub_units:Object,
+    sub_unit_id:Number,
+    types:Object,
 });
 
-const goNext = async (region_id, service_id, unit_id, sub_unit_id) => {
-    if(sub_unit_id == 3){
-        router.get(`/services/csf/sub-unit/types?region_id=`+ region_id + 
+const goNext = async (region_id, service_id, unit_id, sub_unit_id, type_name) => {
+    router.get(`/services/csf?region_id=`+ region_id + 
                                 `&service_id=`+ service_id + 
                                 `&unit_id=`+ unit_id +
-                                `&sub_unit_id=` + sub_unit_id );   
-    }
-    else{
-        getSubUnitPSTO(region_id, service_id, unit_id, sub_unit_id);
-    }
-   
-}
+                                `&sub_unit_id=` + sub_unit_id +
+                                `&sub_unit_type=` + type_name);   
+};
 
 
-const getSubUnitPSTO = async (region_id, service_id, unit_id, sub_unit_id) => {
-
-        router.get(`/services/csf/sub-unit/pstos?region_id=`+ region_id + 
-                                `&service_id=`+ service_id + 
-                                `&unit_id=`+ unit_id +
-                                `&sub_unit_id=` + sub_unit_id );      
-}
 
 const goBack = async (sub_unit_id) => {
-    window.history.back()
-}
-
-
-
+    window.history.back();
+};
 
 
 </script>
@@ -69,17 +55,17 @@ const goBack = async (sub_unit_id) => {
         <v-row class="mx-15" style="margin-top: 100px;" >
             <v-col>
                 <div class="w-full border bg-blue">
-                <v-card-title class="text-center">UNIT SUB-UNITS</v-card-title>
+                <v-card-title class="text-center">SUB-UNIT TYPES</v-card-title>
              </div>
             </v-col>
         </v-row>
         <v-row   class=" mx-15 mt-5" align="center" justify="center">        
-                <v-col v-for="sub_unit in sub_units" cols="12"sm="4" md="4" lg="4">
-                    <Link @click="goNext(region_id, service_id, unit_id, sub_unit.id)">
+                <v-col v-for="type in types" cols="12"sm="4" md="4" lg="4">
+                    <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, type.type_name)">
                         <div style="height:150px"  class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                 <v-icon color="blue" size="x-large" class="p-3" >mdi-check-circle</v-icon>
                                 <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                    {{ sub_unit.sub_unit_name }}
+                                    {{ type.type_name }}
                                 </h5>      
                         </div>     
                     </Link>

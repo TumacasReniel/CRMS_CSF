@@ -40,6 +40,7 @@ Route::get('/services/csf/services', [SurveyFormController::class, 'services_ind
 Route::get('/services/csf/service_units', [SurveyFormController::class, 'service_units_index'])->name('service_units_index');
 Route::get('/services/csf/unit/sub-units', [SurveyFormController::class, 'getUnitSubUnits'])->name('getUnitSubUnits');
 Route::get('/services/csf/sub-unit/pstos', [SurveyFormController::class, 'getSubUnitPSTO'])->name('getSubUnitPSTO');
+Route::get('/services/csf/sub-unit/types', [SurveyFormController::class, 'getSubUnitTypes'])->name('getSubUnitTypes');
 Route::get('/services/csf', [SurveyFormController::class, 'index'])->name('csf_form');
 Route::get('/form/csf/msg', [SurveyFormController::class, 'msg_index'])->name('msg_index');
 Route::get('captcha/{config?}', '\Mews\Captcha\CaptchaController@getCaptcha')->middleware('web');

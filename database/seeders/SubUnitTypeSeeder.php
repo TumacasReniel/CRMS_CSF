@@ -16,31 +16,38 @@ class SubUnitTypeSeeder extends Seeder
         $sub_unit_types = [
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'APL (RO)',
             ],
             
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'LDC (RO)',
             ],
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'RRD (PSTO-ZDN)',
             ],
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'AAF (PSTO-ZDS)',
             ],
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'CJB (PSTO-ZS)',
             ],
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'ATP (CSTC-ZCIC)',
             ],
             [
                 'sub_unit_id' => 3,
+                'region_id'=> 10,
                 'type_name' => 'JRE (CSTC-ZCIC',
             ],
         ];

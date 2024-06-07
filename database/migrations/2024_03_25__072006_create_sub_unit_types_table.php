@@ -17,6 +17,10 @@ return new class extends Migration
             $table->foreign('sub_unit_id')
                     ->references('id')
                     ->on('sub_units');
+            $table->foreignId('region_id');
+            $table->foreign('region_id')
+                    ->references('id')
+                    ->on('regions');
             $table->string('type_name');
             $table->timestamps();
         });
