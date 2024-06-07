@@ -34,8 +34,8 @@
                     </tr>
 
                     <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                            <td class="border-t p-5 pl-10">
-                                {{ index + 1 }}.{{ dimension.name }}
+                            <td class="border-t p-5 pl-3 ">
+                                {{ index + 1 }}. {{ dimension.name }}
                             </td>
                             <td v-if="data.y_totals" class="text-center"  v-for="total in data.y_totals[index+1]">
                                 {{ total }}
@@ -96,8 +96,8 @@
 
                         <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                             
-                                <td class="border-t p-3 pl-10 w-1/8 ">
-                                    {{ index + 1 }}.{{ dimension.name }}
+                                <td class="border-t p-3 pl-3 w-1/8 text-left">
+                                    {{ index + 1 }}. {{ dimension.name }}
                                 </td>
                                 <td v-if="data.importance_rate_score_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.importance_rate_score_totals[index+1]">
                                     {{ total }}

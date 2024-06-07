@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $user->email = 'dost.ro9@gmail.com';
         $user->account_type = 'admin';
         $user->password = bcrypt('dost-superadmin');
-        $user->region_id = 9;
+        $user->region_id = 10;
         $user->save();
     }
 }

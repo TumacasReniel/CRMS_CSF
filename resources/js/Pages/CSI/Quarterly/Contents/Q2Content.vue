@@ -31,7 +31,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                               <td class="text-center" rowspan="7">
+                               <td class="text-left pl-3" rowspan="7">
                                  [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 
@@ -212,7 +212,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                               <td class="text-center" rowspan="6">
+                               <td class="text-left pl-3" rowspan="6">
                                  [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 

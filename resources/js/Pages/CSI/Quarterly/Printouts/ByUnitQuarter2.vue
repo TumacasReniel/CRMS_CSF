@@ -30,7 +30,7 @@
                 </span>
             </div>  
         </h5><br>
-        <div style="display: flex; justify-content: space-between; margin-top:-20px">
+        <div style="display: flex; justify-content: space-between; margin-top:-26px">
             <div style="font-size: 12px;">
                 Services : <u>{{ data.service.services_name }}</u> 
                 
@@ -45,7 +45,7 @@
             </div>
                     
         </div>
-               <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:10px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
+               <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:-5px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
                 <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                     <tr class="text-left font-bold text-center bg-blue-200">
                         <th colspan="3">Service Quality Attributes</th>
@@ -59,7 +59,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                               <td class="text-center" rowspan="7">
+                               <td style="text-align: left; padding: 5px" rowspan="7">
                                  [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 
@@ -165,7 +165,10 @@
                     <tr>
                         <td></td>
                     </tr>
-     <tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                         <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
                         <td class="text-center"> {{ data.may_total_vs_respondents }} </td>
@@ -237,7 +240,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                               <td class="text-center" rowspan="6">
+                               <td style="text-align: left; padding: 5px" rowspan="6">
                                  [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 

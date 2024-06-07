@@ -27,7 +27,7 @@
                         <span style="text-align:center">CUSTOMER SATISFACTION FEEDBACK <br>SUMMARY REPORT FOR   <u><span>{{ form.selected_month }}</span>  {{ form.selected_year }}</u></span>
                     </div>                  
                 </h5><br>
-                <div style="display: flex; justify-content: space-between;" v-if="data.service && data.unit">
+                <div style="display: flex; justify-content: space-between;margin-top: -20px" v-if="data.service && data.unit">
                     <div style="font-size: 12px;">
                         Services : <u>{{ data.service.services_name }}</u> 
                        
@@ -44,7 +44,7 @@
                 </div>
 
 
-                <div style="margin-top: 5px; margin-bottom: 20px">
+                <div style="margin-top: -10px; margin-bottom: 20px">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
                     <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                         <tr style="border: 1px solid #333; text-align: center; background-color:blue">
@@ -60,15 +60,15 @@
                         </tr>
                         <tr style="border: 1px solid #333; text-align: center;background-color:blue">               
                             <td style="border: 1px solid #333; padding:2px">Very Satisfied</td>
-                            <td style="border: 1px solid #333;padding:2px">Satisfied </td>
+                            <td style="border: 1px solid #333; padding:2px">Satisfied </td>
                             <td style="border: 1px solid #333; padding:2px">Neither </td>
                             <td style="border: 1px solid #333; padding:2px" >Dissatisfied </td>
                             <td style="border: 1px solid #333; padding:2px">Very Dissatisfied </td>
                         </tr>
 
                         <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" style="border: 1px solid #333;" >              
-                                <td style="border: 1px solid #333; padding: 3px; ">
-                                    {{ dimension.name }}
+                                <td style="border: 1px solid #333; padding:1px; ">
+                                    [{{ index + 1 }}] {{ dimension.name }}
                                 </td>          
                                 <td v-if="data.y_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.y_totals[index+1]">
                                     {{ total }}
@@ -124,8 +124,8 @@
                         </tr>
 
                         <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" style="border: 1px solid #333;" >   
-                                 <td style="border: 1px solid #333; padding: 2px;">
-                                    {{ dimension.name }}
+                                 <td style="border: 1px solid #333; padding: 1px;">
+                                    [{{ index + 1 }}] {{ dimension.name }}
                                 </td>                  
                                 <td v-if="data.importance_rate_score_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.importance_rate_score_totals[index+1]">
                                     {{ total }}
@@ -284,7 +284,7 @@
                     <p></p>
                 </div>
 
-                 <div style="margin-top: 20px ; font-size: 13px">
+                 <div style="margin-top: 10px ; font-size: 13px">
                     ANALYSIS : 
                     <div v-if="data.unit && data.service"  style="text-align: justify; margin: 5px">
                         The  <span>{{ data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF, 
@@ -297,7 +297,7 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 40px; display: flex;  font-size: 13px">
+                <div style="margin-top: 20px; display: flex;  font-size: 13px">
                    <div>
                      Prepared by : <br>
                     <div style="margin-left:70px">

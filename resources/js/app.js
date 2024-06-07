@@ -1,5 +1,6 @@
 import 'flowbite';
 import vuetify from "../plugins/vuetify";
+import '@mdi/font/css/materialdesignicons.css'
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';

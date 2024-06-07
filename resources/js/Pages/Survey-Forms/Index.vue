@@ -39,11 +39,12 @@ const cc3_options = [
     { label: "4. N/A", value: '4' },
 ];
 const options = [
-    { label: 'Very Satisfied', value: '5', icon: 'mdi-emoticon-cool', color: '#FFEB3B' },
-    { label: 'Satisfied', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
+    { label: 'Strongly Agree', value: '5', icon: 'mdi-emoticon-cool', color: '#FFEB3B' },
+    { label: 'Agree', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
     { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
-    { label: 'Dissatisfied', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
-    { label: 'Very Dissatisfied', value: '1', icon: 'mdi-emoticon-devil', color: '#6200EA' },
+    { label: 'Dissagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
+    { label: 'Very Dissagree', value: '1', icon: 'mdi-emoticon-devil', color: '#6200EA' },
+    { label: 'N/A', value: '', icon: 'mdi-close-circle-outline', color: 'red' },
 ];
 const attribute_numbers = [
     { label: '5', value: '5' },
@@ -65,12 +66,20 @@ const recommendation_numbers = [
     { label: '1', value: '1' },
 ];
 
+const getCurrentDate = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+};
 const form = reactive({
     region_id: null,
     service_id: null,
     unit_id: null,
     sub_unit_id: null,
     psto_id: null,
+    date: getCurrentDate(),
     client_type: null,
     sub_unit_type: null,
     email: null,
@@ -87,7 +96,7 @@ const form = reactive({
     comment: null,
     is_complaint: false,
     indication: null,
-    signature: null,
+    // signature: null,
     dimension_form: {
         id: [],
         rate_score: [],
@@ -127,14 +136,14 @@ const getDimension = (index,dimension_id) => {
 
 
 
-const signaturePad = ref(null);
-const canvas = document.querySelector('.signature-pad canvas');
+// const signaturePad = ref(null);
+// const canvas = document.querySelector('.signature-pad canvas');
 
 
 onMounted(() => {
     AOS.init();
 
-    signaturePad.value = new SignaturePad(signaturePad.value);
+    // signaturePad.value = new SignaturePad(signaturePad.value);
     // const canvas = signaturePad.value;
     // canvas.width = 400;
     // canvas.height = 200;
@@ -164,13 +173,13 @@ onMounted(() => {
 const saveCSF = async () => {
     formSubmitted.value = true;
 
-    const canvas = document.querySelector('.signature-pad');
-    const ctx = canvas.getContext('2d');
+    // const canvas = document.querySelector('.signature-pad');
+    // const ctx = canvas.getContext('2d');
     
-    const imageDataUrl = canvas.toDataURL();
+    // const imageDataUrl = canvas.toDataURL();
 
     // Include the data URL in your form data
-    form.signature = imageDataUrl;
+    // form.signature = imageDataUrl;
    
     let captcha_code = Math.random(); 
      // Function to generate a new CAPTCHA image
@@ -232,9 +241,9 @@ const updateIsComplaint = (index ,rate_score)=> {
 };
 
 
-const clearSignature = () => {
-    new SignaturePad(signaturePad.value);
-};
+// const clearSignature = () => {
+//     new SignaturePad(signaturePad.value);
+// };
 
 watch(
     () => props.errors.captcha,
@@ -249,6 +258,8 @@ watch(
     }
      
 );
+
+
 </script>
 
 <template>
@@ -322,6 +333,14 @@ watch(
                                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 ">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
                                             <div>
                                                 <v-text-field                                    
+                                                    v-model="form.date" 
+                                                    type="date" 
+                                                    label="Date"
+                                                    variant="outlined" 
+                                                >
+                                                </v-text-field>
+                                                
+                                                <v-text-field                                    
                                                     v-model="form.email" 
                                                     type="email" 
                                                     placeholder="email@gmail.com"
@@ -338,13 +357,14 @@ watch(
                                                 >
                                                 </v-text-field>
 
+
                                                 <v-row class="mb-5"  >
                                                     <v-col cols="12" md="" sm="4" style="margin-bottom:-23px">
                                                         <v-select
                                                             label="Client_type*"
                                                             variant="outlined"
                                                             v-model="form.client_type"
-                                                            :items="['Internal Employees','General Public','Government Employees','Business/Organization'  ]"
+                                                            :items="['Citizen','Business','Government(Employee or another Agency)' ]"
                                                             :rules="[v => !!v || errors.client_type || 'This field is required']"
 
                                                         >
@@ -379,7 +399,7 @@ watch(
                                                     </v-col >
 
                                                 </v-row>
-
+<!-- 
                                                 <div class="border border-w-2 p-3 mb-5">
                                                     <div>
                                                         Other Informations
@@ -400,7 +420,7 @@ watch(
                                                         </v-col>
                     
                                                     </v-row>
-                                                </div>
+                                                </div> -->
 
 
                                             </div>
@@ -414,8 +434,13 @@ watch(
                                 data-aos-delay="500" 
                                 class="mb-5 mx-auto text-base sm:text-sm"
                                 
-                            >
-
+                            >  
+                                <div class="m-5 text-gray-600">
+                                    <h2>
+                                    Check mark(✔) your answer to the Citzen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
+                                    the services of a government agency/office's including its requirements, fees and processing times among others.
+                                    </h2>
+                                </div>
                                 <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-10" >
                                     <div class=" m-5 font-black mb-10">
                                       <h2>
@@ -480,12 +505,12 @@ watch(
                                             border="1"
                                             v-for="(dimension, index) in dimensions" :key="dimension.id"
                                         >
-                                            <v-card-title class="text-4xl mt-5 mb-3 text-uppercase">
-                                                {{ dimension.name }}
-                                            </v-card-title>
+                                            <h5 class="mt-5 mb-3 text-left mx-5 bg-gray-200 p-3">
+                                                <span  style="font-size: 18px">{{ dimension.id }}. {{ dimension.description }}</span>
+                                            </h5>
                                             
-                                                <input type="hidden" :value="getDimension(index, dimension.id)" />  
-                                            <div class="ml-2">
+                                            <input type="hidden" :value="getDimension(index, dimension.id)" />  
+                                            <div >
                                                     <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]" v-for="option in options" :key="option.value"
                                                     :rules="[() => formSubmitted ? !!form.dimension_form.rate_score[index] || 'This selection is required' : true]"
                                                     >     
@@ -591,7 +616,7 @@ watch(
                                 Please input the reason/s why you have rated low.</div>
                             </v-card>
 
-                            <v-card 
+                            <!-- <v-card 
                                 data-aos="zoom-out-up" 
                                 data-aos-duration="1000" 
                                 data-aos-delay="500" 
@@ -607,9 +632,9 @@ watch(
                                         ></v-textarea>
                                         
                                     </v-container>
-                            </v-card>
+                            </v-card> -->
 
-                            <v-card 
+                            <!-- <v-card 
                                 data-aos="zoom-out-up" 
                                 data-aos-duration="1000" 
                                 data-aos-delay="500" 
@@ -629,7 +654,7 @@ watch(
                                             </v-col>
                                         </v-row>
                                     </v-container>
-                            </v-card>
+                            </v-card> -->
 
                             <v-card
                                 data-aos="zoom-out-up" 

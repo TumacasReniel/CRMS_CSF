@@ -809,7 +809,7 @@ const currentYear = ref(getCurrentYear());
 
           tr, th, td {
             border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
-            padding: 3px; /* Optional: Add padding for better spacing */
+            padding: 1px; /* Optional: Add padding for better spacing */
           }
           .page-break {
             page-break-before: always; /* or page-break-after: always; */

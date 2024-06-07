@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('c_s_f_forms', function (Blueprint $table) {
             $table->id();
+            $table->string('control_number')->unique(); 
             $table->foreignId('customer_id');
             $table->foreign('customer_id')
                   ->references('id')

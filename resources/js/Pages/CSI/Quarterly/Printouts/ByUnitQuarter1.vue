@@ -33,7 +33,7 @@
                 </div>  
                
             </h5><br>
-            <div style="display: flex; justify-content: space-between; margin-top:-20px">
+            <div style="display: flex; justify-content: space-between; margin-top:-26px">
                 <div style="font-size: 12px;">
                     Services : <u>{{ data.service.services_name }}</u> 
                     
@@ -62,7 +62,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                            <td class="text-center" rowspan="7">
+                            <td style="text-align: left; padding: 5px" rowspan="7">
                                 [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 
@@ -133,7 +133,7 @@
                             <tr>
                                 <td class="text-center">1</td>
                                 <td>Very Dissatisfied</td>
-                                <td v-if="data.q1_vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q1_vd_totals[index+1]">
+                                <td v-if="data.q1_vd_totals" class="border-t p-2 w-1/8 text-center"  v-for="total in data.q1_vd_totals[index+1]">
                                     {{ total }}
                                 </td>
                                 <td v-if="data.trp_totals" class="text-center" >
@@ -165,6 +165,9 @@
                     </template>   
 
                     <!-- totals   -->
+                    <tr>
+                        <td></td>
+                    </tr>
                     <tr>
                         <td></td>
                     </tr>
@@ -240,7 +243,7 @@
 
                             <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                                     <tr>
-                                    <td class="text-center" rowspan="6">
+                                    <td style="text-align: left; padding: 5px" rowspan="6">
                                         [{{ index + 1 }}] {{ dimension.name }}    
                                         </td>             
                                     </tr> 

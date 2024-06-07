@@ -35,7 +35,7 @@
                                 </td>             
                             </tr> 
                             <tr>
-                                <td class="text-center">5</td>
+                                <td class="text-left pl-3">5</td>
                                 <td>Very Satisfied</td>
                                 <td v-if="data.q3_vs_totals" class="text-center"  v-for="total in data.q3_vs_totals[index+1]">
                                     {{ total }}
@@ -211,7 +211,7 @@
 
                     <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                             <tr>
-                               <td class="text-center" rowspan="6">
+                               <td class="text-left pl-3" rowspan="6">
                                  [{{ index + 1 }}] {{ dimension.name }}    
                                 </td>             
                             </tr> 
