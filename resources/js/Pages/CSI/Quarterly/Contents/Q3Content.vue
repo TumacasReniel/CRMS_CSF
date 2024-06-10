@@ -13,414 +13,504 @@
     };
 </script>
 <template>
+    <v-card class="mb-3" v-if="data.cc_data">
+    <v-card-title class="bg-gray-500 text-white">
+        PART I: CITIZEN'S CHARTER(CC)
+    </v-card-title>
+    <table style="width:100%; border: 1px solid #333; border-collapse: collapse; padding: 5px" class="text-center">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Number of Respondents who select the option</th>
+        </tr>
+        <tr class="bg-blue-200">
+            <th>CC1</th>
+            <th colspan="2" class="text-left">Which of the following best describes your awareness of a CC?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">I know what a CC is and I saw this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>           
+            <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">I learned the CC when I saw this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans4}}</td>
+        </tr>
+        <tr class="bg-blue-200" >
+            <th >CC2</th>
+            <th colspan="2" class="text-left">If aware of CC (answered 1-3 in CC1), would say that the CC of this was...?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">Easy to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="text-left">Somewhat easy to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">Difficult to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">Not visible at all</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans4}}</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td class="text-left">N/A</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans5}}</td>
+        </tr>
+        <tr class="bg-blue-200">
+            <th >CC3</th>
+            <th colspan="2" class="text-left">If aware of CC (answered 1-3 in CC1), how much did the CC help you in your transaction?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">Helped Very Much</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="text-left">Somewhat helped</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">Did not help</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">N/A</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans4}}</td>
+        </tr>
+    </table>
+    </v-card>
+    
     <v-card class="mb-3">
-                <v-card-title class="bg-gray-500 text-white">
-                    PART I: CUSTOMER RATING OF SERVICE QUALITY 
-                </v-card-title>
-                <table class="w-full border ">
-                    <tr class="text-left font-bold text-center bg-blue-200">
-                        <th colspan="3">Service Quality Attributes</th>
-                        <th>JUL</th>
-                        <th>AUG</th>
-                        <th>SEP</th>
-                        <th>Total Raw Points</th>
-                        <th>Total Score</th>
-                        <th >Likert Scale Rating</th>
-                    </tr>
+        <v-card-title class="bg-gray-500 text-white">
+            PART I: CUSTOMER RATING OF SERVICE QUALITY 
+        </v-card-title>
+        <table class="w-full border ">
+            <tr class="text-left font-bold text-center bg-blue-200">
+                <th colspan="3">Service Quality Attributes</th>
+                <th>JUL</th>
+                <th>AUG</th>
+                <th>SEP</th>
+                <th>Total Raw Points</th>
+                <th>Total Score</th>
+                <th >Likert Scale Rating</th>
+            </tr>
 
-                    <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                            <tr>
-                               <td class="text-center" rowspan="7">
-                                 [{{ index + 1 }}] {{ dimension.name }}    
-                                </td>             
-                            </tr> 
-                            <tr>
-                                <td class="text-left pl-3">5</td>
-                                <td>Very Satisfied</td>
-                                <td v-if="data.q3_vs_totals" class="text-center"  v-for="total in data.q3_vs_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    {{ data.trp_totals[index+1].vs_total_raw_points }}
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    {{ data.p1_total_scores[index+1].x_vs_total }}
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    {{ data.lsr_totals[index+1].vs_lsr_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">4</td>
-                                <td>Satisfied</td>
-                                <td v-if="data.q3_s_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_s_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                  <td v-if="data.trp_totals"  class="text-center" >
-                                    {{ data.trp_totals[index+1].s_total_raw_points }}
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    {{ data.p1_total_scores[index+1].x_s_total }}
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    {{ data.lsr_totals[index+1].s_lsr_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">3</td>
-                                <td>Neither</td>
-                                <td v-if="data.q3_n_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_n_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    {{ data.trp_totals[index+1].n_total_raw_points }}
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    {{ data.p1_total_scores[index+1].x_n_total }}
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    {{ data.lsr_totals[index+1].n_lsr_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">2</td>
-                                 <td>Dissatisfied</td>
-                                <td v-if="data.q3_d_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_d_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    {{ data.trp_totals[index+1].d_total_raw_points }}
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    {{ data.p1_total_scores[index+1].x_d_total }}
-                                </td>
-                                   <td v-if="data.lsr_totals" class="text-center" >
-                                    {{ data.lsr_totals[index+1].d_lsr_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">1</td>
-                                 <td>Very Dissatisfied</td>
-                                <td v-if="data.q3_vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_vd_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    {{ data.trp_totals[index+1].vd_total_raw_points }}
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    {{ data.p1_total_scores[index+1].x_vd_total }}
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    {{ data.lsr_totals[index+1].vd_lsr_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center" colspan="2"></td>
-                                <td v-if="data.q3_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q3_grand_totals[index+1]">
-                                    {{ total }}
-                                </td>        
-                                <td v-if="data.trp_totals" class="text-center bg-gray-200" >
-                                    {{ data.trp_totals[index+1].total_raw_points }}
-                                </td>  
-                                <td v-if="data.p1_total_scores" class="text-center bg-gray-200" >
-                                    {{ data.p1_total_scores[index+1].x_total_score }} 
-                                </td>   
-                                <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
-                                    {{ data.lsr_totals[index+1].lsr_total }}
-                                </td>             
-                            </tr>
-
-                    </template>   
-
-                    <!-- totals   -->
+            <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
                     <tr>
-                        <td></td>
-                    </tr>
-                      <tr>
-                        <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
-                        <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
-                        <td class="text-center"> {{ data.may_total_vs_respondents }} </td>
-                        <td class="text-center">{{ data.jun_total_vs_respondents }} </td>
-                        <td class="text-center">{{ data.vs_grand_total_raw_points }} </td>
-                        <td class="text-center">{{ data.vs_grand_total_score }}</td>
-                        <td class="text-center">{{ calculate(data.vs_grand_total_score, data.grand_total_score) }}</td>
-
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
-                        <td class="text-center">{{ data.apr_total_s_respondents }}</td>
-                        <td class="text-center"> {{ data.may_total_s_respondents }} </td>
-                        <td class="text-center">{{ data.jun_total_s_respondents }} </td>
-                        <td class="text-center">{{ data.s_grand_total_raw_points }}</td>
-                        <td class="text-center">{{ data.s_grand_total_score }}</td>
-                        <td class="text-center">{{ calculate(data.s_grand_total_score, data.grand_total_score) }}</td>
-
- 
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
-                        <td class="text-center">{{ data.apr_total_ndvd_respondents }}</td>
-                        <td class="text-center"> {{ data.may_total_ndvd_respondents }} </td>
-                        <td class="text-center">{{ data.jun_total_ndvd_respondents }} </td>
-                        <td class="text-center">{{ data.ndvd_grand_total_raw_points }}</td>
-                        <td class="text-center">{{ data.ndvd_grand_total_score }}</td>
-                        <td class="text-center">{{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of All Responses::</td>
-                        <td class="text-center">{{ data.apr_total_respondents }}</td>
-                        <td class="text-center"> {{ data.may_total_respondents }} </td>
-                        <td class="text-center">{{ data.jun_total_respondents }} </td>
-                        <td class="text-center">{{ data.grand_total_raw_points }} </td>
-                        <td class="text-center">{{ data.grand_total_score }}</td>
-                        <td class="text-center"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
-                        <td class="text-center">{{ data.total_respondents }}</td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="8" class="text-right">Total No. of Respondents/Customers who rated VS or S:</td>
-                        <td class="text-center">{{ data.total_vss_respondents }}</td>
-                    </tr>
-                      <tr>
-                        <td colspan="8" class="text-right">Percentage No. of Respondents/Customers who rated VS or S:</td>
-                        <td class="text-center">{{ data.percentage_vss_respondents }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class="text-right"> Likert Scale Rating (Average):</td>      
-                        <td class="text-center">{{ data.lsr_average }}</td>
-                    </tr>              
-                </table> 
-            </v-card> 
-            
-            <v-card class="mb-3">
-                <v-card-title class="bg-gray-500 text-white">
-                    PART II: IMPORTANCE OF THIS ATTRIBUTE   
-                </v-card-title>
-                 <table class="w-full border ">
-                    <tr class="text-left font-bold text-center bg-blue-200">
-                        <th  colspan="3">Importance Service Quality Attributes</th>
-                         <th >JAN</th>
-                        <th >FEB</th>
-                        <th >MAR</th>
-                        <th >Total Raw Points</th>
-                        <th  colspan="2">Total Score</th>
-                    </tr>
-
-                    <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                            <tr>
-                               <td class="text-left pl-3" rowspan="6">
-                                 [{{ index + 1 }}] {{ dimension.name }}    
-                                </td>             
-                            </tr> 
-                            <tr>
-                                <td class="text-center">5</td>
-                                <td>Very Important</td>
-                                <td v-if="data.q3_vi_totals" class="text-center"  v-for="total in data.q3_vi_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.i_trp_totals" class="text-center" >
-                                    {{ data.i_trp_totals[index+1].vi_total_raw_points }}
-                                </td>
-                                <td v-if="data.i_total_scores" class="text-center" >
-                                    {{ data.i_total_scores[index+1].x_vi_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">4</td>
-                                 <td>Important</td>
-                                <td v-if="data.q3_i_totals" class="text-center"  v-for="total in data.q3_i_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.i_trp_totals" class="text-center" >
-                                    {{ data.i_trp_totals[index+1].i_total_raw_points }}
-                                </td>
-                                <td v-if="data.i_total_scores" class="text-center" >
-                                    {{ data.i_total_scores[index+1].x_i_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">3</td>
-                                <td>Moderately Important</td>
-                                <td v-if="data.q3_mi_totals" class="text-center"  v-for="total in data.q3_mi_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.i_trp_totals" class="text-center" >
-                                    {{ data.i_trp_totals[index+1].mi_total_raw_points }}
-                                </td>
-                                <td v-if="data.i_total_scores" class="text-center" >
-                                    {{ data.i_total_scores[index+1].x_mi_total }}
-                                </td>
-                                
-                            </tr>
-                            <tr>
-                                <td class="text-center">2</td>
-                                 <td>Slightly Important</td>
-                                <td v-if="data.q3_si_totals" class="text-center"  v-for="total in data.q3_si_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.i_trp_totals" class="text-center" >
-                                    {{ data.i_trp_totals[index+1].si_total_raw_points }}
-                                </td>
-                                <td v-if="data.i_total_scores" class="text-center" >
-                                    {{ data.i_total_scores[index+1].x_si_total }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">1</td>
-                                 <td>Not all Important</td>
-                                <td v-if="data.q3_nai_totals" class="text-center"  v-for="total in data.q3_nai_totals[index+1]">
-                                    {{ total }}
-                                </td>
-                                <td v-if="data.i_trp_totals" class="text-center" >
-                                    {{ data.i_trp_totals[index+1].nai_total_raw_points }}
-                                </td>
-                                <td v-if="data.i_total_scores" class="text-center" >
-                                    {{ data.i_total_scores[index+1].x_nai_total }}
-                                </td>
-                            </tr>
-                            <tr class="text-center">
-                                <td colspan="3"></td>
-                                 <td v-if="data.q3_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q3_grand_totals[index+1]">
-                                    {{ total }}
-                                </td>        
-                                <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
-                                    {{ data.i_trp_totals[index+1].i_total_raw_points }}
-                                </td>  
-                                <td v-if="data.i_total_scores" class="text-center bg-gray-200" >
-                                    {{ data.i_total_scores[index+1].x_i_total_score }} 
-                                </td>             
-                            </tr>
-                    </template>                 
-
-                    <!-- totals -->
-                    <tr>
-                        <td></td>
-                    </tr>
-
-                     <tr class="text-center bg-blue-200">
-                        <td colspan="3"></td>
-                        <td>JUL</td>
-                        <td>AUG</td>
-                        <td>SEP</td>
-                        <td colspan="2">AVERAGE(%)</td>
-
-                    </tr>
-
-                    <tr>
-                        <td colspan="3" class="text-right">% of Promoters:</td>
-                         <td v-if="data.jul_percentage_promoters" class="text-center" >
-                            {{ data.jul_percentage_promoters }} 
-                        </td>  
-                        <td v-if="data.aug_percentage_promoters" class="text-center " >
-                            {{ data.aug_percentage_promoters }} 
-                        </td>
-                        <td v-if="data.sep_percentage_promoters" class="text-center" >
-                            {{ data.sep_percentage_promoters }} 
-                        </td>
-                        <td v-if="data.average_percentage_promoters" colspan="2"  class="text-center">
-                             {{ data.average_percentage_promoters }} 
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">% of Detractors:</td>
-                        <td v-if="data.jul_percentage_detractors" class="text-center" >
-                            {{ data.jul_percentage_detractors }} 
-                        </td>  
-                        <td v-if="data.aug_percentage_detractors" class="text-center " >
-                            {{ data.aug_percentage_detractors  }} 
-                        </td>
-                        <td v-if="data.sep_percentage_detractors" class="text-center" >
-                            {{ data.sep_percentage_detractors  }} 
-                        </td>
-                        <td v-if="data.average_percentage_detractors" colspan="2"  class="text-center">
-                             {{ data.average_percentage_detractors  }} 
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Net Promoter Score:</td>
-                        <td v-if="data.jul_net_promoter_score" class="text-center" >
-                            {{ data.jul_net_promoter_score }} 
-                        </td>  
-                        <td v-if="data.aug_percentage_detractors" class="text-center " >
-                            {{ data.aug_percentage_detractors  }} 
-                        </td>
-                        <td v-if="data.sep_net_promoter_score" class="text-center" >
-                            {{ data.sep_net_promoter_score  }} 
-                        </td>
-                        <td v-if="data.ave_net_promoter_score" colspan="2"  class="text-center">
-                             {{ data.ave_net_promoter_score  }} 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
-                       <td class="text-center" v-if="data.first_month_csi">{{ data.first_month_csi }}</td>
-                         <td class="text-center" v-if="data.second_month_csi">{{ data.second_month_csi }}</td>
-                        <td class="text-center" v-if="data.third_month_csi">{{ data.third_month_csi }}</td>
-                        <td class="text-center" colspan="2" v-if="data.csi">{{ data.csi }} </td>
+                        <td class="text-center" rowspan="7">
+                            [{{ index + 1 }}] {{ dimension.name }}    
+                        </td>             
                     </tr> 
                     <tr>
-                        <td colspan="8"></td>
+                        <td class="text-left pl-3">5</td>
+                        <td>Very Satisfied</td>
+                        <td v-if="data.q3_vs_totals" class="text-center"  v-for="total in data.q3_vs_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            {{ data.trp_totals[index+1].vs_total_raw_points }}
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            {{ data.p1_total_scores[index+1].x_vs_total }}
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            {{ data.lsr_totals[index+1].vs_lsr_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td>Satisfied</td>
+                        <td v-if="data.q3_s_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_s_totals[index+1]">
+                            {{ total }}
+                        </td>
+                            <td v-if="data.trp_totals"  class="text-center" >
+                            {{ data.trp_totals[index+1].s_total_raw_points }}
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            {{ data.p1_total_scores[index+1].x_s_total }}
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            {{ data.lsr_totals[index+1].s_lsr_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>Neither</td>
+                        <td v-if="data.q3_n_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_n_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            {{ data.trp_totals[index+1].n_total_raw_points }}
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            {{ data.p1_total_scores[index+1].x_n_total }}
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            {{ data.lsr_totals[index+1].n_lsr_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                            <td>Dissatisfied</td>
+                        <td v-if="data.q3_d_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_d_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            {{ data.trp_totals[index+1].d_total_raw_points }}
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            {{ data.p1_total_scores[index+1].x_d_total }}
+                        </td>
+                            <td v-if="data.lsr_totals" class="text-center" >
+                            {{ data.lsr_totals[index+1].d_lsr_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">1</td>
+                            <td>Very Dissatisfied</td>
+                        <td v-if="data.q3_vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q3_vd_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            {{ data.trp_totals[index+1].vd_total_raw_points }}
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            {{ data.p1_total_scores[index+1].x_vd_total }}
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            {{ data.lsr_totals[index+1].vd_lsr_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="2"></td>
+                        <td v-if="data.q3_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q3_grand_totals[index+1]">
+                            {{ total }}
+                        </td>        
+                        <td v-if="data.trp_totals" class="text-center bg-gray-200" >
+                            {{ data.trp_totals[index+1].total_raw_points }}
+                        </td>  
+                        <td v-if="data.p1_total_scores" class="text-center bg-gray-200" >
+                            {{ data.p1_total_scores[index+1].x_total_score }} 
+                        </td>   
+                        <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
+                            {{ data.lsr_totals[index+1].lsr_total }}
+                        </td>             
+                    </tr>
+
+            </template>   
+
+            <!-- totals   -->
+            <tr>
+                <td></td>
+            </tr>
+                <tr>
+                <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
+                <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
+                <td class="text-center"> {{ data.may_total_vs_respondents }} </td>
+                <td class="text-center">{{ data.jun_total_vs_respondents }} </td>
+                <td class="text-center">{{ data.vs_grand_total_raw_points }} </td>
+                <td class="text-center">{{ data.vs_grand_total_score }}</td>
+                <td class="text-center">{{ calculate(data.vs_grand_total_score, data.grand_total_score) }}</td>
+
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
+                <td class="text-center">{{ data.apr_total_s_respondents }}</td>
+                <td class="text-center"> {{ data.may_total_s_respondents }} </td>
+                <td class="text-center">{{ data.jun_total_s_respondents }} </td>
+                <td class="text-center">{{ data.s_grand_total_raw_points }}</td>
+                <td class="text-center">{{ data.s_grand_total_score }}</td>
+                <td class="text-center">{{ calculate(data.s_grand_total_score, data.grand_total_score) }}</td>
+
+
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
+                <td class="text-center">{{ data.apr_total_ndvd_respondents }}</td>
+                <td class="text-center"> {{ data.may_total_ndvd_respondents }} </td>
+                <td class="text-center">{{ data.jun_total_ndvd_respondents }} </td>
+                <td class="text-center">{{ data.ndvd_grand_total_raw_points }}</td>
+                <td class="text-center">{{ data.ndvd_grand_total_score }}</td>
+                <td class="text-center">{{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of All Responses::</td>
+                <td class="text-center">{{ data.apr_total_respondents }}</td>
+                <td class="text-center"> {{ data.may_total_respondents }} </td>
+                <td class="text-center">{{ data.jun_total_respondents }} </td>
+                <td class="text-center">{{ data.grand_total_raw_points }} </td>
+                <td class="text-center">{{ data.grand_total_score }}</td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
+                <td class="text-center">{{ data.total_respondents }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="8" class="text-right">Total No. of Respondents/Customers who rated VS or S:</td>
+                <td class="text-center">{{ data.total_vss_respondents }}</td>
+            </tr>
+                <tr>
+                <td colspan="8" class="text-right">Percentage No. of Respondents/Customers who rated VS or S:</td>
+                <td class="text-center">{{ data.percentage_vss_respondents }}</td>
+            </tr>
+            <tr>
+                <td colspan="8" class="text-right"> Likert Scale Rating (Average):</td>      
+                <td class="text-center">{{ data.lsr_average }}</td>
+            </tr>              
+        </table> 
+    </v-card> 
+            
+    <v-card class="mb-3">
+        <v-card-title class="bg-gray-500 text-white">
+            PART II: IMPORTANCE OF THIS ATTRIBUTE   
+        </v-card-title>
+            <table class="w-full border ">
+            <tr class="text-left font-bold text-center bg-blue-200">
+                <th  colspan="3">Importance Service Quality Attributes</th>
+                    <th >JAN</th>
+                <th >FEB</th>
+                <th >MAR</th>
+                <th >Total Raw Points</th>
+                <th  colspan="2">Total Score</th>
+            </tr>
+
+            <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
+                    <tr>
+                        <td class="text-left pl-3" rowspan="6">
+                            [{{ index + 1 }}] {{ dimension.name }}    
+                        </td>             
+                    </tr> 
+                    <tr>
+                        <td class="text-center">5</td>
+                        <td>Very Important</td>
+                        <td v-if="data.q3_vi_totals" class="text-center"  v-for="total in data.q3_vi_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.i_trp_totals" class="text-center" >
+                            {{ data.i_trp_totals[index+1].vi_total_raw_points }}
+                        </td>
+                        <td v-if="data.i_total_scores" class="text-center" >
+                            {{ data.i_total_scores[index+1].x_vi_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                            <td>Important</td>
+                        <td v-if="data.q3_i_totals" class="text-center"  v-for="total in data.q3_i_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.i_trp_totals" class="text-center" >
+                            {{ data.i_trp_totals[index+1].i_total_raw_points }}
+                        </td>
+                        <td v-if="data.i_total_scores" class="text-center" >
+                            {{ data.i_total_scores[index+1].x_i_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>Moderately Important</td>
+                        <td v-if="data.q3_mi_totals" class="text-center"  v-for="total in data.q3_mi_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.i_trp_totals" class="text-center" >
+                            {{ data.i_trp_totals[index+1].mi_total_raw_points }}
+                        </td>
+                        <td v-if="data.i_total_scores" class="text-center" >
+                            {{ data.i_total_scores[index+1].x_mi_total }}
+                        </td>
                         
                     </tr>
-                   <tr>
-                        <td colspan="3" class="text-right">Customer Satisfaction Rating  :</td>
-                        <td colspan="5" class="text-center" v-if="data.customer_satisfaction_rating">
-                            {{ data.customer_satisfaction_rating }}
+                    <tr>
+                        <td class="text-center">2</td>
+                            <td>Slightly Important</td>
+                        <td v-if="data.q3_si_totals" class="text-center"  v-for="total in data.q3_si_totals[index+1]">
+                            {{ total }}
                         </td>
-                    </tr>                                   
-                </table>   
-            </v-card> 
+                        <td v-if="data.i_trp_totals" class="text-center" >
+                            {{ data.i_trp_totals[index+1].si_total_raw_points }}
+                        </td>
+                        <td v-if="data.i_total_scores" class="text-center" >
+                            {{ data.i_total_scores[index+1].x_si_total }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">1</td>
+                            <td>Not all Important</td>
+                        <td v-if="data.q3_nai_totals" class="text-center"  v-for="total in data.q3_nai_totals[index+1]">
+                            {{ total }}
+                        </td>
+                        <td v-if="data.i_trp_totals" class="text-center" >
+                            {{ data.i_trp_totals[index+1].nai_total_raw_points }}
+                        </td>
+                        <td v-if="data.i_total_scores" class="text-center" >
+                            {{ data.i_total_scores[index+1].x_nai_total }}
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3"></td>
+                            <td v-if="data.q3_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q3_grand_totals[index+1]">
+                            {{ total }}
+                        </td>        
+                        <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
+                            {{ data.i_trp_totals[index+1].i_total_raw_points }}
+                        </td>  
+                        <td v-if="data.i_total_scores" class="text-center bg-gray-200" >
+                            {{ data.i_total_scores[index+1].x_i_total_score }} 
+                        </td>             
+                    </tr>
+            </template>                 
+
+            <!-- totals -->
+            <tr>
+                <td></td>
+            </tr>
+
+                <tr class="text-center bg-blue-200">
+                <td colspan="3"></td>
+                <td>JUL</td>
+                <td>AUG</td>
+                <td>SEP</td>
+                <td colspan="2">AVERAGE(%)</td>
+
+            </tr>
+
+            <tr>
+                <td colspan="3" class="text-right">% of Promoters:</td>
+                    <td v-if="data.jul_percentage_promoters" class="text-center" >
+                    {{ data.jul_percentage_promoters }} 
+                </td>  
+                <td v-if="data.aug_percentage_promoters" class="text-center " >
+                    {{ data.aug_percentage_promoters }} 
+                </td>
+                <td v-if="data.sep_percentage_promoters" class="text-center" >
+                    {{ data.sep_percentage_promoters }} 
+                </td>
+                <td v-if="data.average_percentage_promoters" colspan="2"  class="text-center">
+                        {{ data.average_percentage_promoters }} 
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">% of Detractors:</td>
+                <td v-if="data.jul_percentage_detractors" class="text-center" >
+                    {{ data.jul_percentage_detractors }} 
+                </td>  
+                <td v-if="data.aug_percentage_detractors" class="text-center " >
+                    {{ data.aug_percentage_detractors  }} 
+                </td>
+                <td v-if="data.sep_percentage_detractors" class="text-center" >
+                    {{ data.sep_percentage_detractors  }} 
+                </td>
+                <td v-if="data.average_percentage_detractors" colspan="2"  class="text-center">
+                        {{ data.average_percentage_detractors  }} 
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Net Promoter Score:</td>
+                <td v-if="data.jul_net_promoter_score" class="text-center" >
+                    {{ data.jul_net_promoter_score }} 
+                </td>  
+                <td v-if="data.aug_percentage_detractors" class="text-center " >
+                    {{ data.aug_percentage_detractors  }} 
+                </td>
+                <td v-if="data.sep_net_promoter_score" class="text-center" >
+                    {{ data.sep_net_promoter_score  }} 
+                </td>
+                <td v-if="data.ave_net_promoter_score" colspan="2"  class="text-center">
+                        {{ data.ave_net_promoter_score  }} 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
+                <td class="text-center" v-if="data.first_month_csi">{{ data.first_month_csi }}</td>
+                    <td class="text-center" v-if="data.second_month_csi">{{ data.second_month_csi }}</td>
+                <td class="text-center" v-if="data.third_month_csi">{{ data.third_month_csi }}</td>
+                <td class="text-center" colspan="2" v-if="data.csi">{{ data.csi }} </td>
+            </tr> 
+            <tr>
+                <td colspan="8"></td>
+                
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Customer Satisfaction Rating  :</td>
+                <td colspan="5" class="text-center" v-if="data.customer_satisfaction_rating">
+                    {{ data.customer_satisfaction_rating }}
+                </td>
+            </tr>                                   
+        </table>   
+    </v-card> 
         
-            <v-card class="mb-3">
-                <v-card-title>
-                    COMMENTS AND COMPLAINTS: 
-                </v-card-title>
-                <v-card-content class="m-5 mb-10">
-                        <v-row>
-                        <div class="ml-10">Comments
-                        <v-chip color="primary">
-                            {{ data.total_comments }}
-                        </v-chip>
-                        </div>
-                        <div class="">Complaints
-                            <v-chip color="red">
-                            {{ data.total_complaints }}
-                            </v-chip>
-                        </div>
+    <v-card class="mb-3">
+        <v-card-title>
+            COMMENTS AND COMPLAINTS: 
+        </v-card-title>
+        <v-card-content class="m-5 mb-10">
+                <v-row>
+                <div class="ml-10">Comments
+                <v-chip color="primary">
+                    {{ data.total_comments }}
+                </v-chip>
+                </div>
+                <div class="">Complaints
+                    <v-chip color="red">
+                    {{ data.total_complaints }}
+                    </v-chip>
+                </div>
 
-                        <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
-                            <table style="margin-left: 40px" >
-                            <p>[{{ index +1 }}] {{ comment }}</p>
-                            </table>
-                        </template>
-                    </v-row>
-                </v-card-content>
-            </v-card>
+                <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
+                    <table style="margin-left: 40px" >
+                    <p>[{{ index +1 }}] {{ comment }}</p>
+                    </table>
+                </template>
+            </v-row>
+        </v-card-content>
+    </v-card>
 
 
-            <v-card class="mb-3">
-                <v-card-title>
-                    ANALYSIS:
-                </v-card-title>
-               <v-card-content >
-                    <div class="m-5" style="margin-top: -10px;text-align: justify;">
-                        The <span>{{ data.unit.unit_name }}</span> Unit for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span> 
-                        had a total of <span>{{ data.total_respondents }}</span> respondents who filled out and rated the Customer Satisfaction Feedback. 
-                        <span>{{ data.total_vss_respondents }}</span> (out of <span>{{ data.total_respondents }}</span>%, or <span>{{ data.percentage_vss_respondents }}</span>%) of the respondents rated the CSF as either very satisfied (VS) or satisfied (S), 
-                        which resulted in an overall average Customer Satisfaction Index (CSI) of <span>{{ data.customer_satisfaction_index }}</span>%, 
-                        a Net Promoter Score of {{ data.ave_net_promoter_score }}%, and an average Likert Scale Rating of <span>{{ data.ave_net_promoter_score }}%</span>, which translates to "very satisfied" for 
-                        the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>.
+    <v-card class="mb-3">
+        <v-card-title>
+            ANALYSIS:
+        </v-card-title>
+        <v-card-content >
+            <div class="m-5" style="margin-top: -10px;text-align: justify;">
+                The <span>{{ data.unit.unit_name }}</span> Unit for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span> 
+                had a total of <span>{{ data.total_respondents }}</span> respondents who filled out and rated the Customer Satisfaction Feedback. 
+                <span>{{ data.total_vss_respondents }}</span> (out of <span>{{ data.total_respondents }}</span>%, or <span>{{ data.percentage_vss_respondents }}</span>%) of the respondents rated the CSF as either very satisfied (VS) or satisfied (S), 
+                which resulted in an overall average Customer Satisfaction Index (CSI) of <span>{{ data.customer_satisfaction_index }}</span>%, 
+                a Net Promoter Score of {{ data.ave_net_promoter_score }}%, and an average Likert Scale Rating of <span>{{ data.ave_net_promoter_score }}%</span>, which translates to "very satisfied" for 
+                the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>.
 
-                        The <span>{{ data.unit.unit_name }}</span> unit's Customer Satisfaction Survey resulted in an Overall Customer Satisfaction Score Rating of <span>{{ data.customer_satisfaction_rating }}</span>% 
-                        for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>, which achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
-                    </div>
-                </v-card-content>
-            </v-card>
+                The <span>{{ data.unit.unit_name }}</span> unit's Customer Satisfaction Survey resulted in an Overall Customer Satisfaction Score Rating of <span>{{ data.customer_satisfaction_rating }}</span>% 
+                for the <span style="text-transform:lowercase">{{ form.selected_quarter }}</span> of <span>{{ form.selected_year }}</span>, which achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
+            </div>
+        </v-card-content>
+    </v-card>
    
 </template>
 

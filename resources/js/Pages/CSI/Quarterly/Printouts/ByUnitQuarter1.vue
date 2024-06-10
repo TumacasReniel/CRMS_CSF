@@ -17,7 +17,7 @@
 <template>
     <div class="print-id print">
         <div style="width: 100%;">
-            <h5 style="text-transform:capitalize; text-align:center; margin-top: -8px">
+            <h5 style="text-transform:capitalize; text-align:center; margin-top: -8px;margin-bottom: 5px">
                   <div style="display:flex;justify-content:center;align-items:center;">
                     <img
                     data-aos="zoom-in" 
@@ -33,7 +33,7 @@
                 </div>  
                
             </h5><br>
-            <div style="display: flex; justify-content: space-between; margin-top:-26px">
+            <div style="display: flex; justify-content: space-between; margin-top:10px">
                 <div style="font-size: 12px;">
                     Services : <u>{{ data.service.services_name }}</u> 
                     
@@ -48,7 +48,98 @@
                 </div>
                         
             </div>
-            <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:-5px; font-weight: bold">PART I: CUSTOMER RATING OF SERVICE QUALITY  </div>
+
+            <div style="margin-top: -5px; margin-bottom: 20px;text-align: center" v-if="data.cc_data">
+                <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold;text-align: left">
+                    PART I: CITIZEN'S CHARTER(CC)
+                    </div>
+                <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th style="border: 1px solid #333;font-size: 12px;">Number of Respondents who select the option</th>
+                    </tr>
+                    <tr class="bg-blue-200">
+                        <th>CC1</th>
+                        <th colspan="2" style="text-align: left">Which of the following best describes your awareness of a CC?</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td style="text-align: left">I know what a CC is and I saw this office's CC</td>
+                        <td>{{data.cc_data.cc1_data.cc1_ans1}}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>           
+                        <td style="text-align: left">I know what a CC is but I did NOT see this office's CC</td>
+                        <td>{{data.cc_data.cc1_data.cc1_ans2}}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td style="text-align: left">I learned the CC when I saw this office's CC</td>
+                        <td>{{data.cc_data.cc1_data.cc1_ans3}}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td style="text-align: left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
+                        <td>{{data.cc_data.cc1_data.cc1_ans4}}</td>
+                    </tr>
+                    <tr class="bg-blue-200" >
+                        <th >CC2</th>
+                        <th colspan="2" style="text-align: left">If aware of CC (answered 1-3 in CC1), would say that the CC of this was...?</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td style="text-align: left">Easy to see</td>
+                        <td>{{data.cc_data.cc2_data.cc2_ans1}}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="text-align: left">Somewhat easy to see</td>
+                        <td>{{data.cc_data.cc2_data.cc2_ans2}}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td style="text-align: left">Difficult to see</td>
+                        <td>{{data.cc_data.cc2_data.cc2_ans3}}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td style="text-align: left">Not visible at all</td>
+                        <td>{{data.cc_data.cc2_data.cc2_ans4}}</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td style="text-align: left">N/A</td>
+                        <td>{{data.cc_data.cc2_data.cc2_ans5}}</td>
+                    </tr>
+                    <tr class="bg-blue-200">
+                        <th >CC3</th>
+                        <th colspan="2" style="text-align: left">If aware of CC (answered 1-3 in CC1), how much did the CC help you in your transaction?</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td style="text-align: left">Helped Very Much</td>
+                        <td>{{data.cc_data.cc3_data.cc3_ans1}}</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="text-align: left">Somewhat helped</td>
+                        <td>{{data.cc_data.cc3_data.cc3_ans2}}</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td style="text-align: left">Did not help</td>
+                        <td>{{data.cc_data.cc3_data.cc3_ans3}}</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td style="text-align: left">N/A</td>
+                        <td>{{data.cc_data.cc3_data.cc3_ans4}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="font-size: 12px;margin-right:20px; margin-bottom:5px;margin-top:-5px; font-weight: bold;page-break-before:always">PART II: CUSTOMER RATING OF SERVICE QUALITY  </div>
                 <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                     <tr class="text-left font-bold text-center bg-blue-200">
                         <th colspan="3">Service Quality Attributes</th>
@@ -165,12 +256,10 @@
                     </template>   
 
                     <!-- totals   -->
-                    <tr>
+                    <tr style="page-break-before:always">
                         <td></td>
                     </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
+
                      <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                         <td class="text-center">{{ data.apr_total_vs_respondents }}</td>
@@ -230,7 +319,7 @@
                 </table> 
                 
                 <div style="margin-top: 20px; page-break-before:always">
-                        <div style="font-size: 13px;margin-right:20px; margin-bottom:5px; font-weight: bold">PART II: IMPORTANCE OF THIS ATTRIBUTE    </div>
+                        <div style="font-size: 13px;margin-right:20px; margin-bottom:5px; font-weight: bold">PART III: IMPORTANCE OF THIS ATTRIBUTE    </div>
                         <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                             <tr class="text-left font-bold text-center bg-blue-200">
                                 <th  colspan="3">Importance Service Quality Attributes</th>
@@ -328,7 +417,7 @@
                             </template>                 
 
                             <!-- totals -->
-                            <tr>
+                            <tr style="page-break-before:always">
                                 <td></td>
                             </tr>
 

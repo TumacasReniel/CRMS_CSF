@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerAttributeRating;
 use App\Models\CustomerComment;
+use App\Models\CustomerCCRating;
 use App\Http\Resources\Unit as UnitResource;
 use App\Models\CustomerRecommendationRating;
 use App\Http\Resources\Services as ServiceResource;
@@ -509,11 +510,19 @@ class ReportController extends Controller
         $client_type = $request->client_type; 
         $sub_unit_type = $request->sub_unit_type; 
 
-       // search and check list of forms query  
-       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-
-    
+        // search and check list of forms query  
+        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
+      
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
+
+        $cc_query = CustomerCCRating::whereMonth('created_at', $numericMonth)
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
+
         //$date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                              ->whereMonth('created_at', $numericMonth)->get();
@@ -796,6 +805,7 @@ class ReportController extends Controller
         //send response to front end
         return Inertia::render('CSI/Index')
             ->with('user', $user)
+            ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
@@ -865,9 +875,18 @@ class ReportController extends Controller
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-            
+
         $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
+
+        // Citizen Charter
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
                                             ->whereYear('created_at', $request->selected_year)->get(); 
@@ -1315,6 +1334,7 @@ class ReportController extends Controller
         //send response to front end
         return Inertia::render('CSI/Index')
             ->with('user', $user)
+            ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
@@ -1425,9 +1445,18 @@ class ReportController extends Controller
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-            
+
         $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
+
+        // Citizen's Charter
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+       //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
                                             ->whereYear('created_at', $request->selected_year)->get(); 
@@ -1893,6 +1922,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('cc_data', $cc_data)
             ->with('user', $user)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
@@ -2010,6 +2040,15 @@ class ReportController extends Controller
         // Retrieve records for the specified quarter and year
         $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 9, 31)->endOfDay();
+        
+         // Citizen's Charter
+         $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+         ->whereYear('created_at', $request->selected_year)
+         ->whereIn('customer_id',$customer_ids);
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
                                             ->whereYear('created_at', $request->selected_year)->get(); 
@@ -2472,6 +2511,7 @@ class ReportController extends Controller
 
         //send response to front end
         return Inertia::render('CSI/Index')
+            ->with('cc_data', $cc_data)
             ->with('user', $user)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
@@ -2585,10 +2625,19 @@ class ReportController extends Controller
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-            
+
         // Retrieve records for the specified quarter and year
         $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
         $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+
+         // Citizen's Charter
+         $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
                                             ->whereYear('created_at', $request->selected_year)->get(); 
@@ -3051,6 +3100,7 @@ class ReportController extends Controller
         //send response to front end
         return Inertia::render('CSI/Index')
             ->with('user', $user)
+            ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
@@ -3163,6 +3213,13 @@ class ReportController extends Controller
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
             
+        // Citizen's Charter
+        $cc_query = CustomerCCRating::whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+       //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         // Retrieve records for the specified quarter and year
         $q1_start_date = Carbon::create($request->selected_year, 1, 1)->startOfDay();
         $q1_end_date = Carbon::create($request->selected_year, 3, 31)->endOfDay();
@@ -3714,6 +3771,7 @@ class ReportController extends Controller
         //send response to front end
         return Inertia::render('CSI/Index')
             ->with('user', $user)
+            ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
@@ -3895,7 +3953,15 @@ class ReportController extends Controller
 
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
-    
+
+       // Citizen's Charter
+       $cc_query = CustomerCCRating::whereMonth('created_at', $month)
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id',$customer_ids);
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                              ->whereMonth('created_at', $month)->get();
            
@@ -4462,6 +4528,75 @@ class ReportController extends Controller
 
         return $customer_satisfaction_index;
     }  
+
+    public function calculateCC( $cc_query)
+    {  
+           // Clone the original query builder instance
+        $cc_query_clone = clone $cc_query;
+
+        // CC 1 
+        $cc1_ans4 = $cc_query->where('cc_id', 1)->where('answer', 4)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc1_ans3 = $cc_query->where('cc_id', 1)->where('answer', 3)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc1_ans2 = $cc_query->where('cc_id', 1)->where('answer', 2)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc1_ans1 = $cc_query->where('cc_id', 1)->where('answer', 1)->count();
+
+        // CC 2 
+        $cc_query = clone $cc_query_clone;
+        $cc2_ans5 = $cc_query->where('cc_id', 2)->where('answer', 5)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc2_ans4 = $cc_query->where('cc_id', 2)->where('answer', 4)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc2_ans3 = $cc_query->where('cc_id', 2)->where('answer', 3)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc2_ans2 = $cc_query->where('cc_id', 2)->where('answer', 2)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc2_ans1 = $cc_query->where('cc_id', 2)->where('answer', 1)->count();
+
+        // CC 3
+        $cc3_ans4 = $cc_query->where('cc_id', 3)->where('answer', 4)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc3_ans3 = $cc_query->where('cc_id', 3)->where('answer', 3)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc3_ans2 = $cc_query->where('cc_id', 3)->where('answer', 2)->count();
+        $cc_query = clone $cc_query_clone;
+        $cc3_ans1 = $cc_query->where('cc_id', 3)->where('answer', 1)->count();
+
+        // cc 1-3 data
+        $cc1_data = [
+            'cc1_ans4' => $cc1_ans4,
+            'cc1_ans3' => $cc1_ans3,
+            'cc1_ans2' => $cc1_ans2,
+            'cc1_ans1' => $cc1_ans1,
+        ];
+
+        $cc2_data = [
+            'cc2_ans5' => $cc2_ans5,
+            'cc2_ans4' => $cc2_ans4,
+            'cc2_ans3' => $cc2_ans3,
+            'cc2_ans2' => $cc2_ans2,
+            'cc2_ans1' => $cc2_ans1,
+        ];
+
+        $cc3_data = [
+            'cc3_ans4' => $cc3_ans4,
+            'cc3_ans3' => $cc3_ans3,
+            'cc3_ans2' => $cc3_ans2,
+            'cc3_ans1' => $cc3_ans1,
+        ];
+
+        //cc data all in one
+
+        $cc_data =[
+            'cc1_data' => $cc1_data,
+            'cc2_data' => $cc2_data,
+            'cc3_data' => $cc3_data,
+        ];
+
+        return $cc_data;
+    }
 
     
     

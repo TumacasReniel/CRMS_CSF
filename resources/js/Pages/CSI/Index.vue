@@ -27,6 +27,7 @@ const props = defineProps({
     sub_unit_pstos: Object,
     sub_unit_types: Object,
 
+    cc_data: Object,
     dimensions: Object,
     respondents_list: Object,
     y_totals: Object,
@@ -814,6 +815,12 @@ const currentYear = ref(getCurrentYear());
           .page-break {
             page-break-before: always; /* or page-break-after: always; */
           }
+          .text-left{
+            text-align: left;
+          }
+          .text-center{
+            text-align: center;
+          }
 
         `;
 
@@ -1078,7 +1085,7 @@ const currentYear = ref(getCurrentYear());
                     <!-- End Content Preview-->
 
 
-                  <!-- QUATER AND YEARLY PRINTOUTS Preview-->
+                  <!-- QUARTER AND YEARLY PRINTOUTS Preview-->
                   <ByUnitQ1Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FIRST QUARTER'" :form="form"  :data="props" />
                   <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER'"  :form="form"  :data="props" />
                   <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER'"  :form="form"  :data="props" />

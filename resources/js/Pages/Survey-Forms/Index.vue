@@ -363,7 +363,7 @@ watch(
                                                             label="Client_type*"
                                                             variant="outlined"
                                                             v-model="form.client_type"
-                                                            :items="['Citizen','Business','Government(Employee or another Agency)' ]"
+                                                            :items="['General Public','Internal Employees','Business/Organization','Government Employees' ]"
                                                             :rules="[v => !!v || errors.client_type || 'This field is required']"
 
                                                         >
@@ -436,7 +436,7 @@ watch(
                             >  
                                 <div class="m-5 text-gray-600">
                                     <h2>
-                                    Check mark(✔) your answer to the Citzen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
+                                    Select your answer to the Citzen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
                                     the services of a government agency/office's including its requirements, fees and processing times among others.
                                     </h2>
                                 </div>

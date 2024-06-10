@@ -7,31 +7,102 @@
             type: Object,
         },
     });
+
 </script>
 <template>
-    <!-- <v-card>
-        <v-card-title class="bg-gray-500 text-white">
-            PART 0: CITIZEN'S CHARTER(CC) RATING
-        </v-card-title>
-        <table style="width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 5px" >
-            <tr class="text-center">
-                <th></th>
-                <th>Number of Respondents</th>
-            </tr>
-            <tr>
-                <td>CC1</td>
-            </tr>
-            <tr>
-                <td>CC2</td>
-            </tr>
-            <tr>
-                <td>CC3</td>
-            </tr>
-        </table>
-    </v-card> -->
+    <v-card class="mb-3" v-if="data.cc_data">
+    <v-card-title class="bg-gray-500 text-white">
+        PART I: CITIZEN'S CHARTER(CC)
+    </v-card-title>
+    <table style="width:100%; border: 1px solid #333; border-collapse: collapse; padding: 5px" class="text-center">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Number of Respondents who select the option</th>
+        </tr>
+        <tr class="bg-blue-200">
+            <th>CC1</th>
+            <th colspan="2" class="text-left">Which of the following best describes your awareness of a CC?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">I know what a CC is and I saw this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>           
+            <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">I learned the CC when I saw this office's CC</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
+            <td>{{data.cc_data.cc1_data.cc1_ans4}}</td>
+        </tr>
+        <tr class="bg-blue-200" >
+            <th >CC2</th>
+            <th colspan="2" class="text-left">If aware of CC (answered 1-3 in CC1), would say that the CC of this was...?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">Easy to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="text-left">Somewhat easy to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">Difficult to see</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">Not visible at all</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans4}}</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td class="text-left">N/A</td>
+            <td>{{data.cc_data.cc2_data.cc2_ans5}}</td>
+        </tr>
+        <tr class="bg-blue-200">
+            <th >CC3</th>
+            <th colspan="2" class="text-left">If aware of CC (answered 1-3 in CC1), how much did the CC help you in your transaction?</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="text-left">Helped Very Much</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans1}}</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="text-left">Somewhat helped</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans2}}</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="text-left">Did not help</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans3}}</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="text-left">N/A</td>
+            <td>{{data.cc_data.cc3_data.cc3_ans4}}</td>
+        </tr>
+    </table>
+    </v-card>
+
     <v-card class="mb-3">
                 <v-card-title class="bg-gray-500 text-white">
-                    PART I: CUSTOMER RATING OF SERVICE QUALITY
+                    PART II: CUSTOMER RATING OF SERVICE QUALITY
                 </v-card-title>
                 <table style="width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px" >
                    <tr class="text-center">
@@ -88,7 +159,7 @@
             
             <v-card class="mb-3">
                 <v-card-title class="bg-gray-500 text-white">
-                    PART II: IMPORTANCE OF THIS ATTRIBUTE   
+                    PART III: IMPORTANCE OF THIS ATTRIBUTE   
                 </v-card-title>
                 <v-card-body>
                     <table style="width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
