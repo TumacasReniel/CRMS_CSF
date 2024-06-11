@@ -18,9 +18,6 @@ defineProps({
 });
 
 const goNext = async (unit_id, region_id, service_id) => {
-    console.log(unit_id,999);
-    console.log(region_id,888);
-    console.log(service_id,777);
     getUnitSubUnits( region_id, service_id,unit_id);
 
 }

@@ -121,9 +121,6 @@ const getCC = (index,cc_id, answer) => {
     form.cc_form.id[index] = cc_id;
     form.cc_form.answer[index] = answer;
 
-    // console.log(  form.cc_form.cc_id[index],11);
-    // console.log(form.cc_form.answer[index], 22);
-
 };
 
 

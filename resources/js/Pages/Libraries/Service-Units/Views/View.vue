@@ -58,7 +58,7 @@
     const qr_link_type = ref(null);
     const generated = ref(false);
     const generateURL = async (sub_unit, unit_psto , sub_unit_psto, sub_unit_type) =>{
-        //console.log(props.unit.data[0].id);
+
         generated.value=true;
 
         if(props.unit.data[0].id == 8){

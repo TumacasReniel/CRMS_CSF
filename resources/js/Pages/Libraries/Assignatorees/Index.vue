@@ -32,7 +32,6 @@
     };
 
     const deleteRecord = async (id) => {
-        console.log(id,99);
 
         Swal.fire({
             html: '<div style="font-weight: bold; font-size:25px">Are you sure you want to delete this record?</div> ',

@@ -683,7 +683,7 @@ const currentYear = ref(getCurrentYear());
    form.service = service;
    form.unit = unit;
    form.unit_id = unit.data[0].id;
-  //  console.log(form,990);
+   
     if(form.csi_type == 'By Date'){
       if(form.date_from && form.date_to){
             router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})

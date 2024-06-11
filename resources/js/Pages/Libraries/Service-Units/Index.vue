@@ -45,7 +45,6 @@ const showServiceModal = async (is_show, action , service) => {
     action_clicked.value = action;
     if(service){
         selected_service.value = service;
-        console.log(service, 77);
     }
 };
 

@@ -30,7 +30,6 @@
     );
     
     const showSubUnitPSTOModal = async (is_show, action,data) => {
-        console.log(data,333);
         show_modal.value = is_show;
         action_clicked.value = action;
         sub_unit.value = data;
