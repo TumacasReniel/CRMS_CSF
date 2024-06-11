@@ -59,7 +59,6 @@ onMounted(() => {
 
 const generateCSIReport = async () => {
    generated.value = true;
-  //  console.log(form,990);
 
      if(form.csi_type == 'By Month'){
             form.selected_quarter = "";

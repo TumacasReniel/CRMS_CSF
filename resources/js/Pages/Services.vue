@@ -52,21 +52,21 @@ const goBack = async () => {
              </div>
             </v-col>
         </v-row>
-        <v-row   class=" mx-10 mt-5" align="center" justify="center">        
-                <v-col v-for="service in services" cols="12"sm="4" md="4" lg="4">
-                    <Link @click="goServiceUnits(region_id,service.id)">
-                        <div style="height:170px"  class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <v-icon color="blue" size="x-large" class="p-3" >mdi-check-circle</v-icon>
-                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                    {{ service.services_name }}
-                                </h5>      
-                        </div>     
-                    </Link>
-                </v-col>
+        <v-row class="mx-10 mt-5">
+            <v-col v-for="service in services" :key="service.id" cols="12" sm="6" md="6" lg="6" justify="center" align="center">
+                <Link @click="goServiceUnits(region_id, service.id)">
+                    <div height="160px" class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column align-left justify-center" style="height:180px; text-align: center;">
+                        <v-icon color="blue" size="x-large" class="p-3">mdi-check-circle</v-icon>
+                        <p class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white text-left">
+                            {{ service.services_name }}
+                        </p>
+                    </div>
+                </Link>
+            </v-col>
         </v-row>
         <v-row>
             <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 120px">Back</v-btn>
+            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 130px">Back</v-btn>
             </Link>
         </v-row>
         
