@@ -48,11 +48,10 @@ const goBack = async () => {
         </v-row>
 
         <v-row class=" mx-16 mt-5" align="center" justify="center">        
-
                 <v-col  v-for="region in regions"  class="mx-5" cols="12" sm="6" md="4" lg="3">
                     <Link @click="goServices(region.id)">
                         <div style="width:250px;">
-                            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                            <div class="card shadow max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                 <v-icon color="red" size="x-large" class="p-3" >mdi-map-marker</v-icon>
                                 <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                                     {{ region.short_name }}              
@@ -60,21 +59,25 @@ const goBack = async () => {
                             </div>   
                         </div> 
                     </Link>
-                </v-col>
-                
+                </v-col>     
         </v-row>
-        <!-- <v-row>
-            <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 120px">Back</v-btn>
+        <v-row>
+            <Link @click="goBack()" class="mb-10">
+            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 170px">Back</v-btn>
             </Link>
-        </v-row> -->
+        </v-row>
 
 </v-container>
         
-
-
-    
-
 </template>
+<style scoped>
+.card {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover {
+  box-shadow:  0px 10px 15px rgba(0, 0, 0, 0.2);
+}
+</style>
 
 

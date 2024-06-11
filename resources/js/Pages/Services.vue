@@ -52,16 +52,16 @@ const goBack = async () => {
              </div>
             </v-col>
         </v-row>
-        <v-row class="mx-10 mt-5">
+        <v-row class="mx-10 mt-5" justify="center" align="center">
             <v-col v-for="service in services" :key="service.id" cols="12" sm="6" md="6" lg="6" justify="center" align="center">
-                <Link @click="goServiceUnits(region_id, service.id)">
-                    <div height="160px" class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column align-left justify-center" style="height:180px; text-align: center;">
-                        <v-icon color="blue" size="x-large" class="p-3">mdi-check-circle</v-icon>
-                        <p class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white text-left">
-                            {{ service.services_name }}
-                        </p>
-                    </div>
-                </Link>
+            <Link @click="goServiceUnits(region_id, service.id)" class="card-link">
+                <div class="card mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column align-left justify-center" style="height:180px; text-align: center;">
+                <v-icon color="blue" size="x-large" class="p-3">mdi-check-circle</v-icon>
+                <p class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white text-left">
+                    {{ service.services_name }}
+                </p>
+                </div>
+            </Link>
             </v-col>
         </v-row>
         <v-row>
@@ -74,10 +74,17 @@ const goBack = async () => {
   
 </v-container>
         
-
-
-    
-
 </template>
+
+<style scoped>
+.card {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+</style>
 
 

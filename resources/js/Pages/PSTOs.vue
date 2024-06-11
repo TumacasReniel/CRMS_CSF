@@ -70,7 +70,7 @@ const goBack = async (sub_unit_id) => {
         <v-row   class=" mx-15 mt-5" align="center" justify="center">        
                 <v-col v-for="psto in pstos" cols="12"sm="4" md="4" lg="4">
                     <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, psto.id)">
-                        <div style="height:150px"  class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        <div style="height:150px"  class="card mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                                 <v-icon color="red" size="x-large" class="p-3" >mdi-map-marker-outline</v-icon>
                                 <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                                     {{ psto.psto_name }}
@@ -90,9 +90,17 @@ const goBack = async (sub_unit_id) => {
 </v-container>
         
 
-
-    
-
 </template>
+
+<style scoped>
+.card {
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover {
+  box-shadow:  10px 10px 15px rgba(0, 0, 0, 0.2);
+}
+</style>
+
 
 
