@@ -440,46 +440,46 @@ watch(
                                     the services of a government agency/office's including its requirements, fees and processing times among others.
                                     </h2>
                                 </div>
-                                <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-10" >
-                                    <div class=" m-5 font-black mb-10">
-                                      <h2>
-                                         {{ cc_question.title }}. {{ cc_question.question }}
-                                      </h2>
+                                <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-0" >
+                                    <div class="mx-5">
+                                        <div class="font-black">
+                                            <h2>
+                                                {{ cc_question.title }}. {{ cc_question.question }}
+                                            </h2>
+                                        </div>
+
+                                        <v-radio-group v-if="i == 0" v-model="form.cc1" color="primary" class="mx-2">
+                                            <h5 v-for="(option, index) in cc1_options" :key="index">
+                                                <v-radio 
+                                                    @click="getCC(i, cc_question.id, option.value)"
+                                                    :label="option.label"
+                                                    :value="option.value"
+                                                ></v-radio>
+                                            </h5>
+                                        </v-radio-group>
+
+
+                                        <v-radio-group v-if="i == 1" v-model="form.cc2" color="primary" class="mx-2">
+                                            <h5 v-for="(option, index) in cc2_options" :key="index">
+                                                <v-radio 
+                                                    @click="getCC(i, cc_question.id, option.value)"
+                                                    :label="option.label"
+                                                    :value="option.value"
+                                                ></v-radio>
+                                            </h5>
+                                        </v-radio-group>
+
+                                        <v-radio-group v-if="i == 2" v-model="form.cc3" color="primary" class="mx-2">
+                                            <h5 v-for="(option, index) in cc3_options" :key="index">
+                                                <v-radio 
+                                                    @click="getCC(i, cc_question.id, option.value)"
+                                                    :label="option.label"
+                                                    :value="option.value"
+                                                ></v-radio>
+                                            </h5>
+                                        </v-radio-group>
                                     </div>
 
-                                    <div v-if="i == 0" v-for="(option, index) in cc1_options" :key="index">
-                                        <h5>
-                                            <v-checkbox 
-                                                @click="getCC(i ,cc_question.id, option.value)"
-                                                v-model="form.cc1" color="primary" 
-                                                style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" 
-                                                :label="option.label"
-                                                :value = "option.label" 
-                                            ></v-checkbox>      
-                                         </h5>                
-                                    </div>
-
-                                    <div v-if="i == 1" v-for="(option, index) in cc2_options" :key="index">
-                                        <v-checkbox 
-                                            @click="getCC(i,cc_question.id, option.value)" 
-                                            v-model="form.cc2" color="primary" 
-                                            style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" 
-                                            :label="option.label" 
-                                            :value = "option.label"
-
-                                        ></v-checkbox>                        
-                                    </div>
-
-                                    <div v-if="i == 2" v-for="(option, index) in cc3_options" :key="index">
-                                        <v-checkbox 
-                                            @click="getCC(i, cc_question.id, option.value)" 
-                                            v-model="form.cc3" color="primary" 
-                                            style="margin-top:-50px; margin-left:7%; margin-bottom: -5%" 
-                                            :label="option.label" 
-                                            :value="option.value"
-                                            >
-                                        </v-checkbox>                        
-                                    </div>
                                     
                                     <div class="text-red-800 m-5" style="margin-left:80px" v-if="formSubmitted && !form.cc_form.answer[i]  ">{{ 'This selection is required' }}</div> 
                                 </div>
