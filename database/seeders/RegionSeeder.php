@@ -17,7 +17,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'REGION I',
-                'code' => 'ro1',
+                'code' => 'I',
                 'short_name' => 'REGION-I',
                 'order' => '1',
             ],
@@ -25,7 +25,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 2,
                 'name' => 'REGION II',
-                'code' => 'ro2',
+                'code' => 'II',
                 'short_name' => 'REGION-II',
                 'order' => '2',
             ],
@@ -33,7 +33,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 3,
                 'name' => 'REGION III',
-                'code' => 'ro3',
+                'code' => 'III',
                 'short_name' => 'REGION-III',
                 'order' => '3',
             ],
@@ -41,7 +41,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 4,
                 'name' => 'REGION IVA',
-                'code' => 'ro4A',
+                'code' => 'IVA',
                 'short_name' => 'REGION-IVA',
                 'order' => '4.1',
             ],
@@ -49,7 +49,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 5,
                 'name' => 'REGION IVB',
-                'code' => 'ro4B',
+                'code' => 'IVB',
                 'short_name' => 'REGION-IVB',
                 'order' => '4.2',
             ],
@@ -57,7 +57,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 6,
                 'name' => 'REGION V',
-                'code' => 'ro5',
+                'code' => 'V',
                 'short_name' => 'REGION-V',
                 'order' => '5',
             ],
@@ -65,7 +65,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 7,
                 'name' => 'REGION VI',
-                'code' => 'ro6',
+                'code' => 'VI',
                 'short_name' => 'REGION-VI',
                 'order' => '6',
             ],
@@ -73,7 +73,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 8,
                 'name' => 'REGION VII',
-                'code' => 'ro7',
+                'code' => 'VII',
                 'short_name' => 'REGION-VII',
                 'order' => '7',
             ],
@@ -81,7 +81,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 9,
                 'name' => 'REGION VIII',
-                'code' => 'ro8',
+                'code' => 'VIII',
                 'short_name' => 'REGION-VIII',
                 'order' => '8',
             ],
@@ -89,7 +89,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 10,
                 'name' => 'REGION IX',
-                'code' => 'ro9',
+                'code' => 'IX',
                 'short_name' => 'REGION-IX',
                 'order' => '9',
             ],
@@ -97,7 +97,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 11,
                 'name' => 'REGION X',
-                'code' => 'ro10',
+                'code' => 'X',
                 'short_name' => 'REGION-X',
                 'order' => '10',
             ],
@@ -105,7 +105,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 12,
                 'name' => 'REGION XI',
-                'code' => 'ro11',
+                'code' => 'XI',
                 'short_name' => 'REGION-XI',
                 'order' => '11',
             ],
@@ -113,7 +113,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 13,
                 'name' => 'REGION XII',
-                'code' => 'ro12',
+                'code' => 'XII',
                 'short_name' => 'REGION-XII',
                 'order' => '12',
             ],
@@ -122,7 +122,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 14,
                 'name' => 'REGION ARMM',
-                'code' => 'ro13',
+                'code' => 'ARMM',
                 'short_name' => 'REGION-ARMM',
                 'order' => '13',
             ],
@@ -130,7 +130,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 15,
                 'name' => 'REGION CAR',
-                'code' => 'ro14',
+                'code' => 'CAR',
                 'short_name' => 'REGION-CAR',
                 'order' => '14',
             ],
@@ -139,7 +139,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 16,
                 'name' => 'REGION CARAGA',
-                'code' => 'ro15',
+                'code' => 'CARAGA',
                 'short_name' => 'REGION-CARAGA',
                 'order' => '15',
             ],
@@ -147,7 +147,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 17,
                 'name' => 'REGION NCR',
-                'code' => 'ro16',
+                'code' => 'NCR',
                 'short_name' => 'REGION-NCR',
                 'order' => '16',
             ],
@@ -156,7 +156,7 @@ class RegionSeeder extends Seeder
             [
                 'id' => 18,
                 'name' => 'REGION ROS',
-                'code' => 'ro17',
+                'code' => 'ROS',
                 'short_name' => 'REGION-ROS',
                 'order' => '17',
             ],

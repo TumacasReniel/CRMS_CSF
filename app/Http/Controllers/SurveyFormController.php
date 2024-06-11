@@ -216,33 +216,42 @@ class SurveyFormController extends Controller
 
    public function services_index(Request $request){
         $services = Services::all();
+        //selected region
+        $region = Region::where('id',$request->region_id)->first();
+
         return Inertia::render('Services')
                         ->with('region_id', $request->region_id )
+                        ->with('region', $region )
                         ->with('services', $services );
     }
 
     public function service_units_index(Request $request){
         // dd($request->all());
         $service_units = Unit::where('services_id', $request->service_id)->get();
-
+        //selected region
+        $region = Region::where('id',$request->region_id)->first();
+        //selected service
         $service = Services::where('id', $request->service_id)->first();
 
         return Inertia::render('Units')
                         ->with('region_id', $request->region_id)
+                        ->with('region', $region)
                         ->with('service_id', $request->service_id)
                         ->with('service', $service)
                         ->with('service_units', $service_units);
     }
 
     public function getUnitSubunits(Request $request){
-        //dd($request->all());
         $sub_units = SubUnit::where('unit_id', $request->unit_id)->get();
+        //selected region
+        $region = Region::where('id',$request->region_id)->first();
         //selected unit
         $unit = Unit::where('id', $request->unit_id)->first();
 
         if(sizeof($sub_units) > 0){
             return Inertia::render('SubUnits')
                         ->with('region_id', $request->region_id)
+                        ->with('region', $region)
                         ->with('service_id', $request->service_id)
                         ->with('unit_id', $request->unit_id)
                         ->with('unit', $unit)
@@ -260,6 +269,7 @@ class SurveyFormController extends Controller
             if(sizeof($pstos) > 0){
                 return Inertia::render('PSTOs')
                             ->with('region_id', $request->region_id)
+                            ->with('region', $region)
                             ->with('service_id', $request->service_id)
                             ->with('unit_id', $request->unit_id)
                             ->with('unit', $unit)
@@ -289,7 +299,8 @@ class SurveyFormController extends Controller
                     ->where('region_id', $request->region_id)
                     ->get();
         
-                 
+         //selected region
+         $region = Region::where('id',$request->region_id)->first();    
         //selected sub-unit
         $sub_unit = SubUnit::where('id', $request->sub_unit_id)->first();
  
@@ -297,6 +308,7 @@ class SurveyFormController extends Controller
         if(sizeof($pstos) > 0){
             return Inertia::render('PSTOs')
                         ->with('region_id', $request->region_id)
+                        ->with('region', $region)
                         ->with('service_id', $request->service_id)
                         ->with('unit_id', $request->unit_id)
                         ->with('sub_unit_id', $request->sub_unit_id)
@@ -323,13 +335,15 @@ class SurveyFormController extends Controller
     public function getSubUnitTypes(Request $request){
         $types = SubUnitType::where('sub_unit_id', $request->sub_unit_id)
                     ->where('region_id', $request->region_id)->get();
-        
+        //selected region
+        $region = Region::where('id',$request->region_id)->first();    
         //selected sub-unit
         $sub_unit = SubUnit::where('id',$request->sub_unit_id)->first();
 
         if(sizeof($types) > 0){
             return Inertia::render('SubUnitTypes')
                         ->with('region_id', $request->region_id)
+                        ->with('region', $region)
                         ->with('service_id', $request->service_id)
                         ->with('unit_id', $request->unit_id)
                         ->with('sub_unit_id', $request->sub_unit_id)
