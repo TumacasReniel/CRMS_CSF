@@ -434,7 +434,7 @@ watch(
                                 <div class="m-5 text-gray-600">
                                     <h2>
                                     Select your answer to the Citizen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
-                                    the services of a government agency/office's including its requirements, fees and processing times among others.
+                                    the services of a government agency/office including its requirements, fees and processing times among others.
                                     </h2>
                                 </div>
                                 <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-0" >
