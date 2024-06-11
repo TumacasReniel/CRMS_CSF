@@ -30,9 +30,9 @@ use App\Http\Controllers\SubUnitPstoController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        // 'canRegister' => Route::has('register'),
+        // 'laravelVersion' => Application::VERSION,
+        // 'phpVersion' => PHP_VERSION,
     ]);
 });
 Route::get('/services/csf/regions', [SurveyFormController::class, 'regions_index'])->name('regions_index');
@@ -81,7 +81,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('services_units');
+    Route::get('/profile', function () {
+        return Inertia::render('Profile/Show');
+    })->name('profile');
+    Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('service_units');
     Route::post('/services/add', [ServiceUnitController::class, 'store']);
     Route::post('/services/unit/add', [ServiceUnitController::class, 'storeUnit']);
     

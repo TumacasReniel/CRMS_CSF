@@ -12,6 +12,7 @@ defineProps({
     region_id: Number,
     service_id: Number,
     unit_id: Number,
+    unit: Object,
     sub_units:Object,
 });
 
@@ -69,7 +70,7 @@ const goBack = async (sub_unit_id) => {
         <v-row class="mx-15" style="margin-top: 100px;" >
             <v-col>
                 <div class="w-full border bg-blue">
-                <v-card-title class="text-center">UNIT SUB-UNITS</v-card-title>
+                <v-card-title class="text-center text-uppercase">{{ unit.unit_name  }}</v-card-title>
              </div>
             </v-col>
         </v-row>

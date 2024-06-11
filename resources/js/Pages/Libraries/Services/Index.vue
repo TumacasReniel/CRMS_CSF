@@ -84,7 +84,7 @@
             </h2>
         </template>
        <v-row class="mx-15 mt-5">
-                <Link :href="route('accounts')">
+                <Link href="/accounts">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-account</v-icon>
@@ -98,7 +98,7 @@
                     </div>     
                  </Link>
 
-                <Link :href="route('assignatorees')">
+                <Link href="/assignatorees">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-account-multiple</v-icon>
@@ -113,7 +113,7 @@
                 </Link>
             
 
-                <Link :href="route('services_units')">
+                <Link href="/service_units">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-domain</v-icon>
@@ -127,7 +127,7 @@
                     </div>     
                 </Link>
 
-                    <Link :href="route('regions')">
+                    <Link href="/regions">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-map-marker</v-icon>
@@ -141,7 +141,7 @@
                     </div>     
                 </Link>
 
-                   <Link :href="route('pstos')">
+                   <Link href="/pstos">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-home-map-marker</v-icon>
@@ -155,7 +155,7 @@
                     </div>     
                 </Link>
 
-                <Link :href="route('unitPstos')">
+                <Link href="/unit-pstos">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-map-marker-outline</v-icon>
@@ -170,7 +170,7 @@
                  </Link>
             
 
-                <Link :href="route('subunitPstos')">
+                <Link href="/sub-unit-pstos">
                     <div class="py-5 ml-5 mr-5 " style="width:250px">
                         <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                             <v-icon size="x-large" class="p-3" >mdi-map-marker-radius</v-icon>

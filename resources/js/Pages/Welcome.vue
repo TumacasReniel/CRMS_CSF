@@ -32,7 +32,7 @@ defineProps({
                 <span class="self-center text-2xl font-semibold whitespace-nowrap">Department of Science and Technology</span>
             </a>
             <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <a :href="route('regions_index')">
+                    <a  href="/services/csf/regions">
                         <v-btn variant="outlined" id="mega-menu-full-dropdown-button" data-collapse-toggle="mega-menu-full-dropdown" class="hover:bg-blue  flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded md:w-auto hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
                             Get Started
                         </v-btn>
