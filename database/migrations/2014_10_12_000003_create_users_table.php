@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('account_type')->default('user');
             $table->string('designation')->nullable();
             $table->foreignId('region_id')->nullable();
+            $table->foreign('region_id')
+                    ->references('id')
+                    ->on('regions');
             $table->foreignId('service_id')->nullable();
             $table->foreign('service_id')
                 ->references('id')

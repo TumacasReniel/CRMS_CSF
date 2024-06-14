@@ -29,7 +29,11 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'current_team_id' => null,
+            'account_type' => 'user',
+            'designation' => 'PTA IV',
+            'region_id' => 10,
+            'service_id' => 3,
+            'unit_id' => 3,
         ];
     }
 
