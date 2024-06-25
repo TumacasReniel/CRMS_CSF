@@ -14,6 +14,9 @@ class SubUnitTypeSeeder extends Seeder
     public function run(): void
     {
         $sub_unit_types = [
+
+
+            // 
             [
                 'sub_unit_id' => 3,
                 'region_id'=> 10,
@@ -48,7 +51,7 @@ class SubUnitTypeSeeder extends Seeder
             [
                 'sub_unit_id' => 3,
                 'region_id'=> 10,
-                'type_name' => 'JRE (CSTC-ZCIC',
+                'type_name' => 'JRE (CSTC-ZCIC)',
             ],
         ];
 

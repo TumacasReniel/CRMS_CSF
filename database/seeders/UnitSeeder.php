@@ -66,39 +66,39 @@ class UnitSeeder extends Seeder
             ],
 
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'RSTL',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'S&T Scholarship',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'S&T Information',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'DRRM',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'Information Communication Technology',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'HALAL',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'RxBox',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'Research and Development Support',
             ],
             [
-                'services_id' => 4,
+                'services_id' => 3,
                 'unit_name' => 'Innovation Support Services',
             ],
 

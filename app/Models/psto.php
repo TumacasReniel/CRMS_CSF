@@ -29,6 +29,11 @@ class psto extends Model
         return $query->where('region_id', $regionId);
     }
 
+    public function sub_unit_pstos()
+    {
+        return $this->hasMany(SubUnitPsto::class);
+    }
+
 
 
 }

@@ -1053,24 +1053,6 @@ const currentYear = ref(getCurrentYear());
                                 </v-col>
                               </v-row>
 
-                                <v-row class="p-3" v-if="form.csi_type == 'By Employee'">
-                                  <v-col class="my-auto">
-                                      <v-combobox v-model="form.selected_employee" 
-                                              class="m-3" label="Select Employee" 
-                                              variant="outlined" 
-                                              :items="['']" 
-                                              outlined="none"> 
-                                        </v-combobox>
-                                  </v-col>   
-
-                                  <v-col class="ml-5 mt-3">
-                                    <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                      <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                  </v-col>
-                                <v-col class="text-end mr-5 m-3">
-                                  <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                                </v-col>
-                              </v-row>
                               </v-card-body>
                     </v-card>
 

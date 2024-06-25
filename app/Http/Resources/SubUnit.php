@@ -20,7 +20,7 @@ class SubUnit extends JsonResource
             'id' => $this->id,
             'sub_unit_name' => $this->sub_unit_name, 
             'sub_unit_types'=> $this->sub_unit_types ? SubUnitType::collection($this->sub_unit_types) : [],
-            'sub_unit_pstos'=> $this->sub_unit_pstos ? PSTO::collection($this->sub_unit_pstos) : [],
+            'sub_unit_pstos'=> $this->pstos ? PSTO::collection($this->pstos) : [],
         ];
     }
 }

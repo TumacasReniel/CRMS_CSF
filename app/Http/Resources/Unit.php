@@ -20,6 +20,7 @@ class Unit extends JsonResource
             'id' => $this->id,
             'unit_name' => $this->unit_name,    
             'sub_units'=> $this->sub_units ? SubUnit::collection($this->sub_units) : [],
+            'unit_pstos'=> $this->pstos ? PSTO::collection($this->pstos) : [],
             // 'created_at' => $this->created_at,
             // 'updated_at' => $this->updated_at,
         ];

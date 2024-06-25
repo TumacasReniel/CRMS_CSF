@@ -3,10 +3,16 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { reactive, ref, computed, onMounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { Printd } from "printd";
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
+import MonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
+import VueMultiselect from "vue-multiselect";
 const props = defineProps({
-    service_units: Object,
+  services_units: Object,
+  cc_data: Object,
+  ord_total_respondents: Object,
+  ord_total_vss_respondents: Object,
+  ord_percentage_vss_respondents: Object,
+  csi_total: Number, 
 });
 
 
@@ -60,32 +66,40 @@ onMounted(() => {
 const generateCSIReport = async () => {
    generated.value = true;
 
-     if(form.csi_type == 'By Month'){
-            form.selected_quarter = "";
-            router.get('/csi/generate/all-units', form , { preserveState: true, preserveScroll: true});
-      }
-      else if(form.csi_type == 'By Quarter'){
-            form.selected_month = "";
-      
-      }
+    if(form.csi_type == 'By Month'){
+          form.selected_quarter = "";
+          router.get('/csi/generate/all-units/monthly', form , { preserveState: true, preserveScroll: true})
+    }
+    else if(form.csi_type == 'By Quarter'){
+          form.selected_month = "";
+          if(form.selected_quarter){
+              router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
+          }
+          else{ 
+            Swal.fire({
+                  title: "Error",
+                  icon: "error",
+                  text: "Please select a quarter first!"           
+              });
+          }
+    }
       else if(form.csi_type == 'By Year/Annual'){
-            form.selected_quarter = "";
-            if(form.selected_year ){
-              router.get('/csi/generate/ByUnit/Yearly', form , { preserveState: true, preserveScroll: true});
-            }
-            else{         
-                Swal.fire({
-                    title: "Error",
-                    icon: "error",
-                    text: "Please select year first!"           
-                });
-            }
-          
+          form.selected_quarter = "";
+          if(form.selected_year ){
+             router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
+          }
+          else{         
+              Swal.fire({
+                  title: "Error",
+                  icon: "error",
+                  text: "Please select year first!"           
+              });
+          }     
       }
-  
 
     
   };
+
 
   const is_printing = ref(false);
   const printCSIReport = async () => {
@@ -117,7 +131,7 @@ const generateCSIReport = async () => {
 
           tr, th, td {
             border: 1px solid rgb(145, 139, 139); /* Optional: Add a border for better visibility */
-            padding: 3px; /* Optional: Add padding for better spacing */
+            padding: 1px; /* Optional: Add padding for better spacing */
           }
           .page-break {
             page-break-before: always; /* or page-break-after: always; */
@@ -138,12 +152,9 @@ const generateCSIReport = async () => {
             </h2>
         </template>
 
-        
-
         <div class="py-10"  style="margin-left:80px; margin-right:80px">
             <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-
                      <v-card class="mb-3">
                         <v-card-title class="m-3" >
                             <div>
@@ -152,11 +163,98 @@ const generateCSIReport = async () => {
                            
                         </v-card-title>
                     </v-card>
-                    
-                     <v-divider class="border-opacity-100"></v-divider>
-                   
-                     <v-card class="mb-3 my-auto">
-                       <v-card-text class="ml-5">
+                  
+                     <v-card class="mb-3 my-auto">   
+                        <!-- <v-divider class="border-opacity-100"></v-divider>         
+                        <v-row class="p-3 overflow-visible" style="margin-top: -20px;">
+                          <v-divider class="border-opacity-100"></v-divider>
+                              <v-col class="my-auto overflow-visible">
+                                <div class="my-auto overflow-visible"> 
+                                  <vue-multiselect
+                                      v-model="form.csi_type"
+                                      prepend-icon="mdi-account"
+                                      :options="['By Month', 'By Quarter', 'By Year/Annual']"
+                                      :multiple="false"
+                                      placeholder="Select Type*"
+                                      :allow-empty="false"
+                                    >         
+                                    </vue-multiselect>        
+                                  </div>
+                              </v-col>
+  
+                           
+                        </v-row>
+                        <v-row class="p-3" v-if="form.csi_type == 'By Month'">
+                                <v-col class="my-auto">
+                                      <v-select v-model="form.selected_month" 
+                                            class="m-3" label="Select Month" 
+                                            variant="outlined" 
+                                            :items="months" 
+                                            outlined="none"> 
+                                      </v-select>
+                                </v-col> 
+                                <v-col class="my-auto">
+                                    <v-select v-model="form.selected_year" 
+                                            class="m-3" label="Select Year" 
+                                            variant="outlined" 
+                                            :items="years" 
+                                            outlined="none"> 
+                                      </v-select>
+                                </v-col>  
+                                <v-col class="ml-5 mt-3">
+                                  <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                </v-col>
+                              <v-col class="text-end mr-5 m-3">
+                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                              </v-col> 
+                        </v-row>
+                        <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
+                                <v-col class="my-auto">
+                                      <v-combobox v-model="form.selected_quarter" 
+                                            class="m-3" label="Select Quarter" 
+                                            variant="outlined" 
+                                            :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
+                                            outlined="none"> 
+                                      </v-combobox>
+                                </v-col> 
+                                <v-col class="my-auto">
+                                    <v-combobox v-model="form.selected_year" 
+                                            class="m-3" label="Select Year" 
+                                            variant="outlined" 
+                                            :items="years" 
+                                            outlined="none"> 
+                                      </v-combobox>
+                                </v-col>   
+                                <v-col class="ml-5 mt-3">
+                                  <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
+                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                </v-col>
+                              <v-col class="text-end mr-5 m-3">
+                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                              </v-col>
+                        </v-row>
+                        <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
+                                <v-col class="my-auto">
+                                    <v-combobox v-model="form.selected_year" 
+                                            class="m-3" label="Select Year" 
+                                            variant="outlined" 
+                                            :items="years" 
+                                            outlined="none"> 
+                                      </v-combobox>
+                                </v-col>   
+                                <v-col class="ml-5 mt-3">
+                                  <v-btn @click="generateCSIReport()" >Generate</v-btn>
+                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
+                                </v-col>
+                              <v-col class="text-end mr-5 m-3">
+                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
+                              </v-col>
+                        </v-row>   
+                        
+                        <v-divider class="border-opacity-100"></v-divider>           -->
+
+                      <v-card-text class="ml-5">
                          <span class="font-black">PLEASE DO THE TRADITIONAL MANUAL REPORT ON EXCEL FOR ALL UNITS REPORT </span><br>
                           <span class="ml-10">
                             <p>-By Monthly</p>
@@ -168,8 +266,11 @@ const generateCSIReport = async () => {
         
                             <b>THANK YOU!</b>
                           </span>
-                         </v-card-text>
-                          <v-divider class="border-opacity-100"></v-divider>
+                       </v-card-text>
+                     </v-card>
+                     <v-card>
+                        <!-- Content Preview-->
+                        <MonthlyContent v-if="form.csi_type == 'By Month' &&  generated == true" :form="form"  :data="props" />
                      </v-card>
 
                      
@@ -178,8 +279,12 @@ const generateCSIReport = async () => {
             </div>
         </div>
 
+      
+
               
     </AppLayout>
 </template>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 
 

@@ -23,12 +23,8 @@ class ServicesSeeder extends Seeder
                 'slug' => 'finance-and-administrative-support-services',
             ],
             [
-                'services_name' => 'FIELD OPERATION SERVICES',
-                'slug' => 'field-operation-services',
-            ],
-            [
-                'services_name' => 'TECHNICAL SERVICES',
-                'slug' => 'technical-services',
+                'services_name' => 'TECHNICAL OPERATION SERVICES',
+                'slug' => 'technical-operation-services',
             ],
         ];
 

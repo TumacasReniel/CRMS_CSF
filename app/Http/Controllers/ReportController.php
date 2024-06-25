@@ -94,15 +94,16 @@ class ReportController extends Controller
         //get unit pstos
         $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
         $unit_pstos = UnitPSTOResource::collection($unit_pstos);
+        
 
         $unit_pstos = $unit_pstos->pluck('psto');
- 
-        //get sub unit pstos
 
-        $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get(); 
-        $sub_unit_pstos = SubUnitPSTOResource::collection($sub_unit_pstos);
-
+        $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get();
+          
         $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
+
+      
+        
 
         $sub_unit_types = SubUnitType::where('sub_unit_id',  $request->sub_unit_id)->get();
 
@@ -4222,12 +4223,9 @@ class ReportController extends Controller
 
     public function generateAllUnitReports(Request $request)
     {
-       
-        if($request->csi_type == 'By Date'){
-            return $this->generateCSIAllUnitByDate($request );
-        }
-        else if($request->csi_type == "By Month"){
-            return $this->generateCSIAllUnitMonthly($request);
+        //dd($request->all());
+        if($request->csi_type == "By Month"){
+            return $this->generateCSIAllUnitMonthly($request); 
         }
         else if($request->csi_type == "By Quarter"){
             if($request->selected_quarter == "FIRST QUARTER"){
@@ -4255,72 +4253,149 @@ class ReportController extends Controller
         //get user
         $user = Auth::user();
 
-        // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
         $numeric_month = Carbon::parse("1 {$request->selected_month}")->format('m');
-        $date_range = CustomerAttributeRating::whereMonth('created_at', $numeric_month)
-                                            ->whereYear('created_at', $request->selected_year)->get();
 
-        $customer_recommendation_ratings = CustomerRecommendationRating::whereMonth('created_at', $numeric_month)
-                                                                        ->whereYear('created_at', $request->selected_year)->get();
+        //PART I: Citizens Charter
+        $cc_query = CustomerCCRating::whereMonth('created_at', $numeric_month)
+                                    ->whereYear('created_at', $request->selected_year);
+        $cc_data = $this->calculateCC($cc_query);
 
-        // total number of respondents/customer
-        $total_respondents = $date_range->groupBy('customer_id')->count();
+        // PART II:
+        // --dimensions
+        // --services and units
+        // --totals
 
-        // total number of respondents/customer who rated VS/S
-        $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
 
-        //Percentage of Respondents who rated VS and S
-        $percentage_vss_respondents  = 0;
-        if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
-        }
-        $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
+        $services = Services::all();
+        //all Services and its units
+        $services_units = ServiceResource::collection($services);
 
-        //Customer Satisfaction Rating
-        $customer_satisfaction_rating = 0;
-        if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
-        }
-        $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
-        //Customer Satisfaction Index(CSI)
-        $customer_satisfaction_index = $this->getAllUnitMonthlyCSI($request, $user->region_id,  $date_range);
+        //OFFICE of the REGIONAL  DIRECTOR
+        // SECRETARIAT
+        //---total number of respondents
+        $secretariat_total_respo = CsfForm::where('region_id',  $user->region_id)
+                ->where('service_id', 1)
+                ->where('unit_id', 1)
+                ->count();
+       // Get customer ids to fetch all customers in the specific unit
+        $customer_ids = CsfForm::where('region_id', $user->region_id)
+                        ->where('service_id', 1)
+                        ->where('unit_id', 1)
+                        ->pluck('customer_id');
 
-        //Net Promoter Score
-        // total number of promoters or respondents who rated 9-10 in recommendation rating
-        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','8')->groupBy('customer_id')->count();
-
-        // total number of detractors or respondents who rated 0-6 in recommendation rating
-        $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
-
-        //Percentage of Promoters = number of promoters / total respondents
-        $percentage_promoters = 0;
-        if($total_promoters != 0){
-            $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
-        }
-
-        //Percentage of Promoters = number of promoters / total respondents
-        $percentage_detractors = 0;
-        if($total_detractors != 0){
-            $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
+        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $secretariat_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                    ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
+                    ->distinct('customer_id') // Ensure unique customer_id counts
+                    ->count('customer_id'); // Count distinct customer_id values
+          
+        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $secretariat_percentage_vss_respo = 0;
+        if($secretariat_total_respo != 0){
+            $secretariat_percentage_vss_respo =  ($secretariat_total_respo/$secretariat_total_vss_respo) * 100;
         }
 
-        // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
-        $net_promotion_score =  number_format(($percentage_promoters - $percentage_detractors),2);
 
-        //Likert Scale Rating(Attribute Average)
+        //get monthly CSI
+        $monthly_csi = $this->getAllUnitMonthlyCSI($request, $user->region_id, $numeric_month);
+      
+        dd( $monthly_csi);
+
+        // Gender and Development(GAD)
+        //---total number of respondents
+        $gad_total_respo = CsfForm::where('region_id',  $user->region_id)
+                ->where('service_id', '1')
+                ->where('unit_id' , 2)
+                ->count();
+
+         // Get customer ids to fetch all customers in the specific unit
+         $customer_ids = CsfForm::where('region_id', $user->region_id)
+                ->where('service_id', 1)
+                ->where('unit_id', 2)
+                ->pluck('customer_id');
+
+        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $gad_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
+                ->distinct('customer_id') // Ensure unique customer_id counts
+                ->count('customer_id'); // Count distinct customer_id values
+        
+        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $gad_percentage_vss_respo = 0;
+        if($gad_total_respo != 0){
+            $gad_percentage_vss_respo = ($gad_total_respo/$gad_total_vss_respo) * 100;
+        }
+
+         // Fairness Opinion Board
+        //---total number of respondents
+        $fairness_total_respo = CsfForm::where('region_id',  $user->region_id)
+                ->where('service_id', '1')
+                ->where('unit_id' , 3)
+                ->count();
+         // Get customer ids to fetch all customers in the specific unit
+         $customer_ids = CsfForm::where('region_id', $user->region_id)
+                ->where('service_id', 1)
+                ->where('unit_id', 3)
+                ->pluck('customer_id');
+
+        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $fairness_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
+                ->distinct('customer_id') // Ensure unique customer_id counts
+                ->count('customer_id'); // Count distinct customer_id values
+             
+        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+        $fairness_percentage_vss_respo = 0;
+        if($fairness_total_respo != 0){
+            $fairness_percentage_vss_respo = ($fairness_total_respo/$fairness_total_vss_respo) * 100;
+        }
+        
+        
+
+        $ord_total_respondents = [
+            'secretariat_total_respo' => $secretariat_total_respo,
+            'gad_total_respo' => $gad_total_respo,
+            'fairness_total_respo' => $fairness_total_respo,
+        ];
+
+        $ord_total_vss_respondents = [
+            'secretariat_total_vss_respo' => $secretariat_total_vss_respo,
+            'gad_total_vss_respo' => $gad_total_vss_respo,
+            'fairness_total_vss_respo' => $fairness_total_vss_respo,
+        ];
+
+        $ord_percentage_vss_respondents = [
+            'secretariat_percentage_vss_respo' => $secretariat_percentage_vss_respo,
+            'gad_percentage_vss_respo' => $gad_percentage_vss_respo,
+            'fairness_percentage_vss_respo' => $fairness_percentage_vss_respo,
+        ];
+        
+         //send response to front end
+         return Inertia::render('CSI/AllServicesUnits/Index')
+                    ->with('services_units', $services_units)
+                    ->with('cc_data', $cc_data)
+                    ->with('ord_total_respondents',$ord_total_respondents)
+                    ->with('ord_total_vss_respondents',$ord_total_vss_respondents)
+                    ->with('ord_percentage_vss_respondents', $ord_percentage_vss_respondents)
+                    ->with('csi_total', $monthly_csi);
+
 
     }
 
-    public function getAllUnitMonthlyCSI($request, $region_id,  $date_range)
+    public function getAllUnitMonthlyCSI($request, $region_id, $numeric_month)
     {        
         // Dimensions or attributes
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
+        $date_range = CustomerAttributeRating::whereMonth('created_at', $numeric_month)
+                                             ->whereYear('created_at', $request->selected_year);
+
         // total number of respondents/customer
-        $total_respondents = $date_range->groupBy('customer_id')->count();
+        $total_respondents = $date_range->count();
 
         // total number of respondents/customer who rated VS/S
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
@@ -4535,6 +4610,7 @@ class ReportController extends Controller
         $cc_query_clone = clone $cc_query;
 
         // CC 1 
+        $cc_query = clone $cc_query_clone;
         $cc1_ans4 = $cc_query->where('cc_id', 1)->where('answer', 4)->count();
         $cc_query = clone $cc_query_clone;
         $cc1_ans3 = $cc_query->where('cc_id', 1)->where('answer', 3)->count();
@@ -4556,6 +4632,7 @@ class ReportController extends Controller
         $cc2_ans1 = $cc_query->where('cc_id', 2)->where('answer', 1)->count();
 
         // CC 3
+        $cc_query = clone $cc_query_clone;
         $cc3_ans4 = $cc_query->where('cc_id', 3)->where('answer', 4)->count();
         $cc_query = clone $cc_query_clone;
         $cc3_ans3 = $cc_query->where('cc_id', 3)->where('answer', 3)->count();

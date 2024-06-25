@@ -16,89 +16,89 @@ class UnitPSTOSeeder extends Seeder
         $unit_pstos = [
             [
                 'unit_id' => 9,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],
             [
                 'unit_id' => 9,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],
             [
                 'unit_id' => 9,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],
             [
                 'unit_id' => 9,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
             [
                 'unit_id' => 11,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'unit_id' => 11,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'unit_id' => 11,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'unit_id' => 11,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
 
             //
             [
                 'unit_id' => 14,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'unit_id' => 14,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'unit_id' => 14,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'unit_id' => 14,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
             [
                 'unit_id' => 15,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'unit_id' => 15,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'unit_id' => 15,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'unit_id' => 15,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
-            [
-                'unit_id' => 20,
-                'psto_id' => 1,
-            ],  
-            [
-                'unit_id' => 20,
-                'psto_id' => 2,
-            ],  
-            [
-                'unit_id' => 20,
-                'psto_id' => 3,
-            ],  
-            [
-                'unit_id' => 20,
-                'psto_id' => 4,
-            ],  
+            // [
+            //     'unit_id' => 20,
+            //     'psto_id' => 1,
+            // ],  
+            // [
+            //     'unit_id' => 20,
+            //     'psto_id' => 2,
+            // ],  
+            // [
+            //     'unit_id' => 20,
+            //     'psto_id' => 3,
+            // ],  
+            // [
+            //     'unit_id' => 20,
+            //     'psto_id' => 4,
+            // ],  
 
         ];
 

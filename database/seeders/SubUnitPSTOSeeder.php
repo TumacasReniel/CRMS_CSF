@@ -16,156 +16,156 @@ class SubUnitPSTOSeeder extends Seeder
         $unit_pstos = [
             [
                 'sub_unit_id' => 6,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],
             [
                 'sub_unit_id' => 6,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],
             [
                 'sub_unit_id' => 6,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],
             [
                 'sub_unit_id' => 6,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
             [
                 'sub_unit_id' => 7,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 7,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 7,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 7,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
 
             //
             [
                 'sub_unit_id' => 8,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 8,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 8,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 8,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
              //
              [
                 'sub_unit_id' => 10,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
             //
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ],  
              //
              [
                 'sub_unit_id' => 12,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 12,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 12,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 12,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ], 
              //
-             [
+            [
                 'sub_unit_id' => 13,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 13,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 13,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 13,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ], 
             //
             [
                 'sub_unit_id' => 14,
-                'psto_id' => 1,
+                'psto_id' => 48,
             ],  
             [
                 'sub_unit_id' => 14,
-                'psto_id' => 2,
+                'psto_id' => 49,
             ],  
             [
                 'sub_unit_id' => 14,
-                'psto_id' => 3,
+                'psto_id' => 50,
             ],  
             [
                 'sub_unit_id' => 14,
-                'psto_id' => 4,
+                'psto_id' => 51,
             ], 
 
         ];
