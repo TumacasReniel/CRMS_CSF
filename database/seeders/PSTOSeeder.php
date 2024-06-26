@@ -435,7 +435,7 @@ class PSTOSeeder extends Seeder
 
             // Region NCR
             [
-                'region_id' => '16',
+                'region_id' => '17',
                 'psto_name' => 'National Capital Region',
                 'slug' => 'national-capital-region',
             ],

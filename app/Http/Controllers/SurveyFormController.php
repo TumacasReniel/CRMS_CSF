@@ -298,6 +298,9 @@ class SurveyFormController extends Controller
         $pstos = psto::whereIn('id',$psto_ids)
                     ->where('region_id', $request->region_id)
                     ->get();
+        $pstos = psto::whereIn('id',$psto_ids)
+        ->where('region_id', $request->region_id)
+        ->get();
         
          //selected region
          $region = Region::where('id',$request->region_id)->first();    
