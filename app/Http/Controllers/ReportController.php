@@ -92,15 +92,24 @@ class ReportController extends Controller
         $unit = UnitResource::collection($units);
 
         //get unit pstos
+        
         $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
         $unit_pstos = UnitPSTOResource::collection($unit_pstos);
         
-
         $unit_pstos = $unit_pstos->pluck('psto');
 
-        $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get();
+        $sub_unit_pstos = SubUnitPSTO::where('sub_unit_id', $request->sub_unit_id)->get();
+        $psto_ids = $sub_unit_pstos->pluck('psto_id');
+
+
+        $sub_unit_pstos = psto::whereIn('id',$psto_ids)
+                    ->where('region_id', $user->region_id)
+                    ->get();
+
+
+        // $sub_unit_pstos = SubUnitPsto::where('sub_unit_id', $request->sub_unit_id)->get();
           
-        $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
+        // $sub_unit_pstos = $sub_unit_pstos->pluck('psto');
 
       
         

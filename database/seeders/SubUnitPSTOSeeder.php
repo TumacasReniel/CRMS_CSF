@@ -3050,10 +3050,6 @@ class SubUnitPSTOSeeder extends Seeder
             // REGION 15
             [
                 'sub_unit_id' => 6,
-                'psto_id' => 78,
-            ],
-            [
-                'sub_unit_id' => 6,
                 'psto_id' => 79,
             ],
             [
@@ -3077,10 +3073,6 @@ class SubUnitPSTOSeeder extends Seeder
             //
             [
                 'sub_unit_id' => 7,
-                'psto_id' => 78,
-            ],  
-            [
-                'sub_unit_id' => 7,
                 'psto_id' => 79,
             ],  
             [
@@ -3101,10 +3093,6 @@ class SubUnitPSTOSeeder extends Seeder
             ],  
 
             //
-            [
-                'sub_unit_id' => 8,
-                'psto_id' => 78,
-            ],  
             [
                 'sub_unit_id' => 8,
                 'psto_id' => 79,
@@ -3129,165 +3117,200 @@ class SubUnitPSTOSeeder extends Seeder
             //
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 72,
+                'psto_id' => 79,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 73,
+                'psto_id' => 80,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 74,
+                'psto_id' => 81,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 75,
+                'psto_id' => 82,
             ],  
             [
                 'sub_unit_id' => 9,
-                'psto_id' => 76,
+                'psto_id' => 83,
             ],  
-            [
-                'sub_unit_id' => 9,
-                'psto_id' => 77,
-            ],  
-    
 
             //
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 72,
+                'psto_id' => 79,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 73,
+                'psto_id' => 80,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 74,
+                'psto_id' => 81,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 75,
+                'psto_id' => 82,
             ],  
             [
                 'sub_unit_id' => 10,
-                'psto_id' => 76,
-            ],  
-            [
-                'sub_unit_id' => 10,
-                'psto_id' => 77,
-            ],  
+                'psto_id' => 83,
+            ],   
 
 
             //
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 72,
+                'psto_id' => 79,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 73,
+                'psto_id' => 80,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 74,
+                'psto_id' => 81,
             ],  
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 75,
+                'psto_id' => 82,
             ],  
 
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 76,
+                'psto_id' => 83,
             ],  
             
+
+            //
+            [
+                'sub_unit_id' => 12,
+                'psto_id' => 79,
+            ],  
+            [
+                'sub_unit_id' => 12,
+                'psto_id' => 80,
+            ],  
+            [
+                'sub_unit_id' => 12,
+                'psto_id' => 81,
+            ],  
+            [
+                'sub_unit_id' => 12,
+                'psto_id' => 82,
+            ], 
+            [
+                'sub_unit_id' => 12,
+                'psto_id' => 83,
+            ], 
+
+            //
+            [
+                'sub_unit_id' => 13,
+                'psto_id' => 79,
+            ],  
+            [
+                'sub_unit_id' => 13,
+                'psto_id' => 80,
+            ],  
+            [
+                'sub_unit_id' => 13,
+                'psto_id' => 81,
+            ],  
+            [
+                'sub_unit_id' => 13,
+                'psto_id' => 82,
+            ], 
+            [
+                'sub_unit_id' => 13,
+                'psto_id' => 83,
+            ], 
+   
+
+            //
+            [
+                'sub_unit_id' => 14,
+                'psto_id' => 79,
+            ],  
+            [
+                'sub_unit_id' => 14,
+                'psto_id' => 80,
+            ],  
+            [
+                'sub_unit_id' => 14,
+                'psto_id' => 81,
+            ],  
+            [
+                'sub_unit_id' => 14,
+                'psto_id' => 82,
+            ], 
+            [
+                'sub_unit_id' => 14,
+                'psto_id' => 83,
+            ], 
+            //REGION 16
+            [
+                'sub_unit_id' => 6,
+                'psto_id' => 78,
+            ],
+
+
+            //
+            [
+                'sub_unit_id' => 7,
+                'psto_id' => 78,
+            ],  
+          
+
+            //
+            [
+                'sub_unit_id' => 8,
+                'psto_id' => 78,
+            ],  
+        
+            //
+            [
+                'sub_unit_id' => 9,
+                'psto_id' => 78,
+            ],  
+          
+    
+
+            //
+            [
+                'sub_unit_id' => 10,
+                'psto_id' => 78,
+            ],  
+
+
+            //
             [
                 'sub_unit_id' => 11,
-                'psto_id' => 77,
+                'psto_id' => 78,
             ],  
-
 
 
             //
             [
                 'sub_unit_id' => 12,
-                'psto_id' => 72,
+                'psto_id' => 78,
             ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 73,
-            ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 74,
-            ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 75,
-            ], 
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 76,
-            ], 
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 77,
-            ], 
+          
 
             //
             [
                 'sub_unit_id' => 13,
-                'psto_id' => 72,
+                'psto_id' => 78,
             ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 73,
-            ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 74,
-            ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 75,
-            ], 
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 76,
-            ], 
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 77,
-            ], 
+            
 
             //
             [
                 'sub_unit_id' => 14,
-                'psto_id' => 72,
+                'psto_id' => 78,
             ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 73,
-            ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 74,
-            ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 75,
-            ], 
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 76,
-            ], 
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 77,
-            ], 
-
+          
         ];
 
         SubUnitPsto::insert($unit_pstos);
