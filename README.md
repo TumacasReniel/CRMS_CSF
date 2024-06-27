@@ -98,11 +98,6 @@ Customer SAtisfaction Feedback
 ## Contact Information
 For any inquiries, please contact DOST IX assigned personnel.
 
-## For All DOST Regions
 
-## Applicable For Region I only
-1. Update UnitPSTOSeeder
-   - go to UnitPSTOSeeder
-   - then  update psto ids 
 
 
