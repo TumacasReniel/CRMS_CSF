@@ -20,7 +20,7 @@ Customer SAtisfaction Feedback
 ## Installation
 1. Clone the repository
     ``bash
-    git clone https://github.com/your-username/your-repo.git
+    git clone <https://github.com/your-username/your-repo.git> or the github link of this project
     ```
 
 2. Navigate to the project directory
