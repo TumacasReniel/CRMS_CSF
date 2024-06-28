@@ -372,7 +372,7 @@ watch(
                                                             label="Sex*"
                                                             variant="outlined"
                                                             v-model="form.sex"
-                                                            :items="['Male','Female']"
+                                                            :items="['Male','Female','Prefer not to say']"
                                                             :rules="[
                                                                 (v) => !!v || errors.sex || 'This field is required',]
                                                             "
@@ -386,7 +386,7 @@ watch(
                                                                 label="Age Group*"
                                                                 variant="outlined"
                                                                 v-model="form.age_group"
-                                                                :items="['15-19','20-29','30-39','40-49','50-59','60-69','70-79', '80+']"
+                                                                :items="['19 or lower','20-34','35-49','50-64','60+', 'Prefer not to say']"
                                                                 :rules="[
                                                                     (v) => !!v || errors.sex ||  'This field is required',]
                                                                 "
