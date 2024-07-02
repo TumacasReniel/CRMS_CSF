@@ -86,6 +86,10 @@ class UnitSeeder extends Seeder
                 'unit_name' => 'DRRM',
             ],
             [
+                'services_id' => 1,
+                'unit_name' => 'Management Information System',
+            ],
+            [
                 'services_id' => 3,
                 'unit_name' => 'HALAL',
             ],
