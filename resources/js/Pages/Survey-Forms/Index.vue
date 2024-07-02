@@ -39,7 +39,7 @@ const cc3_options = [
     { label: "4. N/A", value: '4' },
 ];
 const options = [
-    { label: 'Strongly Agree', value: '5', icon: 'mdi-emoticon-cool', color: '#FFEB3B' },
+    { label: 'Strongly Agree', value: '5', icon: 'mdi-emoticon-excited', color: '#FFEB3B' },
     { label: 'Agree', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
     { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
     { label: 'Dissagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
