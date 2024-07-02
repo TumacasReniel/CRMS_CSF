@@ -26,6 +26,10 @@ class UnitSeeder extends Seeder
                 'services_id' => 1,
                 'unit_name' => 'Fairness Opinion Board',
             ],
+            [
+                'services_id' => 1,
+                'unit_name' => 'Management Information System',
+            ],
 
             [
                 'services_id' => 2,
@@ -80,10 +84,6 @@ class UnitSeeder extends Seeder
             [
                 'services_id' => 3,
                 'unit_name' => 'DRRM',
-            ],
-            [
-                'services_id' => 3,
-                'unit_name' => 'Information Communication Technology',
             ],
             [
                 'services_id' => 3,
