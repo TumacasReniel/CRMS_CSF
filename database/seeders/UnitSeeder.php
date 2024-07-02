@@ -41,7 +41,7 @@ class UnitSeeder extends Seeder
             ],
             [
                 'services_id' => 2,
-                'unit_name' => 'Administrative Support',
+                'unit_name' => 'Administrative Support Services',
             ],
             [
                 'services_id' => 2,
@@ -83,7 +83,7 @@ class UnitSeeder extends Seeder
             ],
             [
                 'services_id' => 3,
-                'unit_name' => 'Information Communication Technology',
+                'unit_name' => 'Management Information Sytem',
             ],
             [
                 'services_id' => 3,
