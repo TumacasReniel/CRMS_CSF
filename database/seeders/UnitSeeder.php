@@ -97,10 +97,6 @@ class UnitSeeder extends Seeder
                 'services_id' => 3,
                 'unit_name' => 'Research and Development Support',
             ],
-            [
-                'services_id' => 3,
-                'unit_name' => 'Innovation Support Services',
-            ],
 
         ];
 
