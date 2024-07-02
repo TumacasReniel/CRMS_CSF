@@ -41,7 +41,7 @@ class UnitSeeder extends Seeder
             ],
             [
                 'services_id' => 2,
-                'unit_name' => 'Administrative Support',
+                'unit_name' => 'Administrative Support Services',
             ],
             [
                 'services_id' => 2,
