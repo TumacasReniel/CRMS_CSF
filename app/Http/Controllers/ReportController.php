@@ -188,6 +188,21 @@ class ReportController extends Controller
        // search and check list of forms query  
        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
+       $cc_query = CustomerCCRating::whereBetween('created_at', [$request->date_from, $request->date_to])
+                                ->when($request->sex, function ($query, $sex) {
+                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                        $query->where('sex', $sex);
+                                    });
+                                })
+                                ->when($request->age_group, function ($query, $age_group) {
+                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                        $query->where('age_group', $age_group);
+                                    });
+                                });
+
+        //calculate CC
+        $cc_data = $this->calculateCC($cc_query);
+
         // $date_range = CustomerAttributeRating::whereIn('customer_id',$customer_ids)
         //                                      ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
         
@@ -218,7 +233,9 @@ class ReportController extends Controller
                                 $query->where('age_group', $age_group);
                             });
                         })
-                       ->get();        
+                       ->get();   
+                       
+        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -486,6 +503,7 @@ class ReportController extends Controller
         return Inertia::render('CSI/Index')    
             ->with('user', $user)
             ->with('assignatorees', $assignatorees)
+            ->with('cc_data', $cc_data) 
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
