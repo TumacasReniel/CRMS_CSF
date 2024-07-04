@@ -158,7 +158,7 @@ const closeDialog = (value) => {
                             label="Account_type*"
                             v-model="form.selected_account_type"
                             variant="outlined"
-                            :items="['user','admin']"
+                            :items="['user','admin','planning']"
                             item-title="name"
                             required
                         ></v-select>

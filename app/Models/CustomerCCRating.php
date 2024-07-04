@@ -13,4 +13,8 @@ class CustomerCCRating extends Model
         'cc_id',
         'answer',
     ];
+
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'customer_id' ,'id');
+    }
 }

@@ -207,6 +207,7 @@ class ReportController extends Controller
 
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id',$customer_ids)
+                        ->whereBetween('created_at', [$request->date_from, $request->date_to])
                         ->when($request->sex, function ($query, $sex) {
                             $query->whereHas('customer', function ($query) use ($sex) {
                                 $query->where('sex', $sex);
@@ -217,7 +218,7 @@ class ReportController extends Controller
                                 $query->where('age_group', $age_group);
                             });
                         })
-                        ->whereBetween('created_at', [$request->date_from, $request->date_to])->get();        
+                       ->get();        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -552,7 +553,17 @@ class ReportController extends Controller
 
         $cc_query = CustomerCCRating::whereMonth('created_at', $numericMonth)
                                     ->whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
@@ -560,9 +571,32 @@ class ReportController extends Controller
 
         //$date_range = CustomerAttributeRating::whereMonth('created_at', $numericMonth)->get();
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                                             ->whereMonth('created_at', $numericMonth)->get();
+                                             ->whereMonth('created_at', $numericMonth)
+                                             ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })
+                                            ->get();
+
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
-                                            ->whereMonth('created_at', $numericMonth)->get();
+                                            ->whereMonth('created_at', $numericMonth)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })
+                                            ->get();
         // List of Respondents/Customers
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                     ->whereMonth('created_at', $numericMonth)->get();
@@ -921,44 +955,145 @@ class ReportController extends Controller
         // Citizen Charter
         $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
                                     ->whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
 
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_jan = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 01)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_feb = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 02)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_mar = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 03)
-                                            ->whereYear('created_at', $request->selected_year)->get();
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get();
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                                         ->whereBetween('created_at', [$startDate, $endDate])
-                                                                        ->whereYear('created_at', $request->selected_year)->get();
+                                                                        ->whereYear('created_at', $request->selected_year)
+                                                                        ->when($request->sex, function ($query, $sex) {
+                                                                            $query->whereHas('customer', function ($query) use ($sex) {
+                                                                                $query->where('sex', $sex);
+                                                                            });
+                                                                        })
+                                                                        ->when($request->age_group, function ($query, $age_group) {
+                                                                            $query->whereHas('customer', function ($query) use ($age_group) {
+                                                                                $query->where('age_group', $age_group);
+                                                                            });
+                                                                        })
+                                                                        ->get();
 
         $jan_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',01)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
         $feb_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',02)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
                                                     
         $mar_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',03)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
 
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$startDate, $endDate])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
 
         $dimensions = Dimension::all();
@@ -1495,44 +1630,144 @@ class ReportController extends Controller
         // Citizen's Charter
         $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
                                     ->whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
        //calculate CC
         $cc_data = $this->calculateCC($cc_query);
 
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_apr = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 04)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_may = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 05)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_jun = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 06)
-                                            ->whereYear('created_at', $request->selected_year)->get();
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get();
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                                         ->whereBetween('created_at', [$startDate, $endDate])
-                                                                        ->whereYear('created_at', $request->selected_year)->get();
+                                                                        ->whereYear('created_at', $request->selected_year)
+                                                                        ->when($request->sex, function ($query, $sex) {
+                                                                            $query->whereHas('customer', function ($query) use ($sex) {
+                                                                                $query->where('sex', $sex);
+                                                                            });
+                                                                        })
+                                                                        ->when($request->age_group, function ($query, $age_group) {
+                                                                            $query->whereHas('customer', function ($query) use ($age_group) {
+                                                                                $query->where('age_group', $age_group);
+                                                                            });
+                                                                        })->get();
 
         $apr_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',04)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
         $may_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',05)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
                                                     
         $jun_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',06)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
 
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$startDate, $endDate])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
 
         $dimensions = Dimension::all();
@@ -2090,44 +2325,144 @@ class ReportController extends Controller
         
          // Citizen's Charter
          $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
-         ->whereYear('created_at', $request->selected_year)
-         ->whereIn('customer_id',$customer_ids);
+                            ->whereYear('created_at', $request->selected_year)
+                            ->whereIn('customer_id',$customer_ids)
+                            ->when($request->sex, function ($query, $sex) {
+                                $query->whereHas('customer', function ($query) use ($sex) {
+                                    $query->where('sex', $sex);
+                                });
+                            })
+                            ->when($request->age_group, function ($query, $age_group) {
+                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                    $query->where('age_group', $age_group);
+                                });
+                            });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
 
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_jul = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 7)
-                                             ->whereYear('created_at', $request->selected_year)->get(); 
+                                             ->whereYear('created_at', $request->selected_year)
+                                             ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_aug = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 8)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_sep = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at', 9)
-                                            ->whereYear('created_at', $request->selected_year)->get();
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get();
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereBetween('created_at', [$startDate, $endDate])
-                                                                        ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
         $jul_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at', 7)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
         $aug_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',8)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
                                                     
         $sep_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',9)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
 
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                     ->whereBetween('created_at', [$startDate, $endDate])
-                                                    ->whereYear('created_at', $request->selected_year)->get();
+                                                    ->whereYear('created_at', $request->selected_year)
+                                                    ->when($request->sex, function ($query, $sex) {
+                                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                                            $query->where('sex', $sex);
+                                                        });
+                                                    })
+                                                    ->when($request->age_group, function ($query, $age_group) {
+                                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                                            $query->where('age_group', $age_group);
+                                                        });
+                                                    })->get();
             
 
         $dimensions = Dimension::all();
@@ -2684,44 +3019,144 @@ class ReportController extends Controller
          // Citizen's Charter
          $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
                                     ->whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
 
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_oct = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at',10)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_nov = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at',11)
-                                            ->whereYear('created_at', $request->selected_year)->get(); 
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get(); 
         $month_dec = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                             ->whereMonth('created_at',12)
-                                            ->whereYear('created_at', $request->selected_year)->get();
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get();
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                             ->whereBetween('created_at', [$startDate, $endDate])
-                                            ->whereYear('created_at', $request->selected_year)->get();
+                                            ->whereYear('created_at', $request->selected_year)
+                                            ->when($request->sex, function ($query, $sex) {
+                                                $query->whereHas('customer', function ($query) use ($sex) {
+                                                    $query->where('sex', $sex);
+                                                });
+                                            })
+                                            ->when($request->age_group, function ($query, $age_group) {
+                                                $query->whereHas('customer', function ($query) use ($age_group) {
+                                                    $query->where('age_group', $age_group);
+                                                });
+                                            })->get();
 
         $oct_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at', 10)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
         $nov_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',11)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
                                                     
         $dec_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereMonth('created_at',12)
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
 
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$startDate, $endDate])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
            
 
         $dimensions = Dimension::all();
@@ -3270,7 +3705,17 @@ class ReportController extends Controller
             
         // Citizen's Charter
         $cc_query = CustomerCCRating::whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
        //calculate CC
         $cc_data = $this->calculateCC($cc_query);
@@ -3290,41 +3735,142 @@ class ReportController extends Controller
 
         $q1_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q1_start_date, $q1_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get(); 
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })
+                                                ->get(); 
         $q2_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q2_start_date, $q2_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get(); 
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get(); 
         $q3_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q3_start_date, $q3_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         $q4_date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q4_start_date, $q4_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
         
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                                                ->whereYear('created_at', $request->selected_year)->get(); 
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get(); 
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereYear('created_at', $request->selected_year)->get();
 
         $q1_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q1_start_date, $q1_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
         $q2_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q2_start_date, $q2_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
                                                     
         $q3_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q3_start_date, $q3_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
         $q4_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q4_start_date, $q4_end_date])
-                                                ->whereYear('created_at', $request->selected_year)->get();
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();
 
 
         $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                                                ->whereYear('created_at', $request->selected_year)->get();     
+                                                ->whereYear('created_at', $request->selected_year)
+                                                ->when($request->sex, function ($query, $sex) {
+                                                    $query->whereHas('customer', function ($query) use ($sex) {
+                                                        $query->where('sex', $sex);
+                                                    });
+                                                })
+                                                ->when($request->age_group, function ($query, $age_group) {
+                                                    $query->whereHas('customer', function ($query) use ($age_group) {
+                                                        $query->where('age_group', $age_group);
+                                                    });
+                                                })->get();     
           
         
 
@@ -4016,7 +4562,17 @@ class ReportController extends Controller
        // Citizen's Charter
        $cc_query = CustomerCCRating::whereMonth('created_at', $month)
                                     ->whereYear('created_at', $request->selected_year)
-                                    ->whereIn('customer_id',$customer_ids);
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
@@ -4319,7 +4875,17 @@ class ReportController extends Controller
 
         //PART I: Citizens Charter
         $cc_query = CustomerCCRating::whereMonth('created_at', $numeric_month)
-                                    ->whereYear('created_at', $request->selected_year);
+                                    ->whereYear('created_at', $request->selected_year)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
         $cc_data = $this->calculateCC($cc_query);
 
         // PART II:

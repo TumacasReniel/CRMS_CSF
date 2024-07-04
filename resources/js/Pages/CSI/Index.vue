@@ -892,14 +892,14 @@ const printCSIReport = async () => {
                                   </div>
                               </v-col>
                               
-                              <v-col class="my-auto"  v-if="unit.data[0].id == 8" >
+                              <v-col class="my-auto"  v-if="unit.data[0].id == 8 || user.account_type == 'planning'" >
                                    <vue-multiselect
                                       v-model="form.client_type"
                                       prepend-icon="mdi-account"
                                       :options="['Internal', 'External']"
                                       :multiple="false"
                                       placeholder="Select Client Type"
-                                      :allow-empty="false"
+                                      :allow-empty="true"
                                     >         
                                     </vue-multiselect>       
                               </v-col>
@@ -964,7 +964,7 @@ const printCSIReport = async () => {
     
                           <v-divider class="border-opacity-100"></v-divider>
 
-                          <v-row class="p-3 overflow-visible" v-if="form.csi_type == 'By Date'" >
+                          <v-row class="p-3 overflow-visible" v-if="user.account_type == 'planning'" >
                             <v-col class="my-auto" >
                                 <vue-multiselect
                                     v-model="form.sex"
@@ -972,7 +972,7 @@ const printCSIReport = async () => {
                                     :options="['Male','Female', 'Prefer not to say']"
                                     :multiple="false"
                                     placeholder="Select Sex"
-                                    :allow-empty="false"
+                                    :allow-empty="true"
                                   >         
                                 </vue-multiselect>      
                             </v-col>
@@ -983,7 +983,7 @@ const printCSIReport = async () => {
                                     :options="['19 or lower','20-34','35-49','50-64','60+', 'Prefer not to say']"
                                     :multiple="false"
                                     placeholder="Select Age Group"
-                                    :allow-empty="false"
+                                    :allow-empty="true"
                                   >         
                                 </vue-multiselect>                
                               </v-col>
