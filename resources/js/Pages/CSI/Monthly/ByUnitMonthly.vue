@@ -351,7 +351,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 3px">
-                                    {{ data.customer_satisfaction_rating }}
+                                    {{ data.lsr_grand_total }}
                                 </div>
                             </td>
                         </tr>

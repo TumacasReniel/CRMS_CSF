@@ -448,9 +448,7 @@ class ReportController extends Controller
 
         // round off Likert Scale Rating grand total and control decimal to 2 
         $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
-
         $lsr_grand_total = number_format($lsr_grand_total, 2);    
-        $lsr_average =  $lsr_grand_total / 5; 
 
         // table below total score
         $grand_vs_total =   $grand_vs_total * 5;
@@ -834,6 +832,7 @@ class ReportController extends Controller
         }
 
         // round off Likert Scale Rating grand total and control decimal to 2 
+        $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
         $lsr_grand_total = number_format($lsr_grand_total, 2);      
 
         // table below total score

@@ -426,8 +426,8 @@
 
                     <tr>
                         <td colspan="3" class="text-right">% of Promoters:</td>
-                         <td v-if="data.julpercentage_promoters" class="text-center" >
-                            {{ data.julpercentage_promoters }} 
+                         <td v-if="data.jul_percentage_promoters" class="text-center" >
+                            {{ data.jul_percentage_promoters }} 
                         </td>  
                         <td v-if="data.aug_percentage_promoters" class="text-center " >
                             {{ data.aug_percentage_promoters }} 
