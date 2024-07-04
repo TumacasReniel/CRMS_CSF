@@ -189,16 +189,16 @@ class ReportController extends Controller
        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
        $cc_query = CustomerCCRating::whereBetween('created_at', [$request->date_from, $request->date_to])
-                                ->when($request->sex, function ($query, $sex) {
-                                    $query->whereHas('customer', function ($query) use ($sex) {
-                                        $query->where('sex', $sex);
-                                    });
-                                })
-                                ->when($request->age_group, function ($query, $age_group) {
-                                    $query->whereHas('customer', function ($query) use ($age_group) {
-                                        $query->where('age_group', $age_group);
-                                    });
-                                });
+                        ->when($request->sex, function ($query, $sex) {
+                            $query->whereHas('customer', function ($query) use ($sex) {
+                                $query->where('sex', $sex);
+                            });
+                        })
+                        ->when($request->age_group, function ($query, $age_group) {
+                            $query->whereHas('customer', function ($query) use ($age_group) {
+                                $query->where('age_group', $age_group);
+                            });
+                        });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
@@ -447,7 +447,10 @@ class ReportController extends Controller
         }
 
         // round off Likert Scale Rating grand total and control decimal to 2 
-        $lsr_grand_total = number_format($lsr_grand_total, 2);      
+        $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
+
+        $lsr_grand_total = number_format($lsr_grand_total, 2);    
+        $lsr_average =  $lsr_grand_total / 5; 
 
         // table below total score
         $grand_vs_total =   $grand_vs_total * 5;
@@ -521,6 +524,7 @@ class ReportController extends Controller
             ->with('x_grand_total',$x_grand_total)
             ->with('likert_scale_rating_totals',$likert_scale_rating_totals)
             ->with('lsr_grand_total',$lsr_grand_total)
+            ->with('lsr_average',$lsr_average)
             ->with('importance_rate_score_totals',$importance_rate_score_totals)
             ->with('x_importance_totals', $x_importance_totals)
             ->with('importance_ilsr_totals', $importance_ilsr_totals)
