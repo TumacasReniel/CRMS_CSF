@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignId('customer_id');
             $table->foreign('customer_id')
                 ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+                ->on('customers');
             $table->string('comment')->nullable();
             $table->boolean('is_complaint');
             $table->timestamps();

@@ -634,6 +634,11 @@ const form = reactive({
 
   // for HR case only
   client_type: null,
+
+  // other properties
+  sex:null , 
+  age_group:null,
+
 });
 
 
@@ -780,8 +785,15 @@ const currentYear = ref(getCurrentYear());
 
 };
 
-  const is_printing = ref(false);
-  const printCSIReport = async () => {
+const sex_options = [
+  'Male', 
+  'Female' , 
+  'Prefer not to say'
+];
+
+
+const is_printing = ref(false);
+const printCSIReport = async () => {
       is_printing.value = true;
       //  router.get('/generate-pdf', form , { preserveState: true, preserveScroll: true})
       //Create an instance of Printd
@@ -893,7 +905,7 @@ const currentYear = ref(getCurrentYear());
                               </v-col>
 
 
-                              <v-col class="my-auto ml-5" v-if="unit.data[0].sub_units.length > 0" >
+                              <v-col class="my-auto " v-if="unit.data[0].sub_units.length > 0" >
                                     <vue-multiselect
                                       v-model="form.selected_sub_unit"
                                       prepend-icon="mdi-account"
@@ -946,13 +958,41 @@ const currentYear = ref(getCurrentYear());
                                     >
                                     </vue-multiselect>          
                               </v-col>
-                                
+
+                             
                           </v-row>
     
                           <v-divider class="border-opacity-100"></v-divider>
 
-                          <v-card-body class="overflow-visible mb-5" >
-                            
+                          <v-row class="p-3 overflow-visible" v-if="form.csi_type == 'By Date'" >
+                            <v-col class="my-auto" >
+                                <vue-multiselect
+                                    v-model="form.sex"
+                                    prepend-icon="mdi-account"
+                                    :options="['Male','Female', 'Prefer not to say']"
+                                    :multiple="false"
+                                    placeholder="Select Sex"
+                                    :allow-empty="false"
+                                  >         
+                                </vue-multiselect>      
+                            </v-col>
+                            <v-col class="my-auto" >
+                                <vue-multiselect
+                                    v-model="form.age_group"
+                                    prepend-icon="mdi-account"
+                                    :options="['19 or lower','20-34','35-49','50-64','60+', 'Prefer not to say']"
+                                    :multiple="false"
+                                    placeholder="Select Age Group"
+                                    :allow-empty="false"
+                                  >         
+                                </vue-multiselect>                
+                              </v-col>
+                          </v-row>
+                          <v-divider class="border-opacity-100"></v-divider>
+                          
+
+                          <v-card-body class="overflow-visible mb-2" >
+
                               <v-row class="p-3" v-if="form.csi_type == 'By Date'" >
                                   <v-col class="my-auto">
                                       <v-text-field

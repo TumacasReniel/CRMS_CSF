@@ -69,7 +69,7 @@ class SurveyFormController extends Controller
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
     {       
-        try{
+        // try{
             DB::beginTransaction();    
            
             //Save Customer
@@ -109,16 +109,15 @@ class SurveyFormController extends Controller
     
             // Save Comment
             $this->saveComment($request, $customer);
-        
+    
             // Save Customer Recommendation Rating
-           $this->saveCustomerRecommendationRating($request, $customer);
+            $this->saveCustomerRecommendationRating($request, $customer);
 
             // SAve Other Attributes Indication
             $this->saveCustomerOtherAttributeIndication($request, $customer);
 
             // Save csf form
             $this->saveCSFForm($request, $customer);
-
 
             DB::commit();
            
@@ -129,15 +128,15 @@ class SurveyFormController extends Controller
             
             return Inertia::redirect('msg_index');
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            //return $e;
-            $msg = $e->getMessage();
-            return Inertia::render('Survey-Forms/ThankYou')
-                ->with('message', $msg )
-                ->with('status', "error")
-                ->with('current_url', $request->current_url);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     //return $e;
+        //     $msg = $e->getMessage();
+        //     return Inertia::render('Survey-Forms/ThankYou')
+        //         ->with('message', $msg )
+        //         ->with('status', "error")
+        //         ->with('current_url', $request->current_url);
+        // }
 
         
    
@@ -182,7 +181,6 @@ class SurveyFormController extends Controller
                 'is_complaint' =>  $request->is_complaint,
             ]
          );
-
         return $comment;
     }
 

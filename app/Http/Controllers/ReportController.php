@@ -186,13 +186,38 @@ class ReportController extends Controller
         $sub_unit_type = $request->sub_unit_type; 
 
        // search and check list of forms query  
-       $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
+       $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
-        $date_range = CustomerAttributeRating::whereIn('customer_id',$customer_ids)
-                                             ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
+        // $date_range = CustomerAttributeRating::whereIn('customer_id',$customer_ids)
+        //                                      ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
+        
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                        ->whereBetween('created_at', [$request->date_from, $request->date_to])
+                        ->when($request->sex, function ($query, $sex) {
+                            $query->whereHas('customer', function ($query) use ($sex) {
+                                $query->where('sex', $sex);
+                            });
+                        })
+                        ->when($request->age_group, function ($query, $age_group) {
+                            $query->whereHas('customer', function ($query) use ($age_group) {
+                                $query->where('age_group', $age_group);
+                            });
+                        })
+                        ->get();
+
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id',$customer_ids)
-                                                                        ->whereBetween('created_at', [$request->date_from, $request->date_to])->get();        
+                        ->when($request->sex, function ($query, $sex) {
+                            $query->whereHas('customer', function ($query) use ($sex) {
+                                $query->where('sex', $sex);
+                            });
+                        })
+                        ->when($request->age_group, function ($query, $age_group) {
+                            $query->whereHas('customer', function ($query) use ($age_group) {
+                                $query->where('age_group', $age_group);
+                            });
+                        })
+                        ->whereBetween('created_at', [$request->date_from, $request->date_to])->get();        
 
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
@@ -279,12 +304,12 @@ class ReportController extends Controller
         $ss_totals = [];
         $wf_total= 0;
         $wf_totals = [];
-        $ws_total= 0;
+        $ws_total = 0;
         $ws_totals = [];
         $ws_grand_total = 0;
 
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
-            //PART I
+            //PART II
             $vs_total = $date_range->where('rate_score', 5)->where('dimension_id', $dimensionId)->count();
             $s_total = $date_range->where('rate_score', 4)->where('dimension_id', $dimensionId)->count();
             $n_total = $date_range->where('rate_score', 3)->where('dimension_id', $dimensionId)->count();
@@ -310,7 +335,6 @@ class ReportController extends Controller
             ];
 
             //likert sclae rating grandtotal
-
             $lsr_grand_total =  $lsr_grand_total + $lsr_total;
             $x_totals[$dimensionId] = [
                 'x_total_score' => $x_grand_total,
@@ -336,7 +360,7 @@ class ReportController extends Controller
             $grand_d_total+=$d_total;
             $grand_vd_total+=$vd_total;       
                      
-            // PART II
+            // PART III
             $vi_total = $date_range->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
             $i_total = $date_range->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->count();
             $mi_total = $date_range->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->count();
@@ -395,8 +419,9 @@ class ReportController extends Controller
 
             // WS = (SS * WF) / 100  
             $ws_total = ($ss_total * $wf_total) / 100;   
-            $ws_grand_total = $ws_grand_total + $ws_total;
+
             $ws_total = number_format($ws_total, 2);
+            $ws_grand_total +=  $ws_total;
             $ws_grand_total = number_format($ws_grand_total, 2);
             $ws_totals[$dimensionId] = [
                 'ws_total' => $ws_total,
@@ -418,14 +443,14 @@ class ReportController extends Controller
         //Percentage of Respondents/Customers who rated VS/S: 
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
-        if($total_respondents != 0){
+        if($total_respondents != 0 || $total_vss_respondents != 0){
             $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
-        if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+        if($total_respondents != 0 || $total_vss_respondents != 0){
+            $customer_satisfaction_rating = ($total_vss_respondents/$total_respondents) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -434,24 +459,27 @@ class ReportController extends Controller
         if($ws_grand_total != 0){
             $customer_satisfaction_index = ($ws_grand_total/5) * 100;
         }
-        $customer_satisfaction_index = number_format( $customer_satisfaction_index , 2);
+        $customer_satisfaction_index = number_format($customer_satisfaction_index, 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         //Percentage of Promoters = number of promoters / total respondents
         $percentage_promoters = 0;
-        if($total_promoters != 0){
+        if($total_respondents != 0){
             $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
         }
 
         //Percentage of Promoters = number of promoters / total respondents
         $percentage_detractors = 0;
-        if($total_detractors != 0){
+        if($total_respondents != 0){
             $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
         }
 
         // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
-        $net_promotion_score =  number_format(($percentage_promoters - $percentage_detractors),2);
+        $net_promoter_score =  number_format(($percentage_promoters - $percentage_detractors),2);
   
-
 
         //send response to front end
         return Inertia::render('CSI/Index')    
@@ -488,7 +516,7 @@ class ReportController extends Controller
             ->with('percentage_vss_respondents', $percentage_vss_respondents)
             ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
             ->with('customer_satisfaction_index', $customer_satisfaction_index)
-            ->with('net_promotion_score', $net_promotion_score)
+            ->with('net_promoter_score', $net_promoter_score)
             ->with('percentage_promoters', $percentage_promoters)
             ->with('percentage_detractors', $percentage_detractors)
             ->with('request', $request);    
@@ -780,7 +808,11 @@ class ReportController extends Controller
         if($ws_grand_total != 0){
             $customer_satisfaction_index = ($ws_grand_total/5) * 100;
         }
-        $customer_satisfaction_index = number_format( $customer_satisfaction_index , 2);
+        $customer_satisfaction_index = number_format($customer_satisfaction_index , 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         //Percentage of Promoters = number of promoters / total respondents
         $percentage_promoters = 0;
@@ -1324,6 +1356,10 @@ class ReportController extends Controller
         $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 3);
 
         $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         //comments and  complaints
         $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
@@ -1912,6 +1948,10 @@ class ReportController extends Controller
         $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 6);
    
         $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         //comments and  complaints
         $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
@@ -2503,6 +2543,10 @@ class ReportController extends Controller
 
         $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
 
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
+
          //comments and  complaints
          $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
                                         ->whereBetween('created_at', [$startDate, $endDate])
@@ -3090,6 +3134,10 @@ class ReportController extends Controller
         $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 12);
   
         $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
          //comments and  complaints
          $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
@@ -3762,6 +3810,10 @@ class ReportController extends Controller
         $q4_csi =  $oct_csi +  $nov_csi + $dec_csi;
 
         $customer_satisfaction_index = number_format((($q1_csi + $q2_csi +  $q3_csi + $q4_csi)/4), 2);
+        
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
          //comments and  complaints
          $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
@@ -4208,6 +4260,10 @@ class ReportController extends Controller
             $customer_satisfaction_index = ($ws_grand_total/5) * 100;
         }
         $customer_satisfaction_index = number_format( $customer_satisfaction_index , 2);
+        
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         return $customer_satisfaction_index;
     }   
@@ -4606,6 +4662,10 @@ class ReportController extends Controller
             $customer_satisfaction_index = ($ws_grand_total/5) * 100;
         }
         $customer_satisfaction_index = number_format( $customer_satisfaction_index , 2);
+        
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
 
         return $customer_satisfaction_index;
     }  

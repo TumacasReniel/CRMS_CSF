@@ -13,4 +13,8 @@ class  CustomerComment extends Model
         'comment',
         'is_complaint',
     ];
+
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'customer_id' ,'id');
+    }
 }

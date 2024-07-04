@@ -337,7 +337,19 @@ watch(
                                                 >
                                                 </v-text-field> -->
                                                 
-                                                <v-text-field                                    
+                                                <v-text-field    
+                                                    v-if="form.is_complaint == true"                                
+                                                    v-model="form.email" 
+                                                    type="email" 
+                                                    placeholder="email@gmail.com"
+                                                    label="Email*"
+                                                    variant="outlined" 
+                                                    :rules="[ (v) => !!v || formSubmitted && !form.email ||  'This field is required',]"
+                                                >
+                                                </v-text-field>
+
+                                                <v-text-field      
+                                                    v-else-if="form.is_complaint == false"                                     
                                                     v-model="form.email" 
                                                     type="email" 
                                                     placeholder="email@gmail.com"
@@ -345,6 +357,8 @@ watch(
                                                     variant="outlined" 
                                                 >
                                                 </v-text-field>
+
+                                         
 
                                                 <v-text-field                                    
                                                     v-model="form.name" 
