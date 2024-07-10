@@ -4951,7 +4951,6 @@ class ReportController extends Controller
         //get monthly CSI
         $monthly_csi = $this->getAllUnitMonthlyCSI($request, $user->region_id, $numeric_month);
       
-        dd( $monthly_csi);
 
         // Gender and Development(GAD)
         //---total number of respondents
@@ -5021,6 +5020,7 @@ class ReportController extends Controller
             'gad_percentage_vss_respo' => $gad_percentage_vss_respo,
             'fairness_percentage_vss_respo' => $fairness_percentage_vss_respo,
         ];
+
         
          //send response to front end
          return Inertia::render('CSI/AllServicesUnits/Index')

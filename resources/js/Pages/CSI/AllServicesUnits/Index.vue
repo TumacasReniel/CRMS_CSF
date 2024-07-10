@@ -165,7 +165,7 @@ const generateCSIReport = async () => {
                     </v-card>
                   
                      <v-card class="mb-3 my-auto">   
-                        <!-- <v-divider class="border-opacity-100"></v-divider>         
+                   <v-divider class="border-opacity-100"></v-divider>         
                         <v-row class="p-3 overflow-visible" style="margin-top: -20px;">
                           <v-divider class="border-opacity-100"></v-divider>
                               <v-col class="my-auto overflow-visible">
@@ -252,7 +252,7 @@ const generateCSIReport = async () => {
                               </v-col>
                         </v-row>   
                         
-                        <v-divider class="border-opacity-100"></v-divider>           -->
+                        <v-divider class="border-opacity-100"></v-divider>       
 
                       <v-card-text class="ml-5">
                          <span class="font-black">PLEASE DO THE TRADITIONAL MANUAL REPORT ON EXCEL FOR ALL UNITS REPORT </span><br>

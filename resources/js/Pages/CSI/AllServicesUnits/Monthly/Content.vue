@@ -124,23 +124,23 @@ import { key } from 'fontawesome';
                 <td colspan="8">{{  service.services_name  }}</td>
             </tr>
             <template v-for="(unit,index) in service.units" :key="index">
-                <tr class="text-center">
+                <tr>
                     <td class="pl-5"> {{ unit.unit_name }}</td>
 
                     <!-- Total Respondents -->
-                    <td v-if="service.id == 1 && unit.id == 1">{{ data.ord_total_respondents.secretariat_total_respo  }}</td>
-                    <td v-if="service.id == 1 && unit.id == 2">{{ data.ord_total_respondents.gad_total_respo  }}</td>
-                    <td v-if="service.id == 1 && unit.id == 3">{{ data.ord_total_respondents.fairness_total_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 1">{{ data.ord_total_respondents.secretariat_total_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 2">{{ data.ord_total_respondents.gad_total_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 3">{{ data.ord_total_respondents.fairness_total_respo  }}</td>
                      <!-- Total Respondents who rated VS or S -->
-                    <td v-if="service.id == 1 && unit.id == 1">{{ data.ord_total_vss_respondents.secretariat_total_vss_respo  }}</td>
-                    <td v-if="service.id == 1 && unit.id == 2">{{ data.ord_total_vss_respondents.gad_total_vss_respo  }}</td>
-                    <td v-if="service.id == 1 && unit.id == 3">{{ data.ord_total_vss_respondents.fairness_total_vss_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 1">{{ data.ord_total_vss_respondents.secretariat_total_vss_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 2">{{ data.ord_total_vss_respondents.gad_total_vss_respo  }}</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 3">{{ data.ord_total_vss_respondents.fairness_total_vss_respo  }}</td>
                     <!-- Percentage Respondents who rated VS or S -->
-                    <td v-if="service.id == 1 && unit.id == 1">{{ data.ord_percentage_vss_respondents.secretariat_percentage_vss_respo  }}%</td>
-                    <td v-if="service.id == 1 && unit.id == 2">{{ data.ord_percentage_vss_respondents.gad_percentage_vss_respo  }}%</td>
-                    <td v-if="service.id == 1 && unit.id == 3">{{ data.ord_percentage_vss_respondents.fairness_percentage_vss_respo  }}%</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 1">{{ data.ord_percentage_vss_respondents.secretariat_percentage_vss_respo  }}%</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 2">{{ data.ord_percentage_vss_respondents.gad_percentage_vss_respo  }}%</td>
+                    <td class="text-center" v-if="service.id == 1 && unit.id == 3">{{ data.ord_percentage_vss_respondents.fairness_percentage_vss_respo  }}%</td>
                     <!-- csi_total -->
-                     <td>{{ csi_total }}</td>
+                     <td class="text-center">{{ csi_total }}</td>
                 </tr>
                 <template  v-for="sub_unit in unit.sub_units">
                     <tr>
@@ -164,10 +164,11 @@ import { key } from 'fontawesome';
                     </template>
 
                     <template  v-for="psto in sub_unit.sub_unit_pstos">
-                        <tr >
+                        <tr v-if="psto.id == 48 || psto.id == 49  ||
+                                  psto.id == 50 || psto.id == 51">
                             <td class="pl-16">
                                 <ul>
-                                    <li style="list-style-type: circle;">
+                                    <li style="list-style-type: circle;" >
                                         {{ psto.psto_name }}
                                     </li>
                                    
@@ -179,7 +180,8 @@ import { key } from 'fontawesome';
 
 
                 <template  v-for="psto in unit.unit_pstos">
-                        <tr >
+                        <tr v-if="psto.id == 48 || psto.id == 49  ||
+                                  psto.id == 50 || psto.id == 51">
                             <td class="pl-10">
                                 <ul>
                                     <li style="list-style-type: circle;">
