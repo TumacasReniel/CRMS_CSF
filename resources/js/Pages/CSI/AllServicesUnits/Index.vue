@@ -166,7 +166,7 @@ const generateCSIReport = async () => {
                   
                      <v-card class="mb-3 my-auto">   
                    <v-divider class="border-opacity-100"></v-divider>         
-                        <v-row class="p-3 overflow-visible" style="margin-top: -20px;">
+                        <!-- <v-row class="p-3 overflow-visible" style="margin-top: -20px;">
                           <v-divider class="border-opacity-100"></v-divider>
                               <v-col class="my-auto overflow-visible">
                                 <div class="my-auto overflow-visible"> 
@@ -251,7 +251,7 @@ const generateCSIReport = async () => {
                                 <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
                               </v-col>
                         </v-row>   
-                        
+                         -->
                         <v-divider class="border-opacity-100"></v-divider>       
 
                       <v-card-text class="ml-5">
