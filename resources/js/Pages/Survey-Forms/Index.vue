@@ -218,7 +218,7 @@ const saveCSF = async () => {
 };
 
 const updateIsComplaint = (index ,rate_score)=> {
-    if(form.dimension_form.rate_score[index] > 1 && form.dimension_form.rate_score[index] < 4   ){
+    if(form.dimension_form.rate_score[index] > 0 && form.dimension_form.rate_score[index] < 4   ){
         form.complaint_scanner.value[index] = true; 
     }
     else{
