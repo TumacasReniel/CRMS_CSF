@@ -522,7 +522,6 @@ class ReportController extends Controller
             ->with('x_grand_total',$x_grand_total)
             ->with('likert_scale_rating_totals',$likert_scale_rating_totals)
             ->with('lsr_grand_total',$lsr_grand_total)
-            ->with('lsr_average',$lsr_average)
             ->with('importance_rate_score_totals',$importance_rate_score_totals)
             ->with('x_importance_totals', $x_importance_totals)
             ->with('importance_ilsr_totals', $importance_ilsr_totals)
