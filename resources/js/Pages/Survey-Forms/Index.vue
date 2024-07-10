@@ -44,7 +44,7 @@ const options = [
     { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
     { label: 'Dissagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
     { label: 'Very Dissagree', value: '1', icon: 'mdi-emoticon-frown', color: '#6200EA' },
-    { label: 'N/A', value: '', icon: 'mdi-close-circle-outline', color: 'red' },
+    { label: 'N/A', value: '6', icon: 'mdi-close-circle-outline', color: 'red' },
 ];
 const attribute_numbers = [
     { label: '5', value: '5' },

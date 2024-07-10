@@ -189,16 +189,17 @@ class ReportController extends Controller
        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
        $cc_query = CustomerCCRating::whereBetween('created_at', [$request->date_from, $request->date_to])
-                        ->when($request->sex, function ($query, $sex) {
-                            $query->whereHas('customer', function ($query) use ($sex) {
-                                $query->where('sex', $sex);
-                            });
-                        })
-                        ->when($request->age_group, function ($query, $age_group) {
-                            $query->whereHas('customer', function ($query) use ($age_group) {
-                                $query->where('age_group', $age_group);
-                            });
-                        });
+                                    ->whereIn('customer_id',$customer_ids)
+                                    ->when($request->sex, function ($query, $sex) {
+                                        $query->whereHas('customer', function ($query) use ($sex) {
+                                            $query->where('sex', $sex);
+                                        });
+                                    })
+                                    ->when($request->age_group, function ($query, $age_group) {
+                                        $query->whereHas('customer', function ($query) use ($age_group) {
+                                            $query->where('age_group', $age_group);
+                                        });
+                                    });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
