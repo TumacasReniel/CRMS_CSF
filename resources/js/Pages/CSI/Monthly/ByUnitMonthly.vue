@@ -133,7 +133,7 @@
                     </table>
                 </div>
 
-                <div style="margin-top: -10px; margin-bottom: 20px; page-break-before: always;">
+                <div style="margin-top: -10px; margin-bottom: 40px; ">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART II: CUSTOMER RATING OF SERVICE QUALITY  </div>
                     <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
                         <tr style="border: 1px solid #333; text-align: center; background-color:blue">
@@ -188,8 +188,8 @@
 
                 </div>
 
-                <div style="margin-top: 20px">
-                    <div style="font-size: 13px;margin-right:20px; margin-bottom:5px; font-weight: bold">PART III: IMPORTANCE OF THIS ATTRIBUTE    </div>
+                <div style="margin-top: 30px">
+                    <div style="font-size: 13px;margin-right:20px; margin-bottom:5px; font-weight: bold; page-break-before: always;">PART III: IMPORTANCE OF THIS ATTRIBUTE    </div>
                     <table style="width:100%; border: 1px solid #333; border-collapse: collapse; font-size: 13px;">
                         <tr style="border: 1px solid #333; text-align: center;">
                             <td style="border: 1px solid #333;" rowspan="2">Importance Service Quality Attributes</td>
