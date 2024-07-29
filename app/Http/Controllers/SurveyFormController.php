@@ -131,10 +131,9 @@ class SurveyFormController extends Controller
             DB::rollBack();
             //return $e;
             $msg = $e->getMessage();
-            return Inertia::render('Survey-Forms/ThankYou')
+            return back()
                 ->with('message', $msg )
-                ->with('status', "error")
-                ->with('current_url', $request->current_url);
+                ->with('status', "error");
         }
 
         
