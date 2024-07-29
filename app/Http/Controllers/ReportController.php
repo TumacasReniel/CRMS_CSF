@@ -79,8 +79,6 @@ class ReportController extends Controller
             ->with('sub_unit_types', $sub_unit_types)
             ->with('user', $user)
             ->with('sub_unit', $sub_unit);
-          
-    
     }
 
 
@@ -189,17 +187,17 @@ class ReportController extends Controller
        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
        $cc_query = CustomerCCRating::whereBetween('created_at', [$request->date_from, $request->date_to])
-                                    ->whereIn('customer_id',$customer_ids)
-                                    ->when($request->sex, function ($query, $sex) {
-                                        $query->whereHas('customer', function ($query) use ($sex) {
-                                            $query->where('sex', $sex);
-                                        });
-                                    })
-                                    ->when($request->age_group, function ($query, $age_group) {
-                                        $query->whereHas('customer', function ($query) use ($age_group) {
-                                            $query->where('age_group', $age_group);
-                                        });
-                                    });
+            ->whereIn('customer_id',$customer_ids)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
 
         //calculate CC
         $cc_data = $this->calculateCC($cc_query);
@@ -208,36 +206,34 @@ class ReportController extends Controller
         //                                      ->whereBetween('created_at', [$request->date_from, $request->date_to])->get(); 
         
         $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                        ->whereBetween('created_at', [$request->date_from, $request->date_to])
-                        ->when($request->sex, function ($query, $sex) {
-                            $query->whereHas('customer', function ($query) use ($sex) {
-                                $query->where('sex', $sex);
-                            });
-                        })
-                        ->when($request->age_group, function ($query, $age_group) {
-                            $query->whereHas('customer', function ($query) use ($age_group) {
-                                $query->where('age_group', $age_group);
-                            });
-                        })
-                        ->get();
+            ->whereBetween('created_at', [$request->date_from, $request->date_to])
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            })
+            ->get();
 
 
         $customer_recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id',$customer_ids)
-                        ->whereBetween('created_at', [$request->date_from, $request->date_to])
-                        ->when($request->sex, function ($query, $sex) {
-                            $query->whereHas('customer', function ($query) use ($sex) {
-                                $query->where('sex', $sex);
-                            });
-                        })
-                        ->when($request->age_group, function ($query, $age_group) {
-                            $query->whereHas('customer', function ($query) use ($age_group) {
-                                $query->where('age_group', $age_group);
-                            });
-                        })
-                       ->get();   
+            ->whereBetween('created_at', [$request->date_from, $request->date_to])
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            })
+            ->get();   
                        
-        
-
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
@@ -254,6 +250,7 @@ class ReportController extends Controller
         $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
 
         $ilsr_grand_total =0;
+
         // loop for getting importance ls rating grand total for ws rating calculation
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
             $vi_total = $date_range->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
@@ -567,7 +564,7 @@ class ReportController extends Controller
         $sub_unit_type = $request->sub_unit_type; 
 
         // search and check list of forms query  
-        $customer_ids = $this->querySearchCSF( $region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
+        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
       
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
 
@@ -585,7 +582,7 @@ class ReportController extends Controller
                                         });
                                     });
 
-        //calculate CC
+        //calculate Citizen's Charter
         $cc_data = $this->calculateCC($cc_query);
 
 
@@ -661,7 +658,7 @@ class ReportController extends Controller
 
         }
 
-        // PART I : CUSTOMER RATING OF SERVICE QUALITY 
+        // PART II : CUSTOMER RATING OF SERVICE QUALITY 
 
         //set initial value of buttom side total scores
         $y_totals = [];
@@ -712,23 +709,31 @@ class ReportController extends Controller
         $ws_grand_total = 0;
 
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
-            //PART I
+            //PART I :
             $vs_total = $date_range->where('rate_score', 5)->where('dimension_id', $dimensionId)->count();
             $s_total = $date_range->where('rate_score', 4)->where('dimension_id', $dimensionId)->count();
             $n_total = $date_range->where('rate_score', 3)->where('dimension_id', $dimensionId)->count();
             $d_total = $date_range->where('rate_score', 2)->where('dimension_id', $dimensionId)->count();
-            $vd_total = $date_range->where('rate_score', 1)->where('dimension_id', $dimensionId)->count();          
-       
+            $vd_total = $date_range->where('rate_score', 1)->where('dimension_id', $dimensionId)->count(); 
+
             $x_vs_total = $vs_total * 5; 
             $x_s_total = $s_total * 4; 
             $x_n_total = $n_total * 3; 
             $x_d_total = $d_total * 2; 
             $x_vd_total = $vd_total * 1; 
-            $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total  ; 
-         
+
+            // sum of all repondent with rate_score 1-5
+            $x_respondents_total =  $vs_total +   $x_s_total + $n_total +  $d_total +  $vd_total;
+            $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total; 
+  
             // right side total score divided by total repondents or customers
             if($x_grand_total != 0){
-                $lsr_total = $x_grand_total / $total_respondents;
+                if($dimensionId == 6){
+                    $lsr_total = $x_grand_total / $x_respondents_total;
+                }
+                else{
+                    $lsr_total = $x_grand_total / $total_respondents;
+                }
             }
            
             // SS = lsr with 3 decimals
@@ -764,7 +769,7 @@ class ReportController extends Controller
             $grand_d_total+=$d_total;
             $grand_vd_total+=$vd_total;       
                      
-            // PART II
+            // PART II :
             $vi_total = $date_range->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
             $i_total = $date_range->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->count();
             $mi_total = $date_range->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->count();

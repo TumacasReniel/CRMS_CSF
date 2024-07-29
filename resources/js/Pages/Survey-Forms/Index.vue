@@ -130,12 +130,8 @@ const getDimension = (index,dimension_id) => {
 
 };
 
-
-
-
 // const signaturePad = ref(null);
 // const canvas = document.querySelector('.signature-pad canvas');
-
 
 onMounted(() => {
     AOS.init();
@@ -236,7 +232,6 @@ const updateIsComplaint = (index ,rate_score)=> {
 
 
 };
-
 
 // const clearSignature = () => {
 //     new SignaturePad(signaturePad.value);

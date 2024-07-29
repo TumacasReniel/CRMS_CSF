@@ -148,8 +148,11 @@
                         <td >{{ data.grand_n_total }}</td>
                         <td >{{ data.grand_d_total }}</td>
                         <td >{{ data.grand_vd_total }}</td>
-                        <td >{{ data.x_grand_total }}</td>
+                        <!-- total score -->
+                        <td >{{ data.x_grand_total }}</td> 
+                         <!-- likert scale rating -->
                         <td >{{ data.lsr_grand_total }}</td>
+                        <!--  gap grand total right side or by row-->
                         <td >{{ data.gap_grand_total }}</td>
                     </tr>                                               
                 </table>

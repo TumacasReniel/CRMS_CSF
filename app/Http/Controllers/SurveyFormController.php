@@ -39,7 +39,6 @@ class SurveyFormController extends Controller
 {
     public function index(Request $request)
     {
-        //dd($request->all());
         $cc_questions = CcQuestion::all();
         $dimensions = Dimension::all();
         $unit = Unit::where('id', $request->unit_id)->get();
@@ -69,7 +68,7 @@ class SurveyFormController extends Controller
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
     {       
-        // try{
+        try{
             DB::beginTransaction();    
            
             //Save Customer
@@ -128,15 +127,15 @@ class SurveyFormController extends Controller
             
             return Inertia::redirect('msg_index');
 
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     //return $e;
-        //     $msg = $e->getMessage();
-        //     return Inertia::render('Survey-Forms/ThankYou')
-        //         ->with('message', $msg )
-        //         ->with('status', "error")
-        //         ->with('current_url', $request->current_url);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            //return $e;
+            $msg = $e->getMessage();
+            return Inertia::render('Survey-Forms/ThankYou')
+                ->with('message', $msg )
+                ->with('status', "error")
+                ->with('current_url', $request->current_url);
+        }
 
         
    
