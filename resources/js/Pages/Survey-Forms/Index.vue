@@ -261,7 +261,7 @@ watch(
             Swal.fire({
                 title: 'Failed',
                 icon: 'error',
-                text: "Something went wrong, Please check the fields and make sure captcha is correctly entered and if continues getting errors please contact Administrator.",      
+                text: "Something went wrong. Please check the fields and make sure the captcha is correctly entered. If you continue to get errors, please contact the administrator.",      
             })
         }
     }
