@@ -131,9 +131,11 @@ class SurveyFormController extends Controller
             DB::rollBack();
             //return $e;
             $msg = $e->getMessage();
-            return back()
-                ->with('message', $msg )
-                ->with('status', "error");
+            return back()->with([
+                'message' => $msg ,
+                'status' => "error",
+            ]);
+
         }
 
         

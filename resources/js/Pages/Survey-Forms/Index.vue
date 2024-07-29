@@ -136,6 +136,7 @@ const getDimension = (index,dimension_id) => {
 onMounted(() => {
     AOS.init();
 
+
     // signaturePad.value = new SignaturePad(signaturePad.value);
     // const canvas = signaturePad.value;
     // canvas.width = 400;
@@ -208,9 +209,11 @@ const saveCSF = async () => {
         Swal.fire({
             title: 'Failed',
             icon: 'error',
-            text: "Something went wrong pease check",
+            text: "Something went wrong please check",
         })
     }
+
+
 };
 
 const updateIsComplaint = (index ,rate_score)=> {
@@ -237,25 +240,39 @@ const updateIsComplaint = (index ,rate_score)=> {
 //     new SignaturePad(signaturePad.value);
 // };
 
+// watch(
+//     () => props.errors.captcha,
+//     (value) => {
+//         if(value){
+//             Swal.fire({
+//                 title: "Error Captcha",
+//                 text: "Wrong captcha code!" ,
+//                 icon: "error",         
+//             })
+//         }
+//     }
+     
+// );
+
 watch(
-    () => props.errors.captcha,
+    () => props.errors,
     (value) => {
         if(value){
             Swal.fire({
-                title: "Error Captcha",
-                text: "Wrong captcha code!" ,
-                icon: "error",         
+                title: 'Failed',
+                icon: 'error',
+                text: "Something went wrong, Please check the fields and make sure captcha is correctly entered and if continues getting errors please contact Administrator.",      
             })
         }
     }
      
 );
 
-
 </script>
 
 <template>
-    <Head title="Survey Form" />
+    <Head title="CSF Form" />
+    
 
      <nav 
         data-aos="fade-down" 
@@ -275,6 +292,7 @@ watch(
             data-aos-duration="2000" 
             data-aos-delay="500" 
         >
+
             <v-row justify="center" class="py-3 bg-gray-200 w-full">
                 <v-col cols="12" md="8" sm="6">
                     <v-form class="max-w" @submit.prevent="saveCSF">
@@ -296,7 +314,8 @@ watch(
                                     data-aos="fade-down" 
                                     data-aos-duration="500" 
                                     data-aos-delay="500"
-                                    >CUSTOMER SATISFACTION FEEDBACK</span><br>
+                                    >CUSTOMER SATISFACTION FEEDBACK
+                                </span><br>
 
                                 
                                 </v-card-title>                           
