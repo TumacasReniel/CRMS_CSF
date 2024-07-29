@@ -143,9 +143,9 @@
                                 <th class="text-center">
                                     Role/Account Type
                                 </th>
-                                <th class="text-center">
+                                <!-- <th class="text-center">
                                     Is Active Status
-                                </th>
+                                </th> -->
                                 
                                   <th class="text-center">
                                     Actions
@@ -173,7 +173,7 @@
                                             {{ user.account_type }}
                                         </v-chip>
                                     </td>
-                                    <td style="text-align: center;">
+                                    <!-- <td style="text-align: center;">
                                         <div style="display: inline-block;">
                                             <v-switch
                                                 v-model="user.is_active"
@@ -184,7 +184,7 @@
                                                 readonly
                                             ></v-switch>
                                         </div>
-                                    </td>
+                                    </td> -->
 
                                     <td class="text-center">
                                         <v-btn size="small" @click="resetPassword(user.id)" prepend-icon="mdi-lock-reset" color="secondary" class="mr-5">  
