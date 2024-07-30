@@ -66,7 +66,7 @@ class AccountController extends Controller
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
         $account->email = $request->email;
-        $account->password = Hash::make('*1234#');
+        $account->password = Hash::make($request->password);
         $account->region_id = $request->selected_region;
         $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;

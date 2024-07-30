@@ -227,9 +227,7 @@
         <ModalForm 
             :value="show_modal"
             :account="account"
-            :regions="regions"
             :data="props"
-            :pstos="pstos"
             :action="action_clicked"
             @input="showAccountModal"
             @reloadAccounts="reloadAccounts"

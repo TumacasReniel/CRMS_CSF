@@ -50,6 +50,7 @@ const form = reactive({
     id: null,
     name:null,
     email: null,
+    password: null,
     designation:'',
     selected_region: [],
     selected_account_type: null,
@@ -128,8 +129,8 @@ const fetchPstos = (code) => {
 };
 
 
-
-
+  // Reactive variable to control password visibility
+  const showPassword = ref(false);
 
 
 const saveAccount = async () => {
@@ -185,6 +186,26 @@ const closeDialog = (value) => {
                         ></v-text-field>
                     </v-col>
                 </v-row>
+                <v-row style="margin-bottom:-30px;">
+                    <v-col cols="9">
+                        <v-text-field
+                            v-if="props.action == 'Add'"
+                            prepend-icon="mdi-lock"
+                            label="Password*"
+                            v-model="form.password"
+                            variant="outlined"
+                            :type="showPassword ? 'text' : 'password'"
+                            required
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="3">
+                        <v-checkbox
+                            v-if="props.action == 'Add'"
+                            v-model="showPassword"
+                            label="Show"
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
 
                 <v-row style="margin-bottom:-30px;">
                    <v-col cols="12">
@@ -196,7 +217,6 @@ const closeDialog = (value) => {
                             :items="data.regions"
                             item-title="name"
                             item-value="id"
-                            @change="setData()"
                             required
                         ></v-select>
                     </v-col>
@@ -269,7 +289,7 @@ const closeDialog = (value) => {
                     <v-col cols="12">
                             <v-select
                                 prepend-icon="mdi-map-marker"
-                                label="PSTO*"
+                                label="PSTO"
                                 v-if="form.selected_account_type == 'user' || form.selected_unit && form.selected_region"
                                 v-model="form.selected_psto"
                                 variant="outlined"
