@@ -31,7 +31,7 @@ const props = defineProps({
 watch(
     () => props.account,
     (value) => {
-        if(value && value.region && value.account_type && value.region && value.service && value.unit && value.psto && props.action == 'Update'){
+        if(value && value.region && value.account_type && value.region && value.service && value.unit && value.psto){
             form.id = value.id;
             form.name = value.name;
             form.designation = value.designation;
@@ -147,6 +147,7 @@ const saveAccount = async () => {
    emit("reloadAccounts");
 };
 
+const empty = ref({});
 const closeDialog = (value) => {
     emit("input", value);
     emit("reloadAccounts");
