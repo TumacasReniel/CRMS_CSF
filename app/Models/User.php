@@ -65,5 +65,17 @@ class User extends Authenticatable
         return $this->HasOne(Region::class, 'id', 'region_id');
     }
 
+    public function service(){
+        return $this->HasOne(Services::class, 'id', 'service_id');
+    }
+
+    public function unit(){
+        return $this->HasOne(Unit::class, 'id', 'unit_id');
+    }
+
+    public function psto(){
+        return $this->HasOne(psto::class, 'id', 'psto_id');
+    }
+
 
 }

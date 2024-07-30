@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\SubUnit;
 use App\Models\Services;
 use App\Models\UnitPsto;
+use App\Models\psto;
 use App\Models\SubUnitPsto;
 use App\Models\UnitSubUnit;
 use Illuminate\Support\Str;
@@ -30,6 +31,42 @@ class ServiceUnitController extends Controller
             ->with('service_units', $data)
             ->with('user',  $user);
     }
+
+    public function getServiceUnits(Request $request)
+    {
+        $service_units = Unit::where('services_id',$request->code)
+            ->get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'unit_name' => $item->unit_name
+                ];
+            });
+
+        return $service_units;
+    }
+
+    public function getUnitPstos(Request $request)
+    {
+        //get user
+        $user = Auth::user();
+
+        $unit_pstos = UnitPsto::where('unit_id',$request->code)
+            ->get()->map(function ($item) {
+                return [
+                    'psto_id' => $item->psto_id,
+                ];
+            });
+
+        $pstos = psto::whereIn('id',$unit_pstos)
+                    ->where('region_id', $request->region_id)
+                    ->get();
+
+
+        return $pstos;
+    }
+
+
+    
 
 
     public function store(Request $request)

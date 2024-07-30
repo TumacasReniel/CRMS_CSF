@@ -11,6 +11,7 @@ use App\Models\SubUnit;
 use App\Models\Services;
 use App\Models\UnitSubUnit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Resources\PSTO as PSTOResource;
@@ -23,6 +24,7 @@ class AccountController extends Controller
 {
     public function index(Request $request)
     {
+        $user = Auth::user();
         $search = $request->search;
 
         $regions = Region::all();
@@ -37,7 +39,8 @@ class AccountController extends Controller
         ->paginate(10);
 
         $data = AccountResource::collection($accounts);
-        $services = ServicesResource::collection($services);
+
+        // return $pstos;
 
         return Inertia::render('Account/Index')
                     ->with('accounts', $data)
@@ -68,6 +71,7 @@ class AccountController extends Controller
         $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;
         $account->unit_id = $request->selected_unit;
+        $account->psto_id = $request->selected_psto;
         $account->save();
 
         return Redirect::back();
@@ -81,10 +85,11 @@ class AccountController extends Controller
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
         $account->email = $request->email;
-        $account->region_id = $request->selected_region['id'];
+        $account->region_id = $request->selected_region;
         $account->account_type = $request->selected_account_type;
         $account->service_id = $request->selected_service;
         $account->unit_id = $request->selected_unit;
+        $account->psto_id = $request->selected_psto;
         $account->update();
 
         return Redirect::back();

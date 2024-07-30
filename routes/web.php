@@ -85,6 +85,8 @@ Route::middleware([
         return Inertia::render('Profile/Show');
     })->name('profile');
     Route::get('/service_units', [ServiceUnitController::class, 'index'])->name('service_units');
+    Route::get('/service/units', [ServiceUnitController::class, 'getServiceUnits']);
+    Route::get('/service/pstos', [ServiceUnitController::class, 'getUnitPstos']);
     Route::post('/services/add', [ServiceUnitController::class, 'store']);
     Route::post('/services/unit/add', [ServiceUnitController::class, 'storeUnit']);
     
