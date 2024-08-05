@@ -113,7 +113,7 @@
                         </v-col>
                         <v-col>
                             <div class="text-right m-5">
-                                <v-btn @click="showAccountModal(true, 'Add', null)" size="small" prepend-icon="mdi-plus" color="green">     
+                                <v-btn @click="showAccountModal(true, 'Add', {})" size="small" prepend-icon="mdi-plus" color="green">     
                                     Account                      
                                 </v-btn>
                             </div>
@@ -229,7 +229,7 @@
             :account="account"
             :data="props"
             :action="action_clicked"
-            @input="showAccountModal"
+            @input="showAccountModal(is_show, action, user_data)"
             @reloadAccounts="reloadAccounts"
         ></ModalForm>
     </AppLayout>

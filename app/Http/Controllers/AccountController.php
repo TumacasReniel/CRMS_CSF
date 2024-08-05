@@ -62,16 +62,17 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $account = new User();
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
         $account->email = $request->email;
         $account->password = Hash::make($request->password);
-        $account->region_id = $request->selected_region;
-        $account->account_type = $request->selected_account_type;
-        $account->service_id = $request->selected_service;
-        $account->unit_id = $request->selected_unit;
-        $account->psto_id = $request->selected_psto;
+        $account->region_id = $request->region;
+        $account->account_type = $request->account_type;
+        $account->service_id = $request->service;
+        $account->unit_id = $request->unit;
+        $account->psto_id = $request->psto;
         $account->save();
 
         return Redirect::back();
@@ -80,16 +81,16 @@ class AccountController extends Controller
 
     public function update(Request $request)
     {
-        //dd($request->all());
+        dd($request->all());
         $account = User::findorFail($request->id);
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
         $account->email = $request->email;
-        $account->region_id = $request->selected_region;
-        $account->account_type = $request->selected_account_type;
-        $account->service_id = $request->selected_service;
-        $account->unit_id = $request->selected_unit;
-        $account->psto_id = $request->selected_psto;
+        $account->region_id = $request->region;
+        $account->account_type = $request->account_type;
+        $account->service_id = $request->service;
+        $account->unit_id = $request->unit;
+        $account->psto_id = $request->psto;
         $account->update();
 
         return Redirect::back();

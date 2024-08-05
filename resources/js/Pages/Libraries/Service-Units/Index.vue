@@ -50,7 +50,7 @@ const showServiceModal = async (is_show, action , service) => {
 
 const openPDF = () => {
     // Replace 'path/to/your/pdf/file.pdf' with the actual path to your PDF file
-    const pdfPath = 'https://drive.google.com/file/d/1YHbyz0GnrXOTilE8Kpae1ZriNQQ2FVNh/view?usp=sharing';
+    const pdfPath = 'https://drive.google.com/file/d/1s7hgXu2_3znCrcKrXX0PWJUQfwb7SMWU/view?usp=sharing';
     
     // Open the PDF in a new tab or window
     window.open(pdfPath, '_blank');

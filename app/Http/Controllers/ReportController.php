@@ -337,11 +337,19 @@ class ReportController extends Controller
             $x_n_total = $n_total * 3; 
             $x_d_total = $d_total * 2; 
             $x_vd_total = $vd_total * 1; 
+
+             // sum of all repondent with rate_score 1-5
+             $x_respondents_total =  $vs_total +   $x_s_total + $n_total +  $d_total +  $vd_total;
             $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total  ; 
          
             // right side total score divided by total repondents or customers
             if($x_grand_total != 0){
-                $lsr_total = $x_grand_total / $total_respondents;
+                if($dimensionId == 6){
+                    $lsr_total = $x_grand_total / $x_respondents_total;
+                }
+                else{
+                    $lsr_total = $x_grand_total / $total_respondents;
+                }
             }
            
             // SS = lsr with 3 decimals
@@ -4703,11 +4711,19 @@ class ReportController extends Controller
             $x_n_total = $n_total * 3; 
             $x_d_total = $d_total * 2; 
             $x_vd_total = $vd_total * 1; 
+
+             // sum of all repondent with rate_score 1-5
+             $x_respondents_total =  $vs_total +   $x_s_total + $n_total +  $d_total +  $vd_total;
             $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total  ; 
          
             // right side total score divided by total repondents or customers
             if($x_grand_total != 0){
-                $lsr_total = $x_grand_total / $total_respondents;
+                if($dimensionId == 6){
+                    $lsr_total = $x_grand_total / $x_respondents_total;
+                }
+                else{
+                    $lsr_total = $x_grand_total / $total_respondents;
+                }
             }
            
             // SS = lsr with 3 decimals
@@ -5141,11 +5157,19 @@ class ReportController extends Controller
             $x_n_total = $n_total * 3; 
             $x_d_total = $d_total * 2; 
             $x_vd_total = $vd_total * 1; 
+
+            // sum of all repondent with rate_score 1-5
+            $x_respondents_total =  $vs_total +   $x_s_total + $n_total +  $d_total +  $vd_total;
             $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total  ; 
          
             // right side total score divided by total repondents or customers
             if($x_grand_total != 0){
-                $lsr_total = $x_grand_total / $total_respondents;
+                if($dimensionId == 6){
+                    $lsr_total = $x_grand_total / $x_respondents_total;
+                }
+                else{
+                    $lsr_total = $x_grand_total / $total_respondents;
+                }
             }
            
             // SS = lsr with 3 decimals

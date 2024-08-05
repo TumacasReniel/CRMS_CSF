@@ -12,14 +12,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+
     value: {
         type: Boolean,
         default: false,
-    },
-
-    services: {
-        type: Object,
-        default: null,
     },
 
     action: {
@@ -28,36 +24,46 @@ const props = defineProps({
 
 });
 
-watch(
-    () => props.account,
-    (value) => {
-        if(value && value.region && value.account_type && value.region && value.service && value.unit && value.psto && props.action == 'Update'){
-            form.id = value.id;
-            form.name = value.name;
-            form.designation = value.designation;
-            form.email = value.email;
-            form.selected_account_type = value.account_type;
-            form.selected_region = value.region.id;
-            form.selected_service = value.service.id;
-            form.selected_unit = value.unit.id;
-            form.selected_psto = value.psto.id;    
-        }
-    }
+// watch(
+//     () => props.account,
+//     (value) => {
+//         console.log(props.action, 55);
+//         if(value && value.action == "Update"){
+//             form.id = value.id;
+//             form.name = value.name;
+//             form.designation = value.designation;
+//             form.email = value.email;
+//             form.account_type = value.account_type;
+//             form.region = value.region.id ;
+//             form.service = value.service.id;
+//             form.unit = value.unit.id;
+//         }
+//         else{
+//             form.id = null;
+//             form.name = null;
+//             form.designation = null;
+//             form.email = null;
+//             form.account_type = null;
+//             form.region = null ;
+//             form.service = null;
+//             form.unit = null;
+//         }
+//     }
      
-);
+// );
 
-const form = reactive({
-    id: null,
-    name:null,
-    email: null,
-    password: null,
-    designation:'',
-    selected_region: [],
-    selected_account_type: null,
-    selected_service: null,
-    selected_unit: null,
-    selected_psto:null,
-});
+// const form = reactive({
+//     id: null,
+//     name:null,
+//     email: null,
+//     password: null,
+//     designation:'',
+//     region: [],
+//     account_type: null,
+//     service: null,
+//     unit: null,
+//     psto:null,
+// });
 
 
 const show_form_modal = ref(false);
@@ -73,6 +79,8 @@ const action_clicked = ref('');
 const units = ref();
 const pstos = ref();
 
+
+
 watch(
     () => props.action,
     (value) => {
@@ -82,7 +90,7 @@ watch(
 
 
 watch(
-    () => form.selected_service,
+    () => props.account.service,
     (value) => {
         if(value){
             units.value = fetchUnits(value);
@@ -92,7 +100,7 @@ watch(
 
 
 watch(
-    () => form.selected_unit,
+    () => props.account.unit,
     (value) => {
         if(value){    
             pstos.value = fetchPstos(value);
@@ -119,7 +127,7 @@ const fetchPstos = (code) => {
         params: {
             option: 'pstos',
             code: code,
-            region_id: form.selected_region,
+            region_id: props.account.region,
         }
     })
     .then(response => {
@@ -136,11 +144,11 @@ const fetchPstos = (code) => {
 const saveAccount = async () => {
    
    if(action_clicked.value == 'Add'){
-       router.post('/accounts/add', form );
+       router.post('/accounts/add', props.account );
 
    }
    else if(action_clicked.value == 'Update'){
-       router.post('/accounts/update', form );
+       router.post('/accounts/update', props.account );
    }
   
    emit("input", false);
@@ -160,14 +168,13 @@ const closeDialog = (value) => {
             <v-card-title class="bg-indigo">
                 <span class="text-h5">{{ props.action }} Account</span>
             </v-card-title>
-
-            <v-card-text>                
+            <v-card-text>        
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
                         <v-text-field
                             prepend-icon="mdi-account"
                             label="Name*"
-                            v-model="form.name"
+                            v-model="account.name"
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -179,7 +186,7 @@ const closeDialog = (value) => {
                         <v-text-field
                             prepend-icon="mdi-email"
                             label="Email*"
-                            v-model="form.email"
+                            v-model="account.email"
                             variant="outlined"
                             type="email"
                             required
@@ -192,7 +199,7 @@ const closeDialog = (value) => {
                             v-if="props.action == 'Add'"
                             prepend-icon="mdi-lock"
                             label="Password*"
-                            v-model="form.password"
+                            v-model="account.password"
                             variant="outlined"
                             :type="showPassword ? 'text' : 'password'"
                             required
@@ -212,7 +219,7 @@ const closeDialog = (value) => {
                         <v-select
                             prepend-icon="mdi-map-marker"
                             label="Region*"
-                            v-model="form.selected_region"
+                            v-model="account.region"
                             variant="outlined"
                             :items="data.regions"
                             item-title="name"
@@ -227,9 +234,9 @@ const closeDialog = (value) => {
                         <v-select
                             prepend-icon="mdi-account-circle"
                             label="Account_type*"
-                            v-model="form.selected_account_type"
+                            v-model="account.account_type"
                             variant="outlined"
-                            :items="['user','admin','planning']"
+                            :items="['user','admin','planning','special-user']"
                             item-title="name"
                             clearable
                             required
@@ -240,10 +247,10 @@ const closeDialog = (value) => {
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
                         <v-text-field
-                            v-if="form.selected_account_type == 'user'"
+                            v-if="account.account_type == 'user' || account.account_type == 'special-user'"
                             prepend-icon="mdi-account"
                             label="Designation*"
-                            v-model="form.designation"
+                            v-model="account.designation"
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -253,10 +260,10 @@ const closeDialog = (value) => {
                   <v-row style="margin-bottom:-30px;">
                    <v-col cols="12">
                         <v-select
-                            v-if="form.selected_account_type == 'user'"
+                            v-if="account.account_type == 'user' || account.account_type == 'special-user'"
                             prepend-icon="mdi-map-marker"
                             label="Service*"
-                            v-model="form.selected_service"
+                            v-model="account.service"
                             variant="outlined"
                             :items="data.services"
                             item-title="services_name"
@@ -273,8 +280,8 @@ const closeDialog = (value) => {
                         <v-select
                             prepend-icon="mdi-map-marker"
                             label="Unit*"
-                            v-if="form.selected_account_type == 'user' || form.selected_service  "
-                            v-model="form.selected_unit"
+                            v-if="account.account_type == 'user' || account.account_type == 'special-user' || account.service  "
+                            v-model="account.unit"
                             variant="outlined"
                             :items="units"
                             item-title="unit_name"
@@ -285,13 +292,13 @@ const closeDialog = (value) => {
                     </v-col>
                 </v-row>
 
-                <v-row style="margin-bottom:-30px;">
+                <!-- <v-row style="margin-bottom:-30px;">
                     <v-col cols="12">
                             <v-select
                                 prepend-icon="mdi-map-marker"
                                 label="PSTO"
-                                v-if="form.selected_account_type == 'user' || form.selected_unit && form.selected_region"
-                                v-model="form.selected_psto"
+                                v-if="form.account_type == 'user' || form.account_type == 'special-user' || form.unit && account.region"
+                                v-model="form.psto.id"
                                 variant="outlined"
                                 :items="pstos"
                                 item-title="psto_name"
@@ -300,7 +307,7 @@ const closeDialog = (value) => {
                                 required
                             ></v-select>
                         </v-col>
-                </v-row>
+                </v-row> -->
 
             </v-card-text>
             <v-spacer></v-spacer>
