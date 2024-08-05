@@ -81,7 +81,6 @@ class AccountController extends Controller
 
     public function update(Request $request)
     {
-        dd($request->all());
         $account = User::findorFail($request->id);
         $account->name = $request->name;
         $account->designation = strtoupper($request->designation);
