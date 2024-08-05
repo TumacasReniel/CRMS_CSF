@@ -343,13 +343,14 @@ watch(
                                             </a>
                                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 ">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
                                             <div>
-                                                <!-- <v-text-field                                    
+
+                                                <v-text-field                                    
                                                     v-model="form.date" 
                                                     type="date" 
                                                     label="Date"
                                                     variant="outlined" 
                                                 >
-                                                </v-text-field> -->
+                                                </v-text-field>
                                                 
                                                 <v-text-field    
                                                     v-if="form.is_complaint == true"                                

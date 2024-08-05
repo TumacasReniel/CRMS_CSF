@@ -99,6 +99,8 @@ watch(
     }
 );
 
+
+
 watch(
     () => form.service,
     (value) => {
@@ -180,6 +182,7 @@ const closeDialog = (value) => {
                 <span class="text-h5">{{ props.action }} Account </span>
             </v-card-title>
             <v-card-text>  
+                {{ form }}
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
                         <v-text-field
@@ -235,6 +238,7 @@ const closeDialog = (value) => {
                             :items="data.regions"
                             item-title="name"
                             item-value="id"
+                            @update="clearFieldIfRegionChange()"
                             required
                         ></v-select>
                     </v-col>

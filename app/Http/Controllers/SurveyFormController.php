@@ -152,23 +152,28 @@ class SurveyFormController extends Controller
         $csf_form->psto_id = $request->psto_id;
         $csf_form->client_type = $request->client_type;
         $csf_form->sub_unit_type = $request->sub_unit_type;
+        if($request->date){
+            $csf_form->created_at = $request->date;
+            $csf_form->updated_at = $request->date;
+        }
         $csf_form->save();
 
         return $csf_form;
     }
 
     public function saveCustomer($request){
-        $customer = Customer::create([
-            'email' => $request->email,
-            'name' => $request->name,
-            'client_type' => $request->client_type,
-            'sex' => $request->sex,
-            'age_group' => $request->age_group,
-            'pwd' => $request->pwd,
-            'pregnant' => $request->pregnant,
-            'senior_citizen' => $request->senior_citizen,
-            // 'signature_path' => $request->signature,
-        ]);
+        $customer = new Customer();
+        $customer->email = $request->email;
+        $customer->name = $request->name;
+        $customer->client_type = $request->client_type;
+        $customer->sex = $request->sex;
+        $customer->age_group = $request->age_group;
+        if($request->date){
+            $customer->created_at = $request->date;
+            $customer->updated_at = $request->date;
+        }
+         // 'signature_path' => $request->signature,
+        $customer->save();
 
         return $customer;
     }
@@ -176,6 +181,8 @@ class SurveyFormController extends Controller
     public function saveComment($request, $customer){
          $comment = CustomerComment::create(
             [
+                'created_at' =>   $customer->created_at,
+                'updated_at' =>   $customer->created_at,
                 'customer_id' => $customer->id,
                 'comment' =>  $request->comment,
                 'is_complaint' =>  $request->is_complaint,
@@ -187,9 +194,10 @@ class SurveyFormController extends Controller
     public function saveCustomerRecommendationRating($request, $customer){
         $recommentdation_rating = CustomerRecommendationRating::create(
                 [
+                    'created_at' =>   $customer->created_at,
+                    'updated_at' =>   $customer->created_at,
                     'customer_id' => $customer->id,
-                    'recommend_rate_score' =>  $request->recommend_rate_score, 
-                   
+                    'recommend_rate_score' =>  $request->recommend_rate_score,      
                 ]
             );
         return $recommentdation_rating;
