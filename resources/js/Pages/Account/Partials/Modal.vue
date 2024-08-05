@@ -181,8 +181,7 @@ const closeDialog = (value) => {
             <v-card-title class="bg-indigo">
                 <span class="text-h5">{{ props.action }} Account </span>
             </v-card-title>
-            <v-card-text>  
-                {{ form }}
+            <v-card-text v-if="props.account.account_type != 'admin'  ">  
                 <v-row style="margin-bottom:-30px;">
                     <v-col cols="12" >
                         <v-text-field
@@ -324,6 +323,9 @@ const closeDialog = (value) => {
                         </v-col>
                 </v-row>
 
+            </v-card-text>
+            <v-card-text v-else>
+                This account is an Administrator cannot be edited
             </v-card-text>
             <v-spacer></v-spacer>
             <v-card-action>
