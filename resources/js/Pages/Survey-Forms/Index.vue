@@ -42,8 +42,8 @@ const options = [
     { label: 'Strongly Agree', value: '5', icon: 'mdi-emoticon-excited', color: '#FFEB3B' },
     { label: 'Agree', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
     { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
-    { label: 'Dissagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
-    { label: 'Very Dissagree', value: '1', icon: 'mdi-emoticon-frown', color: '#6200EA' },
+    { label: 'Disagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
+    { label: 'Very Disagree', value: '1', icon: 'mdi-emoticon-frown', color: '#6200EA' },
     { label: 'N/A', value: '6', icon: 'mdi-close-circle-outline', color: 'red' },
 ];
 const attribute_numbers = [
@@ -517,7 +517,9 @@ watch(
                                 data-aos-delay="500" 
                                 class="mb-5 mx-auto">
                                 <div class=" text-white bg-blue_grey p-3 ">
-                                    <h3>HOW WOULD YOU RATE OUR <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span> SERVICES?</h3>
+                                    <h3>HOW WOULD YOU RATE OUR 
+                                        <!-- <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span>  -->
+                                        SERVICES?</h3>
                                 </div>
                                 <div>
             
