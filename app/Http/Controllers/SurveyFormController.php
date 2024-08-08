@@ -84,6 +84,8 @@ class SurveyFormController extends Controller
             // Associate ratings with dimensions for the customer
             foreach ($dimensionData['dimension_form']['id'] as $index => $dimensionId) {
                 CustomerAttributeRating::create([
+                    'created_at' =>  $request->date,
+                    'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'dimension_id' => $dimensionId,
                     'rate_score' => $dimensionData['dimension_form']['rate_score'][$index],
@@ -100,6 +102,8 @@ class SurveyFormController extends Controller
             // Associate ratings with cc for the customer
             foreach ($ccData['cc_form']['id'] as $index => $ccId) {
                 CustomerCCRating::create([
+                    'created_at' =>  $request->date,
+                    'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'cc_id' => $ccId,
                     'answer' => $ccData['cc_form']['answer'][$index],
@@ -107,13 +111,15 @@ class SurveyFormController extends Controller
             }
     
             // Save Comment
-            $this->saveComment($request, $customer);
-    
+            if($request->comment){
+                $this->saveComment($request, $customer);
+            }
+           
             // Save Customer Recommendation Rating
             $this->saveCustomerRecommendationRating($request, $customer);
 
             // SAve Other Attributes Indication
-            $this->saveCustomerOtherAttributeIndication($request, $customer);
+            // $this->saveCustomerOtherAttributeIndication($request, $customer);
 
             // Save csf form
             $this->saveCSFForm($request, $customer);
@@ -181,8 +187,8 @@ class SurveyFormController extends Controller
     public function saveComment($request, $customer){
          $comment = CustomerComment::create(
             [
-                'created_at' =>   $customer->created_at,
-                'updated_at' =>   $customer->created_at,
+                'created_at' => $request->date,
+                'updated_at' => $request->date,
                 'customer_id' => $customer->id,
                 'comment' =>  $request->comment,
                 'is_complaint' =>  $request->is_complaint,
@@ -194,8 +200,8 @@ class SurveyFormController extends Controller
     public function saveCustomerRecommendationRating($request, $customer){
         $recommentdation_rating = CustomerRecommendationRating::create(
                 [
-                    'created_at' =>   $customer->created_at,
-                    'updated_at' =>   $customer->created_at,
+                    'created_at' =>  $request->date,
+                    'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'recommend_rate_score' =>  $request->recommend_rate_score,      
                 ]
@@ -206,6 +212,8 @@ class SurveyFormController extends Controller
     public function saveCustomerOtherAttributeIndication($request, $customer){
         $customer_indication = CustomerOtherAttributeIndication::create(
                 [
+                    'created_at' =>  $request->date,
+                    'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,   
                     'indication' =>  $request->indication,           
                 ]

@@ -12,6 +12,8 @@ class  CustomerComment extends Model
         'customer_id',
         'comment',
         'is_complaint',
+        'created_at',
+        'updated_at',
     ];
 
     public function customer(){

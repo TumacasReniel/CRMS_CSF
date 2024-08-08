@@ -11,6 +11,8 @@ class CustomerRecommendationRating extends Model
     protected $fillable = [
         'customer_id',
         'recommend_rate_score',
+        'created_at',
+        'updated_at',
     ];
     
     public function customer(){

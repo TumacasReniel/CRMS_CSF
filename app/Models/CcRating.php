@@ -12,5 +12,7 @@ class CcRating extends Model
         'customer_id',
         'name',
         'answer',
+        'created_at',
+        'updated_at',
     ];
 }

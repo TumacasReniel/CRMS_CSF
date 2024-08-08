@@ -18,5 +18,7 @@ class Customer extends Model
         'pregnant',
         'senior_citizen',
         'signature_path',
+        'created_at',
+        'updated_at',
     ];
 }

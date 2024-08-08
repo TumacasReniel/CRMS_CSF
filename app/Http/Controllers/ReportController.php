@@ -575,6 +575,7 @@ class ReportController extends Controller
         $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
       
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
+  
 
         $cc_query = CustomerCCRating::whereMonth('created_at', $numericMonth)
                                     ->whereYear('created_at', $request->selected_year)

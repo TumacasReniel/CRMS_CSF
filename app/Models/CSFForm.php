@@ -16,6 +16,8 @@ class CSFForm extends Model
         'unit_id',
         'sub_unit_id',
         'psto_id',
+        'created_at',
+        'updated_at',
     ];
     protected static function boot()
     {

@@ -12,6 +12,8 @@ class CustomerCCRating extends Model
         'customer_id',
         'cc_id',
         'answer',
+        'created_at',
+        'updated_at',
     ];
 
     public function customer(){
