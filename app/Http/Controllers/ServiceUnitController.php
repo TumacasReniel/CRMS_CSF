@@ -47,6 +47,7 @@ class ServiceUnitController extends Controller
 
     public function getUnitPstos(Request $request)
     {
+        //dd($request->all());
         //get user
         $user = Auth::user();
 
@@ -56,11 +57,11 @@ class ServiceUnitController extends Controller
                     'psto_id' => $item->psto_id,
                 ];
             });
+    
 
         $pstos = psto::whereIn('id',$unit_pstos)
                     ->where('region_id', $request->region_id)
                     ->get();
-
 
         return $pstos;
     }
@@ -81,6 +82,7 @@ class ServiceUnitController extends Controller
     
     public function storeUnit(Request $request)
     {
+        //dd($request->all());
         $unit = new Unit();
         $unit->services_id = $request->service_id;
         $unit->unit_name = strtoupper($request->unit_name);

@@ -99,8 +99,6 @@ watch(
     }
 );
 
-
-
 watch(
     () => form.service,
     (value) => {
@@ -139,7 +137,7 @@ const fetchPstos = (code) => {
         params: {
             option: 'pstos',
             code: code,
-            region_id: props.account.region,
+            region_id: form.region,
         }
     })
     .then(response => {
@@ -237,7 +235,6 @@ const closeDialog = (value) => {
                             :items="data.regions"
                             item-title="name"
                             item-value="id"
-                            @update="clearFieldIfRegionChange()"
                             required
                         ></v-select>
                     </v-col>

@@ -23,7 +23,7 @@ class Account extends JsonResource
             'region'=> $this->region ? new Region( $this->region) : null,
             'service'=> $this->service ? new Services( $this->service) : null,
             'unit'=> $this->unit ? new Unit( $this->unit) : null,
-            'psto'=> $this->psto ? new psto( $this->psto) : null,   
+            'psto'=> $this->psto ? new PSTO( $this->psto) : null,   
             'account_type' => $this->account_type,
             // 'created_at' => Carbon::parse($this->created_at)->format("mm/dd/YY"), 
             // 'updated_at' => Carbon::parse($this->updated_at)->format("mm/dd/YY"),
