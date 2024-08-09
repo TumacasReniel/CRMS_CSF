@@ -154,7 +154,9 @@ class SurveyFormController extends Controller
         $csf_form->region_id = $request->region_id;
         $csf_form->service_id = $request->service_id;
         $csf_form->unit_id = $request->unit_id;
-        $csf_form->sub_unit_id = $request->sub_unit_id;
+        if($request->sub_unit_id != "null"){
+            $csf_form->sub_unit_id = $request->sub_unit_id;
+        }
         $csf_form->psto_id = $request->psto_id;
         $csf_form->client_type = $request->client_type;
         $csf_form->sub_unit_type = $request->sub_unit_type;
@@ -162,7 +164,8 @@ class SurveyFormController extends Controller
             $csf_form->created_at = $request->date;
             $csf_form->updated_at = $request->date;
         }
-        $csf_form->save();
+        
+        //$csf_form->save();
 
         return $csf_form;
     }
