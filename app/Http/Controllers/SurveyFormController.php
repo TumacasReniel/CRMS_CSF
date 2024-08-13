@@ -68,6 +68,7 @@ class SurveyFormController extends Controller
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
     {       
+        // dd($request->all());
         try{
             DB::beginTransaction();    
            
@@ -165,7 +166,7 @@ class SurveyFormController extends Controller
         //     $csf_form->updated_at = $request->date;
         // }
         
-        //$csf_form->save();
+        $csf_form->save();
 
         return $csf_form;
     }
