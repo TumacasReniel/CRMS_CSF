@@ -84,8 +84,8 @@ class SurveyFormController extends Controller
             // Associate ratings with dimensions for the customer
             foreach ($dimensionData['dimension_form']['id'] as $index => $dimensionId) {
                 CustomerAttributeRating::create([
-                    'created_at' =>  $request->date,
-                    'updated_at' =>  $request->date,
+                    // 'created_at' =>  $request->date,
+                    // 'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'dimension_id' => $dimensionId,
                     'rate_score' => $dimensionData['dimension_form']['rate_score'][$index],
@@ -102,8 +102,8 @@ class SurveyFormController extends Controller
             // Associate ratings with cc for the customer
             foreach ($ccData['cc_form']['id'] as $index => $ccId) {
                 CustomerCCRating::create([
-                    'created_at' =>  $request->date,
-                    'updated_at' =>  $request->date,
+                    // 'created_at' =>  $request->date,
+                    // 'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'cc_id' => $ccId,
                     'answer' => $ccData['cc_form']['answer'][$index],
@@ -160,10 +160,10 @@ class SurveyFormController extends Controller
         $csf_form->psto_id = $request->psto_id;
         $csf_form->client_type = $request->client_type;
         $csf_form->sub_unit_type = $request->sub_unit_type;
-        if($request->date){
-            $csf_form->created_at = $request->date;
-            $csf_form->updated_at = $request->date;
-        }
+        // if($request->date){
+        //     $csf_form->created_at = $request->date;
+        //     $csf_form->updated_at = $request->date;
+        // }
         
         //$csf_form->save();
 
@@ -177,10 +177,10 @@ class SurveyFormController extends Controller
         $customer->client_type = $request->client_type;
         $customer->sex = $request->sex;
         $customer->age_group = $request->age_group;
-        if($request->date){
-            $customer->created_at = $request->date;
-            $customer->updated_at = $request->date;
-        }
+        // if($request->date){
+        //     $customer->created_at = $request->date;
+        //     $customer->updated_at = $request->date;
+        // }
          // 'signature_path' => $request->signature,
         $customer->save();
 
@@ -190,8 +190,8 @@ class SurveyFormController extends Controller
     public function saveComment($request, $customer){
          $comment = CustomerComment::create(
             [
-                'created_at' => $request->date,
-                'updated_at' => $request->date,
+                // 'created_at' => $request->date,
+                // 'updated_at' => $request->date,
                 'customer_id' => $customer->id,
                 'comment' =>  $request->comment,
                 'is_complaint' =>  $request->is_complaint,
@@ -203,8 +203,8 @@ class SurveyFormController extends Controller
     public function saveCustomerRecommendationRating($request, $customer){
         $recommentdation_rating = CustomerRecommendationRating::create(
                 [
-                    'created_at' =>  $request->date,
-                    'updated_at' =>  $request->date,
+                    // 'created_at' =>  $request->date,
+                    // 'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,
                     'recommend_rate_score' =>  $request->recommend_rate_score,      
                 ]
@@ -215,8 +215,8 @@ class SurveyFormController extends Controller
     public function saveCustomerOtherAttributeIndication($request, $customer){
         $customer_indication = CustomerOtherAttributeIndication::create(
                 [
-                    'created_at' =>  $request->date,
-                    'updated_at' =>  $request->date,
+                    // 'created_at' =>  $request->date,
+                    // 'updated_at' =>  $request->date,
                     'customer_id' => $customer->id,   
                     'indication' =>  $request->indication,           
                 ]
