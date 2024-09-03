@@ -534,7 +534,7 @@
                        which translates to "very satisfied" for the year <span>{{ form.selected_year }}</span>.
 
                         The <span>{{ data.unit.unit_name }}</span> unit's Customer Satisfaction Survey resulted in an Overall Customer Satisfaction Score Rating of <span>{{ data.customer_satisfaction_rating }}</span>% 
-                        for the year <span>{{ form.selected_year }}</span>, which achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
+                        for the year <span>{{ form.selected_year }}</span>, which <span v-if="data.customer_satisfaction_rating < 95">does not</span> achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
                     </div>
                 </div>
         </div> 

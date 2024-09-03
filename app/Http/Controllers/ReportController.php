@@ -469,13 +469,13 @@ class ReportController extends Controller
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0 || $total_vss_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
         if($total_respondents != 0 || $total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_respondents) * 100;
+            $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -862,13 +862,13 @@ class ReportController extends Controller
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -1159,26 +1159,26 @@ class ReportController extends Controller
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
             //PART I
 
-            // April total responses with its dimensions and rate score
+            // January total responses with its dimensions and rate score
             $jan_vs_total = $month_jan->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_s_total = $month_jan->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_n_total = $month_jan->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_d_total = $month_jan->where('rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jan_vd_total = $month_jan->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
 
-            $jan_grand_total =  $jan_vs_total + $jan_s_total + $jan_n_total + $jan_d_total + $jan_vd_total ; 
-            
+            $jan_grand_total =  $jan_vs_total + $jan_s_total + $jan_n_total + $jan_d_total + $jan_vd_total ;
 
-            //  May total responses with its dimensions and rate score
+            //  February total responses with its dimensions and rate score
             $feb_vs_total = $month_feb->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_s_total = $month_feb->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_n_total = $month_feb->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_d_total = $month_feb->where('rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $feb_vd_total = $month_feb->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
 
-            $feb_grand_total =  $feb_vs_total + $feb_s_total + $feb_n_total + $feb_d_total + $feb_vd_total ; 
+            $feb_grand_total =  $feb_vs_total + $feb_s_total + $feb_n_total + $feb_d_total + $feb_vd_total ;
 
-            //  June total responses with its dimensions and rate score
+
+            //  March total responses with its dimensions and rate score
             $mar_vs_total = $month_mar->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $mar_s_total = $month_mar->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $mar_n_total = $month_mar->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -1224,7 +1224,7 @@ class ReportController extends Controller
                 'mar_grand_total' => $mar_grand_total,
             ];
 
-            //Total Raw Points totals
+            //Total Raw Points totals or Total Scores
             $vs_total_raw_points = $jan_vs_total + $feb_vs_total + $mar_vs_total;
             $s_total_raw_points = $jan_s_total + $feb_s_total + $mar_s_total;
             $n_total_raw_points =$jan_n_total + $feb_n_total + $mar_n_total;
@@ -1458,13 +1458,13 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -1516,7 +1516,7 @@ class ReportController extends Controller
             // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
             $customer_satisfaction_rating = 0;
             if($total_vss_respondents != 0){
-                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+                $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
             }
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
@@ -2149,13 +2149,13 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -2207,7 +2207,7 @@ class ReportController extends Controller
             // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
             $customer_satisfaction_rating = 0;
             if($total_vss_respondents != 0){
-                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+                $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
             }
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
@@ -2843,13 +2843,13 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -2897,13 +2897,6 @@ class ReportController extends Controller
             $average_percentage_promoters =  number_format((($jul_percentage_promoters + $aug_percentage_promoters + $sep_percentage_promoters)/ 3),2);
             $average_percentage_detractors =  number_format((($jul_percentage_detractors + $aug_percentage_detractors + $sep_percentage_detractors)/ 3),2);
 
-
-            // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
-            $customer_satisfaction_rating = 0;
-            if($total_vss_respondents != 0){
-                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
-            }
-            $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
 
         // get Monthly CSI
@@ -3541,7 +3534,7 @@ class ReportController extends Controller
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -3593,7 +3586,7 @@ class ReportController extends Controller
             // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
             $customer_satisfaction_rating = 0;
             if($total_vss_respondents != 0){
-                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+                $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
             }
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
@@ -4299,7 +4292,7 @@ class ReportController extends Controller
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -4355,7 +4348,7 @@ class ReportController extends Controller
             // CSAT = ((Total No. of Very Satisfied (VS) Responses + Total No. of Satisfied (S) Responses) / grand total respondents) * 100
             $customer_satisfaction_rating = 0;
             if($total_vss_respondents != 0){
-                $customer_satisfaction_rating = (($total_vss_respondents / $total_respondents)) * 100;
+                $customer_satisfaction_rating = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
             }
             $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
         }
@@ -4849,7 +4842,7 @@ class ReportController extends Controller
 
         $customer_satisfaction_rating = 0;
         if($total_vss_respondents != 0){
-            $customer_satisfaction_rating = ($total_vss_respondents/$total_vss_respondents) * 100;
+            $customer_satisfaction_rating = ($total_respondents/$total_vss_respondents) * 100;
         }
         $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
 
@@ -5357,18 +5350,5 @@ class ReportController extends Controller
 
         return $cc_data;
     }
-
-    
-    
-
-
-    
- 
-      
-     
-
-   
-
-
 
 }
