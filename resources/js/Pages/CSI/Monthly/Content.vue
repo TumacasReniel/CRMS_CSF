@@ -228,7 +228,7 @@
                                     Total No. of Respondents/Customers:   
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.total_respondents }}
+                                <span v-if="data.total_respondents">{{ data.total_respondents }}%</span>
                             </v-card-content>
                         </v-card>
 
@@ -237,7 +237,7 @@
                                     Total No. of Respondents/Customers who rated VS/S: 
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.total_vss_respondents }}
+                                <span v-if="data.total_vss_respondents">{{ data.total_vss_respondents }}%</span>
                             </v-card-content>
                         </v-card>
                             <v-card class="mb-2">
@@ -245,7 +245,7 @@
                                     Percentage of Respondents/Customers who rated VS/S:       
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.percentage_vss_respondents }} %
+                                <span v-if="data.percentage_vss_respondents">{{ data.percentage_vss_respondents }} %</span>
                             </v-card-content>
                         </v-card>
 
@@ -254,7 +254,7 @@
                                 Customer Satisfaction Score Rating(CSAT) 
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.customer_satisfaction_rating }} %
+                                <span v-if="data.customer_satisfaction_rating">{{ data.customer_satisfaction_rating }} %</span>
                             </v-card-content>
                         </v-card>
                     </v-col>
@@ -264,7 +264,7 @@
                                     Customer Satifaction Index(CSI)
                             </v-card-title>
                             <v-card-content class="p-10 m-5 text-lg " >
-                                {{ data.customer_satisfaction_index }} %
+                                <span v-if="data.customer_satisfaction_index">{{ data.customer_satisfaction_index }} %</span>
                             </v-card-content>
                         </v-card>
 
@@ -273,7 +273,7 @@
                                     Net Promotion Score(NPS)
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.net_promoter_score }} %
+                                <span v-if="data.net_promoter_score">{{ data.net_promoter_score }} %</span>
                             </v-card-content>
                         </v-card>
             
@@ -284,7 +284,7 @@
                                         Percentage of Promoters
                                     </v-card-title>
                                     <v-card-content class="p-5 m-5 text-lg">
-                                        {{ data.percentage_promoters }} %
+                                        <span v-if="data.percentage_promoters">{{ data.percentage_promoters }} %</span>
                                     </v-card-content>
                                     
                                 </v-card>
@@ -295,7 +295,7 @@
                                     Percentage of Detractors
                                     </v-card-title>
                                     <v-card-content class="p-5 m-5 text-lg">
-                                        {{ data.percentage_detractors }} %
+                                        <span v-if="data.percentage_detractors">{{ data.percentage_detractors }} %</span>
                                     </v-card-content>                                        
                                 </v-card>
                             </v-col>
@@ -305,7 +305,7 @@
                                 Likert Scale Rating(Average)
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                {{ data.lsr_grand_total }}
+                                <span v-if="data.lsr_grand_total">{{ data.lsr_grand_total }} %</span>
                             </v-card-content>
                         </v-card>
 
