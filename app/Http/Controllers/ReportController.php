@@ -469,7 +469,7 @@ class ReportController extends Controller
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0 || $total_vss_respondents != 0){
-            $percentage_vss_respondents  = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
@@ -638,7 +638,7 @@ class ReportController extends Controller
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
         
         // total number of promoters or respondents who rated 9-10 in recommendation rating
-        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','8')->groupBy('customer_id')->count();
+        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
         $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
@@ -862,7 +862,7 @@ class ReportController extends Controller
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = (($grand_vs_total+$grand_s_total)/$x_grand_total) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents/$total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
@@ -1458,7 +1458,7 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
@@ -2149,7 +2149,7 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
@@ -2843,7 +2843,7 @@ class ReportController extends Controller
           //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
