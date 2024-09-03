@@ -60,22 +60,22 @@
                         <tr>
                             <td>1</td>
                             <td style="text-align: left">I know what a CC is and I saw this office's CC</td>
-                            <td>{{data.cc_data.cc1_data.cc1_ans1}}</td>
+                            <td><span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">{{data.cc_data.cc1_data.cc1_ans1}}</span></td>
                         </tr>
                         <tr>
                             <td>2</td>           
                             <td style="text-align: left">I know what a CC is but I did NOT see this office's CC</td>
-                            <td>{{data.cc_data.cc1_data.cc1_ans2}}</td>
+                            <td><span v-if="data.cc_data.cc1_data.cc1_ans2 > 0">{{data.cc_data.cc1_data.cc1_ans2}}</span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td style="text-align: left">I learned the CC when I saw this office's CC</td>
-                            <td>{{data.cc_data.cc1_data.cc1_ans3}}</td>
+                            <td><span v-if="data.cc_data.cc1_data.cc1_ans3 > 0">{{data.cc_data.cc1_data.cc1_ans3}}</span></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td style="text-align: left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
-                            <td>{{data.cc_data.cc1_data.cc1_ans4}}</td>
+                            <td><span v-if="data.cc_data.cc1_data.cc1_ans4 > 0">{{data.cc_data.cc1_data.cc1_ans4}}</span></td>
                         </tr>
                         <tr class="bg-blue-200" >
                             <th >CC2</th>
@@ -84,27 +84,27 @@
                         <tr>
                             <td>1</td>
                             <td style="text-align: left">Easy to see</td>
-                            <td>{{data.cc_data.cc2_data.cc2_ans1}}</td>
+                            <td><span v-if="data.cc_data.cc2_data.cc2_ans1 > 0">{{data.cc_data.cc2_data.cc2_ans1}}</span></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td style="text-align: left">Somewhat easy to see</td>
-                            <td>{{data.cc_data.cc2_data.cc2_ans2}}</td>
+                            <td><span v-if="data.cc_data.cc2_data.cc2_ans2 > 0">{{data.cc_data.cc2_data.cc2_ans2}}</span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td style="text-align: left">Difficult to see</td>
-                            <td>{{data.cc_data.cc2_data.cc2_ans3}}</td>
+                            <td><span v-if="data.cc_data.cc2_data.cc2_ans3 > 0">{{data.cc_data.cc2_data.cc2_ans3}}</span></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td style="text-align: left">Not visible at all</td>
-                            <td>{{data.cc_data.cc2_data.cc2_ans4}}</td>
+                            <td><span v-if="data.cc_data.cc2_data.cc2_ans4 > 0">{{data.cc_data.cc2_data.cc2_ans4}}</span></td>
                         </tr>
                         <tr>
                             <td>5</td>
                             <td style="text-align: left">N/A</td>
-                            <td>{{data.cc_data.cc2_data.cc2_ans5}}</td>
+                            <td><span v-if="data.cc_data.cc2_data.cc2_ans5 > 0">{{data.cc_data.cc2_data.cc2_ans5}}</span></td>
                         </tr>
                         <tr class="bg-blue-200">
                             <th >CC3</th>
@@ -113,22 +113,22 @@
                         <tr>
                             <td>1</td>
                             <td style="text-align: left">Helped Very Much</td>
-                            <td>{{data.cc_data.cc3_data.cc3_ans1}}</td>
+                            <td><span v-if="data.cc_data.cc3_data.cc3_ans1 > 0">{{data.cc_data.cc3_data.cc3_ans1}}</span></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td style="text-align: left">Somewhat helped</td>
-                            <td>{{data.cc_data.cc3_data.cc3_ans2}}</td>
+                            <td> <span v-if="data.cc_data.cc3_data.cc3_ans2 > 0">{{data.cc_data.cc3_data.cc3_ans2}}</span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td style="text-align: left">Did not help</td>
-                            <td>{{data.cc_data.cc3_data.cc3_ans3}}</td>
+                            <td><span v-if="data.cc_data.cc3_data.cc3_ans3 > 0">{{data.cc_data.cc3_data.cc3_ans3}}</span></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td style="text-align: left">N/A</td>
-                            <td>{{data.cc_data.cc3_data.cc3_ans4}}</td>
+                            <td><span v-if="data.cc_data.cc3_data.cc3_ans4 > 0">{{data.cc_data.cc3_data.cc3_ans4}}</span></td>
                         </tr>
                     </table>
                 </div>
@@ -160,29 +160,45 @@
                                     [{{ index + 1 }}] {{ dimension.name }}
                                 </td>          
                                 <td v-if="data.y_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.y_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>
                                 <td v-if="data.x_totals" style="border: 1px solid #333; padding: 2px; text-align: center"  v-for="total in data.x_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>
                                 <td v-if="data.likert_scale_rating_totals" style="border: 1px solid #333; padding: 2px; text-align: center"  v-for="total in data.likert_scale_rating_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>          
                                 <td v-if="data.gap_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.gap_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>                   
                         </tr>
 
                         <tr style="border: 1px solid #333; text-align: center;">
                             <td style="border: 1px solid #333; ">TOTAL SCORE</td>
-                            <td style="border: 1px solid #333;">{{ data.grand_vs_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.grand_s_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.grand_n_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.grand_d_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.grand_vd_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.x_grand_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.lsr_grand_total }}</td>
-                            <td style="border: 1px solid #333;">{{ data.gap_grand_total }}</td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.grand_vs_total > 0">{{ data.grand_vs_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;"> 
+                                <span v-if="data.grand_s_total > 0">{{ data.grand_s_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.grand_n_total > 0">{{ data.grand_n_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.grand_d_total > 0">{{ data.grand_d_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.grand_vd_total > 0">{{ data.grand_vd_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.x_grand_total > 0">{{ data.x_grand_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.lsr_grand_total > 0">{{ data.lsr_grand_total }}</span>
+                            </td>
+                            <td style="border: 1px solid #333;">
+                                <span v-if="data.gap_grand_total > 0">  {{ data.gap_grand_total }}</span>         
+                            </td>
                         </tr>  
                     </table>
 
@@ -217,22 +233,22 @@
                                     [{{ index + 1 }}] {{ dimension.name }}
                                 </td>                  
                                 <td v-if="data.importance_rate_score_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.importance_rate_score_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>
                                 <td v-if="data.x_importance_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.x_importance_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>
                                 <td v-if="data.likert_scale_rating_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.importance_ilsr_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>  
                                 <td v-if="data.wf_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.wf_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>       
                                 <td v-if="data.ss_totals" style="border: 1px solid #333; padding: 2px; text-align: center" v-for="total in data.ss_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>  
                                 <td v-if="data.ws_totals" style="border: 1px solid #333; padding: 2px; text-align: center"  v-for="total in data.ws_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total > 0">{{ total }}</span>
                                 </td>                                   
                         </tr>
 
@@ -250,8 +266,8 @@
                                 </div>
                             </td>
                             <td style="border: 1px solid #333;">
-                                <div style=" padding: 2px">
-                                    {{ data.total_respondents }}
+                                <div style=" padding: 2px" >
+                                    <span v-if="data.total_respondents > 0"> {{ data.total_respondents }}</span>
                                 </div>
                             </td>
 
@@ -262,7 +278,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style=" padding:2px">
-                                    {{ data.customer_satisfaction_index }}
+                                    <span v-if="data.customer_satisfaction_index > 0">{{ data.customer_satisfaction_index }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -275,7 +291,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style=" padding: 2px">
-                                    {{ data.total_vss_respondents }}
+                                    <span v-if="data.customer_satisfaction_index > 0">{{ data.total_vss_respondents }}</span>
                                 </div>
                             </td>
 
@@ -286,7 +302,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 2px">
-                                    {{ data.net_promoter_score }}
+                                    <span v-if="data.net_promoter_score > 0">{{ data.net_promoter_score }}</span>
                                 </div>
                             </td>
 
@@ -300,7 +316,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 2px">
-                                    {{ data.percentage_vss_respondents }}
+                                    <span v-if="data.percentage_vss_respondents > 0 ">{{ data.percentage_vss_respondents }}</span>
                                 </div>
                             </td>
 
@@ -313,7 +329,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style=" padding: 2px">
-                                    {{ data.percentage_promoters }}
+                                    <span v-if="data.percentage_promoters > 0 ">{{ data.percentage_promoters }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -327,7 +343,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style=" padding: 3px">
-                                    {{ data.percentage_detractors }}
+                                    <span v-if="data.percentage_detractors > 0 ">{{ data.percentage_detractors }}</span>
                                 </div>
                             </td>
                         </tr>
@@ -341,7 +357,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 3px">
-                                    {{ data.customer_satisfaction_rating }}
+                                    <span v-if="data.customer_satisfaction_rating > 0 ">{{ data.customer_satisfaction_rating }}</span>
                                 </div>
                             </td>
                             <td style="border: 1px solid #333;">
@@ -351,7 +367,7 @@
                             </td>
                             <td style="border: 1px solid #333;">
                                 <div style="padding: 3px">
-                                    {{ data.lsr_grand_total }}
+                                    <span v-if="data.lsr_grand_total > 0 "> {{ data.lsr_grand_total }}</span>
                                 </div>
                             </td>
                         </tr>

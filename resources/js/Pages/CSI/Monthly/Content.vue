@@ -27,22 +27,22 @@
         <tr>
             <td>1</td>
             <td class="text-left">I know what a CC is and I saw this office's CC</td>
-            <td>{{data.cc_data.cc1_data.cc1_ans1}}</td>
+            <td><span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">{{data.cc_data.cc1_data.cc1_ans1}}</span></td>
         </tr>
         <tr>
             <td>2</td>           
             <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
-            <td>{{data.cc_data.cc1_data.cc1_ans2}}</td>
+            <td><span v-if="data.cc_data.cc1_data.cc1_ans2 > 0">{{data.cc_data.cc1_data.cc1_ans2}}</span></td>
         </tr>
         <tr>
             <td>3</td>
             <td class="text-left">I learned the CC when I saw this office's CC</td>
-            <td>{{data.cc_data.cc1_data.cc1_ans3}}</td>
+            <td><span v-if="data.cc_data.cc1_data.cc1_ans3 > 0">{{data.cc_data.cc1_data.cc1_ans3}}</span></td>
         </tr>
         <tr>
             <td>4</td>
             <td class="text-left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
-            <td>{{data.cc_data.cc1_data.cc1_ans4}}</td>
+            <td><span v-if="data.cc_data.cc1_data.cc1_ans3 > 0">{{data.cc_data.cc1_data.cc1_ans4}}</span></td>
         </tr>
         <tr class="bg-blue-200" >
             <th >CC2</th>
@@ -51,27 +51,27 @@
         <tr>
             <td>1</td>
             <td class="text-left">Easy to see</td>
-            <td>{{data.cc_data.cc2_data.cc2_ans1}}</td>
+            <td><span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">{{data.cc_data.cc2_data.cc2_ans1}}</span></td>
         </tr>
         <tr>
             <td>2</td>
             <td class="text-left">Somewhat easy to see</td>
-            <td>{{data.cc_data.cc2_data.cc2_ans2}}</td>
+            <td><span v-if="data.cc_data.cc2_data.cc2_ans2">{{data.cc_data.cc2_data.cc2_ans2}}</span></td>
         </tr>
         <tr>
             <td>3</td>
             <td class="text-left">Difficult to see</td>
-            <td>{{data.cc_data.cc2_data.cc2_ans3}}</td>
+            <td><span v-if="data.cc_data.cc2_data.cc2_ans3">{{data.cc_data.cc2_data.cc2_ans3}}</span></td>
         </tr>
         <tr>
             <td>4</td>
             <td class="text-left">Not visible at all</td>
-            <td>{{data.cc_data.cc2_data.cc2_ans4}}</td>
+            <td><span v-if="data.cc_data.cc2_data.cc2_ans4">{{data.cc_data.cc2_data.cc2_ans4}}</span></td>
         </tr>
         <tr>
             <td>5</td>
             <td class="text-left">N/A</td>
-            <td>{{data.cc_data.cc2_data.cc2_ans5}}</td>
+            <td><span v-if="data.cc_data.cc2_data.cc2_ans5">{{data.cc_data.cc2_data.cc2_ans5}}</span></td>
         </tr>
         <tr class="bg-blue-200">
             <th >CC3</th>
@@ -80,22 +80,22 @@
         <tr>
             <td>1</td>
             <td class="text-left">Helped Very Much</td>
-            <td>{{data.cc_data.cc3_data.cc3_ans1}}</td>
+            <td><span v-if="data.cc_data.cc3_data.cc3_ans1">{{data.cc_data.cc3_data.cc3_ans1}}</span></td>
         </tr>
         <tr>
             <td>2</td>
             <td class="text-left">Somewhat helped</td>
-            <td>{{data.cc_data.cc3_data.cc3_ans2}}</td>
+            <td><span v-if="data.cc_data.cc3_data.cc3_ans2">{{data.cc_data.cc3_data.cc3_ans2}}</span></td>
         </tr>
         <tr>
             <td>3</td>
             <td class="text-left">Did not help</td>
-            <td>{{data.cc_data.cc3_data.cc3_ans3}}</td>
+            <td><span v-if="data.cc_data.cc3_data.cc3_ans3">{{data.cc_data.cc3_data.cc3_ans3}}</span></td>
         </tr>
         <tr>
             <td>4</td>
             <td class="text-left">N/A</td>
-            <td>{{data.cc_data.cc3_data.cc3_ans4}}</td>
+            <td><span v-if="data.cc_data.cc3_data.cc3_ans4">{{data.cc_data.cc3_data.cc3_ans4}}</span></td>
         </tr>
     </table>
     </v-card>
@@ -129,31 +129,35 @@
                                 {{ index + 1 }}. {{ dimension.name }}
                             </td>
                             <td v-if="data.y_totals" class="text-center"  v-for="total in data.y_totals[index+1]">
-                                {{ total }}
+                                <span v-if="total != 0">{{ total }}</span>
+                                <span v-else></span>
                             </td>
                             <td v-if="data.x_totals" class="text-center"  v-for="total in data.x_totals[index+1]">
-                                {{ total }}
+                                <span v-if="total != 0">{{ total }}</span>
+                                <span v-else></span>
                             </td>
                                 <td v-if="data.likert_scale_rating_totals" class=" text-center"  v-for="total in data.likert_scale_rating_totals[index+1]">
-                                {{ total }}
+                                <span v-if="total != 0">{{ total }}</span>
+                                <span v-else></span>
                             </td>          
                             <td v-if="data.likert_scale_rating_totals" class="text-center"  v-for="total in data.gap_totals[index+1]">
-                                {{ total }}
+                                <span v-if="total != 0">{{ total }}</span>
+                                <span v-else></span>
                             </td>                   
                     </tr>
                     <tr class="text-center font-black p-5 m-5 border border-solid hover:bg-gray-100 focus-within:bg-gray-100" >
                         <td class="m-5 p-3">TOTAL SCORE</td>
-                        <td >{{ data.grand_vs_total }}</td>
-                        <td >{{ data.grand_s_total }}</td>
-                        <td >{{ data.grand_n_total }}</td>
-                        <td >{{ data.grand_d_total }}</td>
-                        <td >{{ data.grand_vd_total }}</td>
+                        <td ><span v-if="data.grand_vs_total > 0">{{ data.grand_vs_total }} </span> </td>
+                        <td ><span v-if="data.grand_s_total > 0">{{ data.grand_s_total }} </span></td>
+                        <td ><span v-if="data.grand_n_total > 0">{{ data.grand_n_total }}</span></td>
+                        <td ><span v-if="data.grand_d_total > 0">{{ data.grand_d_total }}</span></td>
+                        <td ><span v-if="data.grand_vd_total > 0">{{ data.grand_vd_total }}</span></td>
                         <!-- total score -->
-                        <td >{{ data.x_grand_total }}</td> 
+                        <td ><span v-if="data.x_grand_total > 0">{{ data.x_grand_total }}</span></td> 
                          <!-- likert scale rating -->
-                        <td >{{ data.lsr_grand_total }}</td>
+                        <td ><span v-if="data.lsr_grand_total > 0">{{ data.lsr_grand_total }}</span></td>
                         <!--  gap grand total right side or by row-->
-                        <td >{{ data.gap_grand_total }}</td>
+                        <td ><span v-if="data.gap_grand_total > 0">{{ data.gap_grand_total }}</span></td>
                     </tr>                                               
                 </table>
 
@@ -194,22 +198,22 @@
                                     {{ index + 1 }}. {{ dimension.name }}
                                 </td>
                                 <td v-if="data.importance_rate_score_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.importance_rate_score_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>
                                 <td v-if="data.x_importance_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.x_importance_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>
                                 <td v-if="data.likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.importance_ilsr_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>  
                                 <td v-if="data.wf_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.wf_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>       
                                 <td v-if="data.ss_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.ss_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>  
                                 <td v-if="data.ws_totals" class="border-t p-5 w-1/8 text-center mr-10"  v-for="total in data.ws_totals[index+1]">
-                                    {{ total }}
+                                    <span v-if="total">{{ total }}</span>
                                 </td>                   
                         </tr>                                           
                     </table>
