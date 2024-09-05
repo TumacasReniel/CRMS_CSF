@@ -51,7 +51,7 @@
                         <tr>
                             <th></th>
                             <th></th>
-                            <th style="border: 1px solid #333;font-size: 12px;">Number of Respondents who select the option</th>
+                            <th style="border: 1px solid #333;font-size: 12px;">Number of Respondents who selected</th>
                         </tr>
                         <tr class="bg-blue-200">
                             <th>CC1</th>
