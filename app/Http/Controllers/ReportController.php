@@ -637,7 +637,7 @@ class ReportController extends Controller
         // total number of respondents/customer who rated VS/S
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
         
-        // total number of promoters or respondents who rated 9-10 in recommendation rating
+        // total number of promoters or respondents who rated 7-10 in recommendation rating
         $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
@@ -725,6 +725,7 @@ class ReportController extends Controller
             $d_total = $date_range->where('rate_score', 2)->where('dimension_id', $dimensionId)->count();
             $vd_total = $date_range->where('rate_score', 1)->where('dimension_id', $dimensionId)->count(); 
 
+            // calculation for total score per dimension
             $x_vs_total = $vs_total * 5; 
             $x_s_total = $s_total * 4; 
             $x_n_total = $n_total * 3; 
@@ -843,21 +844,36 @@ class ReportController extends Controller
             $ws_totals[$dimensionId] = [
                 'ws_total' => $ws_total,
             ];
+
+          
+
         }
+
+        //Calculate total number of respondents/customer who rated VS/S
+        // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
+        // here is 9 because I include the overall data in the dimensions
+
+        $vss_total = $grand_vs_total +  $grand_s_total;
+        $total_vss_respondents = $vss_total / $dimension_count;     
+        $total_vss_respondents = number_format($total_vss_respondents);      
+       
 
         // round off Likert Scale Rating grand total and control decimal to 2 
         $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
         $lsr_grand_total = number_format($lsr_grand_total, 2);      
+        
 
-        // table below total score
+        // table below TOTAL SCORES
         $grand_vs_total =   $grand_vs_total * 5;
-        $grand_s_total =   $grand_s_total * 5;
-        $grand_n_total =   $grand_n_total * 5;
-        $grand_d_total =   $grand_d_total * 5;
-        $grand_vd_total =   $grand_vd_total * 5;
+        $grand_s_total =   $grand_s_total * 4;
+        $grand_n_total =   $grand_n_total * 3;
+        $grand_d_total =   $grand_d_total * 2;
+        $grand_vd_total =   $grand_vd_total * 1;
+
 
         $x_grand_total =  $grand_vs_total +  $grand_s_total + $grand_n_total +  $grand_d_total +   $grand_vd_total;
 
+ 
         //Percentage of Respondents/Customers who rated VS/S: 
         // = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
