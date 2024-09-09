@@ -110,7 +110,7 @@ const closeDialog = (value) => {
 </script>
 
 <template>
-    <v-dialog v-model="show_form_modal" width="600" height="400" scrollable persistent>
+    <v-dialog v-model="show_form_modal" width="800" height="800" scrollable persistent>
         <v-card>
             <v-card-title class="bg-indigo">
                 <span class="text-h5">Select Assignatoree</span>
