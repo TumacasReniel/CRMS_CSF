@@ -227,7 +227,7 @@
                                     Total No. of Respondents/Customers:   
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                <span v-if="data.total_respondents">{{ data.total_respondents }}%</span>
+                                <span v-if="data.total_respondents">{{ data.total_respondents }}</span>
                             </v-card-content>
                         </v-card>
 
@@ -236,7 +236,7 @@
                                     Total No. of Respondents/Customers who rated VS/S: 
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                <span v-if="data.total_vss_respondents">{{ data.total_vss_respondents }}%</span>
+                                <span v-if="data.total_vss_respondents">{{ data.total_vss_respondents }}</span>
                             </v-card-content>
                         </v-card>
                             <v-card class="mb-2">
