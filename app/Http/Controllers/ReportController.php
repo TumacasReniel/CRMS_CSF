@@ -671,6 +671,7 @@ class ReportController extends Controller
 
         //set initial value of buttom side total scores
         $y_totals = [];
+        $grand_na_total = 0;
         $grand_vs_total = 0;
         $grand_s_total = 0;
         $grand_n_total = 0;
@@ -719,6 +720,9 @@ class ReportController extends Controller
 
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
             //PART I :
+
+            $na_total = $date_range->where('rate_score', 6)->where('dimension_id', $dimensionId)->count(); 
+
             $vs_total = $date_range->where('rate_score', 5)->where('dimension_id', $dimensionId)->count();
             $s_total = $date_range->where('rate_score', 4)->where('dimension_id', $dimensionId)->count();
             $n_total = $date_range->where('rate_score', 3)->where('dimension_id', $dimensionId)->count();
@@ -772,6 +776,8 @@ class ReportController extends Controller
                 'd_total' => $d_total,
                 'vd_total' => $vd_total,
             ];
+         
+            $grand_na_total+=$na_total;  
 
             $grand_vs_total+=$vs_total;
             $grand_s_total+=$s_total;
@@ -853,10 +859,9 @@ class ReportController extends Controller
         // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
         // here is 9 because I include the overall data in the dimensions
 
-        $vss_total = $grand_vs_total +  $grand_s_total;
+        $vss_total = $grand_vs_total +  $grand_s_total + $grand_na_total;
         $total_vss_respondents = $vss_total / $dimension_count;     
         $total_vss_respondents = number_format($total_vss_respondents);      
-       
 
         // round off Likert Scale Rating grand total and control decimal to 2 
         $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
