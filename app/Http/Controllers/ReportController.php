@@ -861,7 +861,7 @@ class ReportController extends Controller
 
         $vss_total = $grand_vs_total +  $grand_s_total + $grand_na_total;
         $total_vss_respondents = $vss_total / $dimension_count;     
-        $total_vss_respondents = number_format($total_vss_respondents);      
+        $total_vss_respondents = round($total_vss_respondents);      
 
         // round off Likert Scale Rating grand total and control decimal to 2 
         $lsr_grand_total = ($lsr_grand_total/ $dimension_count);
