@@ -19,6 +19,7 @@ use Mews\Captcha\Facades\Captcha;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubUnitPsto;
 use App\Models\SubUnitType;
+use App\Models\ShowDateCsfForm;
 use App\Models\CustomerAttributeRating;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\SurveyFormRequest;
@@ -32,6 +33,7 @@ use App\Http\Resources\SubUnit as SubUnitResource;
 use App\Http\Resources\UnitPSTO as UnitPSTOResource;
 use App\Http\Resources\SubUnitPSTO as SubUnitPSTOResource;
 use App\Http\Resources\SubUnitType as SubUnitTypeResource;
+use App\Http\Resources\ShowDateCSFForm as ShowDateCSFFormResource;
 
 use App\Models\CustomerSignature;
 
@@ -39,6 +41,9 @@ class SurveyFormController extends Controller
 {
     public function index(Request $request)
     {
+        // get the data if the date will be displayed or not
+        $date_display = ShowDateCsfForm::all();
+
         $cc_questions = CcQuestion::all();
         $dimensions = Dimension::all();
         $unit = Unit::where('id', $request->unit_id)->get();
@@ -60,7 +65,8 @@ class SurveyFormController extends Controller
             ->with('unit', $unit)
             ->with('sub_unit', $sub_unit)
             ->with('unit_psto', $unit_psto)
-            ->with('sub_unit_psto', $sub_unit_psto);  
+            ->with('sub_unit_psto', $sub_unit_psto)
+            ->with('date_display', $date_display);  
     }
 
 
@@ -68,7 +74,7 @@ class SurveyFormController extends Controller
     // SurveyFormRequest
     public function store(SurveyFormRequest $request)
     {       
-        // dd($request->all());
+        //dd($request->all());
         try{
             DB::beginTransaction();    
            

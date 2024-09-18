@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
         status: String,
         errors: Object,
         captcha_img: String,
+        date_display: String,
     });
 
 
@@ -292,6 +293,7 @@ watch(
             data-aos-duration="2000" 
             data-aos-delay="500" 
         >
+    
 
             <v-row justify="center" class="py-3 bg-gray-200 w-full">
                 <v-col cols="12" md="8" sm="6">
@@ -314,7 +316,7 @@ watch(
                                     data-aos="fade-down" 
                                     data-aos-duration="500" 
                                     data-aos-delay="500"
-                                    >CUSTOMER SATISFACTION FEEDBACK
+                                    >CUSTOMER SATISFACTION FEEDBACK 
                                 </span><br>
 
                                 
@@ -344,14 +346,16 @@ watch(
                                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 ">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
                                             <div>
 
-                                                <v-text-field                                    
+                                                <v-text-field   
+                                                    v-if="date_display[0].is_displayed == 1"                                 
                                                     v-model="form.date" 
                                                     type="date" 
                                                     label="Date"
                                                     variant="outlined" 
                                                 >
                                                 </v-text-field>
-                                                
+
+
                                                 <v-text-field    
                                                     v-if="form.is_complaint == true"                                
                                                     v-model="form.email" 
@@ -541,16 +545,15 @@ watch(
                                                     <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]" v-for="option in options" :key="option.value"
                                                     :rules="[() => formSubmitted ? !!form.dimension_form.rate_score[index] || 'This selection is required' : true]"
                                                     >     
-                                                    <v-btn @click="updateIsComplaint(index , form.dimension_form.rate_score[index])"  rounded class="mr-2 bg-gray-200" :value="option.value" color="secondary" >
-                                                        <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'gray'" size="40">{{ option.icon }}</v-icon><br>
-                                                        <label>{{ option.label }}</label>
-                                                    </v-btn>      
-                                                    
-                                                    
+                                                        <v-btn @click="updateIsComplaint(index , form.dimension_form.rate_score[index])"  rounded class="mr-2 bg-gray-200" :value="option.value" color="secondary" >
+                                                            <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'gray'" size="40">{{ option.icon }}</v-icon><br>
+                                                            <label>{{ option.label }}</label>
+                                                        </v-btn>      
+
                                                     </v-btn-toggle> 
                                                     <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
                                                 </div>
-                                                <div class="overflow-hidden mb-3">
+                                                <div class="overflow-hidden mb-3" v-if="form.dimension_form.rate_score[index]">
                                                     <div>How important is this attribute?</div>
                                                     <div>
                                                         <div class="ml-2 mb-3">
@@ -572,6 +575,8 @@ watch(
                                                     </div>
 
                                                 </div>
+
+                                  
                                             
 
                                         </v-card>                     

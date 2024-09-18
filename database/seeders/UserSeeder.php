@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         $user->save();
 
         $user = new User();
-        $user->name = 'ORD PALNNING';
+        $user->name = 'ORD PLANNING';
         $user->email = 'ord.planning@gmail.com';
         $user->account_type = 'planning';
         $user->password = bcrypt('dost-planning');

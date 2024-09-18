@@ -729,6 +729,8 @@ class ReportController extends Controller
             $d_total = $date_range->where('rate_score', 2)->where('dimension_id', $dimensionId)->count();
             $vd_total = $date_range->where('rate_score', 1)->where('dimension_id', $dimensionId)->count(); 
 
+            //check if there are respondent who rate 3 or below and add it if theres
+
             // calculation for total score per dimension
             $x_vs_total = $vs_total * 5; 
             $x_s_total = $s_total * 4; 

@@ -8,6 +8,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PstoController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\AssignatoreesController;
+use App\Http\Controllers\ShowDateCSFFormController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\SubUnitController;
@@ -76,6 +77,8 @@ Route::middleware([
         Route::post('/assignatorees/add', [AssignatoreesController::class, 'store']);
         Route::post('/assignatorees/update', [AssignatoreesController::class, 'update']);
         Route::post('/assignatorees/delete', [AssignatoreesController::class, 'destroy']);
+        Route::get('/show-date-csf-form', [ShowDateCSFFormController::class, 'index'])->name('showdate');
+        Route::post('/show-date-csf-form/update', [ShowDateCSFFormController::class, 'update']);
     });
 
     Route::get('/dashboard', function () {
