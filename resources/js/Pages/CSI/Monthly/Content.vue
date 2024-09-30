@@ -332,7 +332,9 @@
 
                         <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
                             <table style="margin-left: 40px" >
-                            <p>[{{ index +1 }}] {{ comment }}</p>
+                            <p>[{{ index +1 }}]
+                                 {{ comment }}
+                                </p>
                             </table>
                         </template>
                     </v-row>
