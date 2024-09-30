@@ -141,8 +141,20 @@ const props = defineProps({
     feb_total_respondents: Number, 
     mar_total_respondents: Number, 
 
+    // grand totals
+    jan_vs_grand_total: Number, 
+    feb_vs_grand_total: Number, 
+    mar_vs_grand_total: Number, 
 
-      //First Quarter importance quality attributes totals
+    jan_s_grand_total: Number, 
+    feb_s_grand_total: Number, 
+    mar_s_grand_total: Number, 
+
+    jan_ndvd_grand_total: Number, 
+    feb_ndvd_grand_total: Number, 
+    mar_ndvd_grand_total: Number, 
+
+    //First Quarter importance quality attributes totals
     q1_vi_totals: Object,
     q1_i_totals: Object,
     q1_mi_totals: Object,
@@ -229,6 +241,19 @@ const props = defineProps({
     apr_total_ndvd_respondents: Number, 
     may_total_ndvd_respondents: Number, 
     jun_total_ndvd_respondents: Number, 
+
+    // grand totals
+    apr_vs_grand_total: Number, 
+    may_vs_grand_total: Number, 
+    jun_vs_grand_total: Number, 
+
+    apr_s_grand_total: Number, 
+    may_s_grand_total: Number, 
+    jun_s_grand_total: Number, 
+
+    apr_ndvd_grand_total: Number, 
+    may_ndvd_grand_total: Number, 
+    jun_ndvd_grand_total: Number, 
 
     // respondent totals
     apr_total_respondents: Number, 
@@ -324,6 +349,23 @@ const props = defineProps({
     jul_total_ndvd_respondents: Number, 
     aug_total_ndvd_respondents: Number, 
     sep_total_ndvd_respondents: Number, 
+
+    // grand totals
+    jul_vs_grand_total: Number, 
+    aug_vs_grand_total: Number, 
+    sep_vs_grand_total: Number, 
+
+    jul_s_grand_total: Number, 
+    aug_s_grand_total: Number, 
+    sep_s_grand_total: Number, 
+
+    jul_ndvd_grand_total: Number, 
+    aug_ndvd_grand_total: Number, 
+    sep_ndvd_grand_total: Number, 
+    
+    jul_grand_total: Number, 
+    aug_grand_total: Number, 
+    sep_grand_total: Number, 
 
     // respondent totals
     jul_total_respondents: Number, 
@@ -423,6 +465,19 @@ const props = defineProps({
     oct_total_respondents: Number, 
     nov_total_respondents: Number, 
     dec_total_respondents: Number, 
+
+    // grand totals
+    oct_vs_grand_total: Number, 
+    nov_vs_grand_total: Number, 
+    dec_vs_grand_total: Number, 
+
+    oct_s_grand_total: Number, 
+    nov_s_grand_total: Number, 
+    dec_s_grand_total: Number, 
+
+    oct_ndvd_grand_total: Number, 
+    nov_ndvd_grand_total: Number, 
+    dec_ndvd_grand_total: Number, 
 
 
     //importance quality attributes totals

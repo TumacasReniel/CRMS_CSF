@@ -2548,10 +2548,28 @@ class ReportController extends Controller
         $i_grand_total_score =0;
         $misinai_grand_total_score = 0;
 
+        $jul_vs_grand_total = 0;
+        $aug_vs_grand_total =  0;
+        $sep_vs_grand_total =  0;
+
+        $jul_s_grand_total = 0;
+        $aug_s_grand_total =  0;
+        $sep_s_grand_total =  0;
+
+        $jul_ndvd_grand_total = 0;
+        $aug_ndvd_grand_total =  0;
+        $sep_ndvd_grand_total =  0;
+
+        $jul_na_grand_total = 0;
+        $aug_na_grand_total =  0;
+        $sep_na_grand_total =  0;
+
         for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
             //PART I
 
             // July total responses with its dimensions and rate score
+            $jul_na_total = $month_jul->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
             $jul_vs_total = $month_jul->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jul_s_total = $month_jul->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $jul_n_total = $month_jul->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -2561,6 +2579,8 @@ class ReportController extends Controller
             $jul_grand_total =  $jul_vs_total + $jul_s_total + $jul_n_total + $jul_d_total + $jul_vd_total ; 
 
             //  August total responses with its dimensions and rate score
+            $aug_na_total = $month_aug->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
             $aug_vs_total = $month_aug->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $aug_s_total = $month_aug->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $aug_n_total = $month_aug->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -2570,6 +2590,8 @@ class ReportController extends Controller
             $aug_grand_total =  $aug_vs_total + $aug_s_total + $aug_n_total + $aug_d_total + $aug_vd_total ; 
 
             //  September total responses with its dimensions and rate score
+            $sep_na_total = $month_sep->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
             $sep_vs_total = $month_sep->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $sep_s_total = $month_sep->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $sep_n_total = $month_sep->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -2625,6 +2647,7 @@ class ReportController extends Controller
 
             $vs_grand_total_raw_points += $vs_total_raw_points;
             $s_grand_total_raw_points +=  $s_total_raw_points;
+
             $ndvd_grand_total_raw_points +=  $n_total_raw_points + $d_total_raw_points + $vd_total_raw_points;
             $grand_total_raw_points+= $total_raw_points;
 
@@ -2766,9 +2789,9 @@ class ReportController extends Controller
             $i_total_raw_points = $vi_total_raw_points + $i_total_raw_points + $mi_total_raw_points +  $si_total_raw_points +  $nai_total_raw_points;           
 
             $vi_grand_total_raw_points += $vi_total_raw_points;
-            $s_grand_total_raw_points +=  $i_total_raw_points;
+            $i_grand_total_raw_points +=  $i_total_raw_points;
             $misinai_grand_total_raw_points +=  $mi_total_raw_points + $si_total_raw_points + $nai_total_raw_points;
-            $i_grand_total_raw_points+= $total_raw_points;
+            $grand_total_raw_points+= $total_raw_points;
 
             $i_trp_totals[$dimensionId] = [
                 'vi_total_raw_points' => $vi_total_raw_points,
@@ -2800,8 +2823,59 @@ class ReportController extends Controller
                 'x_i_total_score' => $x_i_total_score,
             ];
 
-        
+
+
+            // Calculate all respondents who rated VS 
+            $jul_vs_grand_total +=  $jul_vs_total;
+            $aug_vs_grand_total +=  $aug_vs_total;
+            $sep_vs_grand_total +=  $sep_vs_total; 
+
+            // Calculate all respondents who rated S
+            $jul_s_grand_total +=  $jul_s_total;
+            $aug_s_grand_total +=  $aug_s_total;
+            $sep_s_grand_total +=  $sep_s_total; 
+
+            // Calculate all respondents who rated NDVD
+            $jul_ndvd_total = $jul_n_total + $jul_d_total + $jul_vd_total;
+            $aug_ndvd_total = $aug_n_total + $aug_d_total + $aug_vd_total;
+            $sep_ndvd_total = $sep_n_total + $sep_d_total + $sep_vd_total;
+
+            $jul_ndvd_grand_total +=  $jul_ndvd_total;
+            $aug_ndvd_grand_total +=  $aug_ndvd_total;
+            $sep_ndvd_grand_total +=  $sep_ndvd_total; 
+
+            // Calculate all respondents who rated n/a
+            $jul_na_grand_total +=  $jul_na_total;
+            $aug_na_grand_total +=  $aug_na_total;
+            $sep_na_grand_total +=  $sep_na_total; 
+
+           
         }
+
+
+        // Calculate all respondents 
+        $jul_grand_total =  $jul_vs_grand_total + $jul_s_grand_total +   $jul_ndvd_grand_total;     
+        $aug_grand_total =  $aug_vs_grand_total + $aug_s_grand_total +  $aug_ndvd_grand_total;
+        $sep_grand_total =  $sep_vs_grand_total + $sep_s_grand_total +  $sep_ndvd_grand_total;
+
+        //Calculate total number of respondents/customer who rated VS/S include N/A
+        // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
+        // here is 9 because I include the overall data in the dimensions
+
+        $jul_vss_total = $jul_vs_grand_total +  $jul_s_grand_total + $jul_na_grand_total;
+        $jul_total_vss_respondents = $jul_vss_total / 9;     
+        $jul_total_vss_respondents = round($jul_total_vss_respondents);  
+
+        $aug_vss_total = $aug_vs_grand_total +  $aug_s_grand_total + $aug_na_grand_total;
+        $aug_total_vss_respondents = $aug_vss_total / 9;     
+        $aug_total_vss_respondents = round($aug_total_vss_respondents);  
+
+        $sep_vss_total = $sep_vs_grand_total +  $sep_s_grand_total + $sep_na_grand_total;
+        $sep_total_vss_respondents = $sep_vss_total / 9;     
+        $sep_total_vss_respondents = round($sep_total_vss_respondents);  
+
+        $total_vss_respondents =   $jul_total_vss_respondents + $aug_total_vss_respondents +   $sep_total_vss_respondents ;
+
 
         // Total No. of Very Satisfied (VS) Responses of First Quarte
         // -- July
@@ -2837,18 +2911,12 @@ class ReportController extends Controller
 
         //Total respondents /Customers
         $total_respondents = $date_range->groupBy('customer_id')->count();
-
-        // total number of respondents/customer who rated VS/S
-        $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
-        // total number of respondents/customer who rated VS
-        $total_vs_respondents = $date_range->where('rate_score', '=','5')->groupBy('customer_id')->count();
-        // total number of respondents/customer who rated S
-        $total_s_respondents = $date_range->where('rate_score', '=','4')->groupBy('customer_id')->count();
     
         // Frst quarter total number of promoters or respondents who rated 9-10 in recommendation rating
         $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         // July
         $jul_total_promoters = $jul_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        // dd(  $jul_total_promoters );
         // August
         $aug_total_promoters = $aug_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         // September
@@ -2900,15 +2968,15 @@ class ReportController extends Controller
 
         if($total_respondents != 0){
             $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
-            $jul_percentage_promoters = number_format((($jul_total_promoters / $total_respondents) * 100), 2);
-            $aug_percentage_promoters = number_format((($aug_total_promoters / $total_respondents) * 100), 2);
-            $sep_percentage_promoters = number_format((($sep_total_promoters / $total_respondents) * 100), 2);
+            $jul_percentage_promoters = number_format((($jul_total_promoters / $jul_total_respondents) * 100), 2);
+            $aug_percentage_promoters = number_format((($aug_total_promoters / $aug_total_respondents) * 100), 2);
+            $sep_percentage_promoters = number_format((($sep_total_promoters / $sep_total_respondents) * 100), 2);
         
             //Percentage of Promoters = number of promoters / total respondents
             $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
-            $jul_percentage_detractors = number_format((($jul_total_detractors / $total_respondents) * 100),2);
-            $aug_percentage_detractors = number_format((($aug_total_detractors / $total_respondents) * 100),2);
-            $sep_percentage_detractors = number_format((($sep_total_detractors / $total_respondents) * 100),2);
+            $jul_percentage_detractors = number_format((($jul_total_detractors / $jul_total_respondents) * 100),2);
+            $aug_percentage_detractors = number_format((($aug_total_detractors / $aug_total_respondents) * 100),2);
+            $sep_percentage_detractors = number_format((($sep_total_detractors / $sep_total_respondents) * 100),2);
             
 
             // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
@@ -3030,7 +3098,20 @@ class ReportController extends Controller
             ->with('third_month_csi', $third_month_csi)
             ->with('total_comments', $total_comments)
             ->with('total_complaints', $total_complaints)
-            ->with('comments', $comments);
+            ->with('jul_vs_grand_total', $jul_vs_grand_total)
+            ->with('aug_vs_grand_total', $aug_vs_grand_total)
+            ->with('sep_vs_grand_total', $sep_vs_grand_total)
+            ->with('jul_s_grand_total', $jul_s_grand_total)
+            ->with('aug_s_grand_total', $aug_s_grand_total)
+            ->with('sep_s_grand_total', $sep_s_grand_total)
+            ->with('jul_ndvd_grand_total', $jul_ndvd_grand_total)
+            ->with('aug_ndvd_grand_total', $aug_ndvd_grand_total)
+            ->with('sep_ndvd_grand_total', $sep_ndvd_grand_total)
+            ->with('jul_grand_total', $jul_grand_total)
+            ->with('aug_grand_total', $aug_grand_total)
+            ->with('sep_grand_total', $sep_grand_total);
+
+
     }
 
     public function generateCSIByUnitFourthQuarter($request, $region_id, $psto_id)
@@ -3237,6 +3318,8 @@ class ReportController extends Controller
             //PART I
 
             // October total responses with its dimensions and rate score
+            $oct_na_total = $month_oct->where('rate_score', 6)->where('dimension_id', $dimensionId)->count(); 
+
             $oct_vs_total = $month_oct->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $oct_s_total = $month_oct->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $oct_n_total = $month_oct->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -3246,6 +3329,8 @@ class ReportController extends Controller
             $oct_grand_total =  $oct_vs_total + $oct_s_total + $oct_n_total + $oct_d_total + $oct_vd_total ; 
 
             //  November total responses with its dimensions and rate score
+            $nov_na_total = $month_nov->where('rate_score', 6)->where('dimension_id', $dimensionId)->count(); 
+
             $nov_vs_total = $month_nov->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $nov_s_total = $month_nov->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $nov_n_total = $month_nov->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -3255,6 +3340,8 @@ class ReportController extends Controller
             $nov_grand_total =  $nov_vs_total + $nov_s_total + $nov_n_total + $nov_d_total + $nov_vd_total ; 
 
             //  Decmeber total responses with its dimensions and rate score
+            $dec_na_total = $month_nov->where('rate_score', 6)->where('dimension_id', $dimensionId)->count(); 
+
             $dec_vs_total = $month_dec->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $dec_s_total = $month_dec->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
             $dec_n_total = $month_dec->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
@@ -5373,5 +5460,19 @@ class ReportController extends Controller
 
         return $cc_data;
     }
+
+    public function calculateTotalVSSRespondentsByQuarter( $grand_vs_total, $grand_s_total ,$grand_na_total )
+    {  
+    
+        //Calculate total number of respondents/customer who rated VS/S
+        // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
+        // here is 9 because I include the overall data in the dimensions
+
+        $vss_total = $grand_vs_total +  $grand_s_total + $grand_na_total;
+        $total_vss_respondents = $vss_total / $dimension_count;     
+        $total_vss_respondents = round($total_vss_respondents); 
+
+        return $total_vss_respondents ;
+    } 
 
 }

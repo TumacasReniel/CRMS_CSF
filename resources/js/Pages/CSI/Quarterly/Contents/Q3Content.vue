@@ -7,8 +7,8 @@
             type: Object,
         },
     });
-    const calculate = (ndvd_grand_total_score ,grand_total_score) => {
-        const result = (ndvd_grand_total_score / grand_total_score) * 100;
+    const calculate = (total_score ,grand_total_score) => {
+        const result = (total_score / grand_total_score) * 100;
         return result.toFixed(2);
     };
 </script>
@@ -330,18 +330,18 @@
                 <tr>
                 <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_vs_respondents > 0">
-                        {{ data.apr_total_vs_respondents }}
+                    <span v-if="data.jul_vs_grand_total > 0">
+                        {{ data.jul_vs_grand_total }}
                     </span>
                 </td>
                 <td class="text-center"> 
-                    <span v-if="data.may_total_vs_respondents  > 0">
-                        {{ data.may_total_vs_respondents  }}
+                    <span v-if="data.aug_vs_grand_total  > 0">
+                        {{ data.aug_vs_grand_total  }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.jun_total_vs_respondents   > 0">
-                        {{ data.jun_total_vs_respondents   }}
+                    <span v-if="data.sep_vs_grand_total   > 0">
+                        {{ data.sep_vs_grand_total   }}
                     </span>
                  </td>
                 <td class="text-center">
@@ -355,7 +355,7 @@
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.vs_grand_total_score  > 0 && data.vs_grand_total_score">
+                    <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score">
                         {{ calculate(data.vs_grand_total_score, data.grand_total_score) }}
                     </span>  
                 </td>
@@ -364,18 +364,18 @@
             <tr>
                 <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_s_respondents  > 0">
-                        {{ data.apr_total_s_respondents   }}
+                    <span v-if="data.jul_s_grand_total  > 0">
+                        {{ data.jul_s_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center"> 
-                    <span v-if="data.may_total_s_respondents  > 0">
-                        {{ data.may_total_s_respondents   }}
+                    <span v-if="data.aug_s_grand_total  > 0">
+                        {{ data.aug_s_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.jun_total_s_respondents  > 0">
-                        {{ data.jun_total_s_respondents   }}
+                    <span v-if="data.sep_s_grand_total  > 0">
+                        {{ data.sep_s_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
@@ -399,18 +399,18 @@
             <tr>
                 <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_ndvd_respondents  > 0">
-                        {{ data.apr_total_ndvd_respondents   }}
+                    <span v-if="data.jul_ndvd_grand_total  > 0">
+                        {{ data.jul_ndvd_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.may_total_ndvd_respondents  > 0">
-                        {{ data.may_total_ndvd_respondents   }}
+                    <span v-if="data.aug_ndvd_grand_total  > 0">
+                        {{ data.aug_ndvd_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.jun_total_ndvd_respondents  > 0">
-                        {{ data.jun_total_ndvd_respondents   }}
+                    <span v-if="data.sep_ndvd_grand_total  > 0">
+                        {{ data.sep_ndvd_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
@@ -432,18 +432,18 @@
             <tr>
                 <td colspan="3" class="text-right">Total No. of All Responses::</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_respondents  > 0">
-                        {{ data.apr_total_respondents   }}
+                    <span v-if="data.jul_grand_total  > 0">
+                        {{ data.jul_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.may_total_respondents  > 0">
-                        {{ data.may_total_respondents   }}
+                    <span v-if="data.aug_grand_total  > 0">
+                        {{ data.aug_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.jun_total_respondents  > 0">
-                        {{ data.jun_total_respondents   }}
+                    <span v-if="data.sep_grand_total  > 0">
+                        {{ data.sep_grand_total   }}
                     </span>
                 </td>
                 <td class="text-center">
@@ -470,8 +470,8 @@
             <tr>
                 <td colspan="8" class="text-right">Total No. of Respondents/Customers who rated VS or S:</td>
                 <td class="text-center">
-                    <span v-if="data.total_vss_respondents  > 0">
-                        {{ data.total_vss_respondents   }}
+                    <span v-if="data.total_vss_respondents   > 0">
+                        {{ data.total_vss_respondents    }}
                     </span>
                 </td>
             </tr>
@@ -694,22 +694,23 @@
             </tr>
             <tr>
                 <td colspan="3" class="text-right">Net Promoter Score:</td>
-                <td v-if="data.jul_net_promoter_score" class="text-center" >
+                <td class="text-center" >
                     <span v-if="data.jul_net_promoter_score > 0">
                         {{  data.jul_net_promoter_score  }}
                     </span> 
                 </td>  
-                <td v-if="data.aug_percentage_detractors" class="text-center " >
-                    <span v-if="data.aug_percentage_detractors > 0">
-                        {{  data.aug_percentage_detractors  }}
+                <td class="text-center " >
+                    <span v-if="data.aug_net_promoter_score > 0">
+                        {{  data.aug_net_promoter_score  }}
                     </span> 
                 </td>
-                <td v-if="data.sep_net_promoter_score" class="text-center" >
+                <td class="text-center" >
                     <span v-if="data.sep_net_promoter_score > 0">
                         {{  data.sep_net_promoter_score  }}
                     </span> 
+
                 </td>
-                <td v-if="data.ave_net_promoter_score" colspan="2"  class="text-center">
+                <td colspan="2"  class="text-center">
                     <span v-if="data.ave_net_promoter_score > 0">
                         {{  data.ave_net_promoter_score  }}
                     </span> 
@@ -732,7 +733,7 @@
                         {{  data.third_month_csi  }}
                     </span>
                 </td>
-                <td class="text-center">
+                <td  colspan="2" class="text-center">
                     <span v-if="data.csi > 0" >
                         {{  data.csi  }}
                     </span>

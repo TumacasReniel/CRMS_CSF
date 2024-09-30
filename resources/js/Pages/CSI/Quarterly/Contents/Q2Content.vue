@@ -330,68 +330,68 @@
             <tr>
                 <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_vs_respondents  > 0">
-                        {{ data.apr_total_vs_respondents  }}
-                    </span> 
+                    <span v-if="data.apr_vs_grand_total > 0">
+                        {{ data.apr_vs_grand_total }}
+                    </span>
+                </td>
+                <td class="text-center"> 
+                    <span v-if="data.may_vs_grand_total  > 0">
+                        {{ data.may_vs_grand_total  }}
+                    </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.may_total_vs_respondents  > 0">
-                        {{ data.may_total_vs_respondents }}
-                    </span> 
-                </td>
-                <td class="text-center">
-                    <span v-if="data.jun_total_vs_respondents  > 0">
-                        {{ data.jun_total_vs_respondents }}
-                    </span> 
-                </td>
+                    <span v-if="data.jun_vs_grand_total   > 0">
+                        {{ data.jun_vs_grand_total   }}
+                    </span>
+                 </td>
                 <td class="text-center">
                     <span v-if="data.vs_grand_total_raw_points  > 0">
-                        {{ data.vs_grand_total_raw_points }}
-                    </span> 
+                        {{ data.vs_grand_total_raw_points   }}
+                    </span>
                 </td>
                 <td class="text-center">
                     <span v-if="data.vs_grand_total_score  > 0">
-                        {{ data.vs_grand_total_score }}
-                    </span> 
+                        {{ data.vs_grand_total_score   }}
+                    </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score > 0">
+                    <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score">
                         {{ calculate(data.vs_grand_total_score, data.grand_total_score) }}
-                    </span> 
+                    </span>  
                 </td>
 
             </tr>
             <tr>
                 <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
                 <td class="text-center">
-                    <span v-if="data.apr_total_s_respondents  > 0">
-                        {{ data.apr_total_s_respondents }}
-                    </span> 
+                    <span v-if="data.apr_s_grand_total  > 0">
+                        {{ data.apr_s_grand_total   }}
+                    </span>
                 </td>
                 <td class="text-center"> 
-                    <span v-if="data.may_total_s_respondents  > 0">
-                        {{ data.may_total_s_respondents }}
-                    </span> 
+                    <span v-if="data.may_s_grand_total  > 0">
+                        {{ data.may_s_grand_total   }}
+                    </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.jun_total_s_respondents  > 0">
-                        {{ data.jun_total_s_respondents }}
-                    </span> 
+                    <span v-if="data.jun_s_grand_total  > 0">
+                        {{ data.jun_s_grand_total   }}
+                    </span>
                 </td>
                 <td class="text-center">
                     <span v-if="data.s_grand_total_raw_points  > 0">
-                        {{ data.s_grand_total_raw_points }}
-                    </span> 
+                        {{ data.s_grand_total_raw_points   }}
+                    </span>
                 </td>
                 <td class="text-center">
                     <span v-if="data.s_grand_total_score  > 0">
-                        {{ data.s_grand_total_score }}
-                    </span> 
+                        {{ data.s_grand_total_score   }}
+                    </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.s_grand_total_score  > 0 && data.grand_total_score > 0">
+                    <span v-if="data.s_grand_total_score  > 0 && data.grand_total_score  > 0">
                         {{ calculate(data.s_grand_total_score, data.grand_total_score) }}
-                    </span> 
+                    </span>
                 </td>
 
 
