@@ -496,7 +496,7 @@
 
               <div style="margin-top: 20px; font-size: 13px">
                     COMMENTS/COMPLAINTS : 
-                    <span v-if="data.comments.length > 0">       
+                    <span v-if="data.comments">       
                         <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
                             <table>
                             <p>[{{ index +1 }}] {{ comment  }}</p>
