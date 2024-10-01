@@ -646,22 +646,22 @@
 
             <tr>
                 <td colspan="3" class="text-right">% of Promoters:</td>
-                <td v-if="data.jul_percentage_promoters" class="text-center" >
+                <td class="text-center" >
                     <span v-if="data.jul_percentage_promoters  > 0">
                         {{  data.jul_percentage_promoters  }}
                     </span>  
                 </td>  
-                <td v-if="data.aug_percentage_promoters" class="text-center " >
+                <td  class="text-center " >
                     <span v-if="data.aug_percentage_promoters  > 0">
                         {{  data.aug_percentage_promoters  }}
                     </span>  
                 </td>
-                <td v-if="data.sep_percentage_promoters" class="text-center" >
+                <td  class="text-center" >
                     <span v-if="data.sep_percentage_promoters  > 0">
                         {{  data.sep_percentage_promoters  }}
                     </span>  
                 </td>
-                <td v-if="data.average_percentage_promoters" colspan="2"  class="text-center">
+                <td  colspan="2"  class="text-center">
                     <span v-if="data.average_percentage_promoters  > 0">
                         {{  data.average_percentage_promoters  }}
                     </span>  
@@ -670,22 +670,22 @@
             </tr>
             <tr>
                 <td colspan="3" class="text-right">% of Detractors:</td>
-                <td v-if="data.jul_percentage_detractors" class="text-center" >
+                <td  class="text-center" >
                     <span v-if="data.jul_percentage_detractors  > 0">
                         {{  data.jul_percentage_detractors  }}
                     </span>  
                 </td>  
-                <td v-if="data.aug_percentage_detractors" class="text-center " >
+                <td  class="text-center " >
                     <span v-if="data.aug_percentage_detractors  > 0">
                         {{  data.aug_percentage_detractors  }}
                     </span>  
                 </td>
-                <td v-if="data.sep_percentage_detractors" class="text-center" >
+                <td  class="text-center" >
                     <span v-if="data.sep_percentage_detractors  > 0">
                         {{  data.sep_percentage_detractors  }}
                     </span>  
                 </td>
-                <td v-if="data.average_percentage_detractors" colspan="2"  class="text-center">
+                <td  colspan="2"  class="text-center">
                     <span v-if="data.average_percentage_detractors > 0">
                         {{  data.average_percentage_detractors  }}
                     </span>  
