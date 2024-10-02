@@ -575,7 +575,6 @@ class ReportController extends Controller
         $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
       
         $numericMonth = Carbon::parse("1 {$request->selected_month}")->format('m');
-  
 
         $cc_query = CustomerCCRating::whereMonth('created_at', $numericMonth)
                                     ->whereYear('created_at', $request->selected_year)
@@ -4740,28 +4739,41 @@ class ReportController extends Controller
 
     public function querySearchCSF($region_id, $service_id, $unit_id , $sub_unit_id , $psto_id, $client_type, $sub_unit_type )
     {
+
         $customer_ids = CSFForm::when($region_id, function ($query, $region_id) {
             $query->where('region_id', $region_id);
-        })->when($service_id, function ($query, $service_id) {
+        })
+        ->when($service_id, function ($query, $service_id) {
             $query->where('service_id', $service_id);
-        })->when($unit_id, function ($query, $unit_id) {
+        })
+        ->when($unit_id, function ($query, $unit_id) {
             $query->where('unit_id', $unit_id);
-        })->when($sub_unit_id, function ($query, $sub_unit_id) {
+        })
+        ->when($sub_unit_id, function ($query, $sub_unit_id) {
             $query->where('sub_unit_id', $sub_unit_id);
-        })->when($psto_id, function ($query, $psto_id) {
+        })
+        ->when($psto_id, function ($query, $psto_id) {
             $query->where('psto_id', $psto_id);
-        })->when($client_type, function ($query, $client_type) {
-            if($client_type == "Internal"){
-                $query->where('client_type', "Internal Employees");
+        })
+        ->when($client_type, function ($query, $client_type) use ($region_id, $service_id, $unit_id) {
+            // IF HR UNIT
+            if($region_id == 10 && $service_id == 2 && $unit_id == 8){
+                if($client_type == "Internal"){
+                    $query->where('client_type', "Internal Employees");
+                }
+                else if($client_type == "External"){
+                    $query->where(function ($q) {
+                        $q->where('client_type', "General Public")
+                          ->orWhere('client_type', "Government Employees")
+                          ->orWhere('client_type', "Business/Organization");
+                    });
+                }
             }
-            else if($client_type == "External"){
-                $query->where('client_type', "General Public")
-                      ->orWhere('client_type', "Government Employees")
-                      ->orWhere('client_type', "Business/Organization");
-            }     
-        })->when($sub_unit_type, function ($query, $sub_unit_type) {
+        })
+        ->when($sub_unit_type, function ($query, $sub_unit_type) {
             $query->where('sub_unit_type', $sub_unit_type['type_name']);
-       })->select('customer_id')   // select all customers id to find other data for customer satifaction index report
+        })
+        ->select('customer_id')
         ->get();
 
         return  $customer_ids;
