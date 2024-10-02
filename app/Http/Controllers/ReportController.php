@@ -4771,10 +4771,14 @@ class ReportController extends Controller
             }
         })
         ->when($sub_unit_type, function ($query, $sub_unit_type) {
-            $query->where('sub_unit_type', $sub_unit_type['type_name']);
+            if($sub_unit_type['type_name']){
+                $query->where('sub_unit_type', $sub_unit_type['type_name']);
+            }
+          
         })
         ->select('customer_id')
         ->get();
+
 
         return  $customer_ids;
     
