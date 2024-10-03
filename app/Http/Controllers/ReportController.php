@@ -3019,6 +3019,7 @@ class ReportController extends Controller
         $total_comments = $comment_list->where('comment','!=','')->count();
         $total_complaints = $comment_list->where('is_complaint',1)->count();
 
+
         //Respondents list
         $data = CARResource::collection($respondents_list);
 
@@ -3104,8 +3105,6 @@ class ReportController extends Controller
             ->with('first_month_csi', $first_month_csi)
             ->with('second_month_csi', $second_month_csi)
             ->with('third_month_csi', $third_month_csi)
-            ->with('total_comments', $total_comments)
-            ->with('total_complaints', $total_complaints)
             ->with('jul_vs_grand_total', $jul_vs_grand_total)
             ->with('aug_vs_grand_total', $aug_vs_grand_total)
             ->with('sep_vs_grand_total', $sep_vs_grand_total)
@@ -3117,7 +3116,10 @@ class ReportController extends Controller
             ->with('sep_ndvd_grand_total', $sep_ndvd_grand_total)
             ->with('jul_grand_total', $jul_grand_total)
             ->with('aug_grand_total', $aug_grand_total)
-            ->with('sep_grand_total', $sep_grand_total);
+            ->with('sep_grand_total', $sep_grand_total)
+            ->with('total_comments', $total_comments)
+            ->with('total_complaints', $total_complaints)
+            ->with('comments', $comments);
 
 
     }
@@ -3790,6 +3792,8 @@ class ReportController extends Controller
 
         $comments = $comment_list->where('comment','!=','')->pluck('comment'); 
 
+
+
         $total_comments = $comment_list->where('comment','!=','')->count();
         $total_complaints = $comment_list->where('is_complaint',1)->count();
 
@@ -3878,8 +3882,6 @@ class ReportController extends Controller
             ->with('first_month_csi', $first_month_csi)
             ->with('second_month_csi', $second_month_csi)
             ->with('third_month_csi', $third_month_csi)
-            ->with('total_comments', $total_comments)
-            ->with('total_complaints', $total_complaints)
             ->with('oct_vs_grand_total', $oct_vs_grand_total)
             ->with('nov_vs_grand_total', $nov_vs_grand_total)
             ->with('dec_vs_grand_total', $dec_vs_grand_total)
@@ -3891,7 +3893,10 @@ class ReportController extends Controller
             ->with('dec_ndvd_grand_total', $dec_ndvd_grand_total)
             ->with('oct_grand_total', $oct_grand_total)
             ->with('nov_grand_total', $nov_grand_total)
-            ->with('dec_grand_total', $dec_grand_total);
+            ->with('dec_grand_total', $dec_grand_total)
+            ->with('total_comments', $total_comments)
+            ->with('total_complaints', $total_complaints)
+            ->with('comments', $comments);
     }
    
 
@@ -5560,19 +5565,5 @@ class ReportController extends Controller
 
         return $cc_data;
     }
-
-    public function calculateTotalVSSRespondentsByQuarter( $grand_vs_total, $grand_s_total ,$grand_na_total )
-    {  
-    
-        //Calculate total number of respondents/customer who rated VS/S
-        // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
-        // here is 9 because I include the overall data in the dimensions
-
-        $vss_total = $grand_vs_total +  $grand_s_total + $grand_na_total;
-        $total_vss_respondents = $vss_total / $dimension_count;     
-        $total_vss_respondents = round($total_vss_respondents); 
-
-        return $total_vss_respondents ;
-    } 
 
 }
