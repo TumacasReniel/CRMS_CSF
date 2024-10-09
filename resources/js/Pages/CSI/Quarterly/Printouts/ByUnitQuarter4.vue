@@ -343,7 +343,7 @@
                                     </span> 
                                 </td>   
                                 <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
-                                    <span v-if="todata.lsr_totals[index+1].lsr_totaltal > 0">
+                                    <span v-if="data.lsr_totals[index+1].lsr_totaltal > 0">
                                         {{ data.lsr_totals[index+1].lsr_total }}
                                     </span> 
                                 </td>             
