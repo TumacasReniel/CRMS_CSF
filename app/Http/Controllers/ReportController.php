@@ -3136,7 +3136,6 @@ class ReportController extends Controller
         //get assignatoree list
         $assignatorees = Assignatorees::all();
         
-
         $date_range = null;
         $customer_recommendation_ratings = null;
         $respondents_list = null;
@@ -3899,7 +3898,825 @@ class ReportController extends Controller
             ->with('comments', $comments);
     }
    
+    // QUARTERLY || FIRST, SECOND , THIRD AND FOURTH QUARTER
+    public function generateCSIByQuarter($request, $region_id, $psto_id)
+    {
+        $sub_unit = $this->getSubUnit($request);
+        $unit_pstos = $this->getUnitPSTOs($request);
+        $sub_unit_pstos = $this->getSubUnitPSTOs($request);
+        $sub_unit_types = $this->getSubUnitTypes($request);
 
+        //get user
+        $user = Auth::user();
+        //get assignatoree list
+        $assignatorees = Assignatorees::all();
+        
+        $date_range = null;
+        $customer_recommendation_ratings = null;
+        $respondents_list = null;
+      
+            
+        $service_id = $request->service['id'];
+        $unit_id = $request->unit_id;
+        $sub_unit_id = $request->selected_sub_unit;
+        $client_type = $request->client_type; 
+        $sub_unit_type = $request->sub_unit_type; 
+
+       $startDate = '';
+       $endDate = '';
+       $numeric_first_month = 0;
+       $numeric_second_month = 0;
+       $numeric_second_month = 0;
+
+        // Retrieve records for the specified quarter and year
+        switch($request->selected_quarter){
+            case 'FIRST QUARTER':
+                $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
+                $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
+
+                $numeric_first_month = 1;
+                $numeric_second_month = 2;
+                $numeric_second_month = 3;
+
+            break;
+            case 'SECOND QUARTER':
+                $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
+                $endDate = Carbon::create($request->selected_year, 5, 31)->endOfDay();
+
+                $numeric_first_month = 4;
+                $numeric_second_month = 5;
+                $numeric_third_month = 6;
+            break;
+            case 'THIRD QUARTER':
+                $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
+                $endDate = Carbon::create($request->selected_year, 9, 31)->endOfDay();
+
+                $numeric_first_month = 7;
+                $numeric_second_month = 8;
+                $numeric_third_month = 9;
+            break;
+            case 'FOURTH QUARTER':
+                $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
+                $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+
+                $numeric_first_month = 10;
+                $numeric_second_month = 11;
+                $numeric_third_month = 12;
+            break;
+
+            default:
+                dd('no quarter selected'); 
+        }  
+        
+        // search and check list of forms query  and get customers list ids
+       $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
+
+        // get CC Data
+        $cc_query = $this->getCitizenCharterByQuarter($request);
+        //calculate CC Data
+        $cc_data = $this->calculateCC($cc_query);
+
+        // get Customer Attribute Rating with specific quarter date range
+        $date_range = $this->getCustomerAttributeRatingByQuarter($request,$customer_ids,$startDate ,$endDate);
+
+        // get first month of Specific Quarter Selected 
+        $first_month = $this->getCustomerAttributeRatingByQuarterWithMonth($request, $customer_ids, $numeric_first_month);
+        // get second month of Specific Quarter Selected 
+        $second_month = $this->getCustomerAttributeRatingByQuarterWithMonth($request, $customer_ids, $numeric_second_month);
+        // get third month of Specific Quarter Selected 
+        $third_month = $this->getCustomerAttributeRatingByQuarterWithMonth($request, $customer_ids, $numeric_third_month);
+
+        // get Customer Recommendation Rating with specific quarter date range 
+        $customer_recommendation_ratings = $this->getCustomerRecommendationRatingByQuarter($request, $customer_ids,$startDate ,$endDate);
+
+        // get First Month Customer Recommendation Rating with specific quarter date range 
+        $first_month_crr = $this->getCustomerRecommendationRatingByQuarterWithMonth($request, $customer_ids, $numeric_first_month);
+        // get First Month Customer Recommendation Rating with specific quarter date range 
+        $second_month_crr = $this->getCustomerRecommendationRatingByQuarterWithMonth($request, $customer_ids, $numeric_second_month);
+        // get First Month Customer Recommendation Rating with specific quarter date range 
+        $third_month_crr = $this->getCustomerRecommendationRatingByQuarterWithMonth($request, $customer_ids, $numeric_third_month);
+
+        // get respondents list
+        $respondents_list = $this->getRespondents($request, $customer_ids,$startDate ,$endDate);            
+
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
+        $grand_total_raw_points = 0;
+        $vs_grand_total_score =0;
+        $s_grand_total_score = 0;
+        $ndvd_grand_total_score = 0;
+        $grand_total_score =0;
+
+        $vs_grand_total_raw_points = 0;
+        $s_grand_total_raw_points = 0;
+        $ndvd_grand_total_raw_points = 0;
+        $lsr_grand_total = 0 ;
+        $lsr_average = 0;
+
+        //Importance total raw points  
+        $vi_grand_total_raw_points = 0;
+        $i_grand_total_raw_points = 0;
+        $misinai_grand_total_raw_points = 0;
+        //Importance grand total score
+          
+        $vi_grand_total_score=0;
+        $i_grand_total_score =0;
+        $misinai_grand_total_score = 0;
+
+        $first_month_vs_grand_total = 0;
+        $second_month_vs_grand_total =  0;
+        $third_month_vs_grand_total =  0;
+
+        $first_month_s_grand_total = 0;
+        $second_motnh_s_grand_total =  0;
+        $third_month_s_grand_total =  0;
+
+        $first_month_ndvd_grand_total = 0;
+        $second_month_ndvd_grand_total =  0;
+        $third_month_ndvd_grand_total =  0;
+
+        $first_month_na_grand_total = 0;
+        $second_na_grand_total =  0;
+        $third_na_grand_total =  0;
+
+        for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
+            //PART I
+
+            // First Month total responses with its dimensions and rate score
+            $first_month_na_total = $first_month->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
+            $first_month_vs_total = $first_month->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $first_month_s_total = $first_month->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $first_month_n_total = $first_month->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $first_month_d_total = $first_month->where('rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $first_month_vd_total = $first_month->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+
+            $first_month_grand_total =  $oct_vs_total + $first_month_s_total + $first_month_n_total + $first_month_d_total + $first_month_vd_total ; 
+
+            // Second Month total responses with its dimensions and rate score
+            $second_month_na_total = $second_month->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
+            $second_month_vs_total = $second_month->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $second_month_s_total = $second_month->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $second_month_n_total = $second_month->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $second_month_d_total = $second_month->where('rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $second_month_vd_total = $second_month->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+
+            $second_month_grand_total =  $second_month_vs_total + $second_month_s_total + $second_month_n_total + $second_month_d_total + $second_month_vd_total ; 
+
+            // Third Month total responses with its dimensions and rate score
+            $third_month_na_total = $month_dec->where('rate_score', 6)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+
+            $third_month_vs_total = $third_month->where('rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $third_month_s_total = $third_month->where('rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $third_month_n_total = $third_month->where('rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $third_month_d_total = $third_month->where('rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+            $third_month_vd_total = $third_month->where('rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+
+            $third_month_grand_total =  $third_month_vs_total + $third_month_s_total + $third_month_n_total + $third_month_d_total + $third_month_vd_total ; 
+
+            // Quarterly Very Satisfied total with specific dimension or attribute
+            $q_vs_totals[$dimensionId] = [
+                'first_month_vs_total' => $first_month_vs_total,
+                'seond_month_vs_total' => $seond_month_vs_total,
+                'third_month_vs_total' => $third_month_vs_total,
+            ];
+            // Quarterly Satisfied total with specific dimension or attribute
+            $q_s_totals[$dimensionId] = [
+                'first_month_s_total' => $first_month_s_total,
+                'second_month_s_total' => $second_month_s_total,
+                'third_month_s_total' => $third_month_s_total,
+            ];
+
+             // Quarterly Neutral total with specific dimension or attribute
+            $q_n_totals[$dimensionId] = [
+                'first_month_n_total' => $first_month_n_total,
+                'second_month_n_total' => $second_month_n_total,
+                'third_month_n_total' => $third_month_n_total,
+            ];
+
+            // Quarterly Disatisfied total with specific dimension or attribute
+            $q_d_totals[$dimensionId] = [
+                'first_month_d_total' => $first_month_d_total,
+                'second_month_d_total' => $second_month_d_total,
+                'third_month_d_total' => $third_month_d_total,
+            ];
+
+             // Quarterly Very Disatisfied total with specific dimension or attribute
+            $q_vd_totals[$dimensionId] = [
+                'first_month_vd_total' => $first_month_vd_total,
+                'second_month_vd_total' => $second_month_vd_total,
+                'third_month_vd_total' => $third_month_vd_total,
+            ];
+
+            // Quarterly grand totals with specific dimension or attribute
+            $q_grand_totals[$dimensionId] = [
+                'first_month_grand_total' => $first_month_grand_total,
+                'second_month_grand_total' => $second_month_grand_total,
+                'third_month_grand_total' => $third_month_grand_total,
+            ];
+
+            //Total Raw Points totals
+            $vs_total_raw_points = $first_month_vs_total + $second_month_vs_total + $third_month_vs_total;
+            $s_total_raw_points = $first_month_s_total + $second_month_s_total + $third_month_s_total;
+            $n_total_raw_points = $first_month_n_total + $second_month_n_total + $third_month_n_total;
+            $d_total_raw_points =$first_month_d_total + $second_month_d_total + $third_month_d_total;
+            $vd_total_raw_points =$first_month_vd_total + $second_month_vd_total + $third_month_vd_total;
+            $total_raw_points = $vs_total_raw_points + $s_total_raw_points + $n_total_raw_points +  $d_total_raw_points +  $vd_total_raw_points;           
+
+            $vs_grand_total_raw_points += $vs_total_raw_points;
+            $s_grand_total_raw_points +=  $s_total_raw_points;
+
+            $ndvd_grand_total_raw_points +=  $n_total_raw_points + $d_total_raw_points + $vd_total_raw_points;
+            $grand_total_raw_points+= $total_raw_points;
+
+            $trp_totals[$dimensionId] = [
+                'vs_total_raw_points' => $vs_total_raw_points,
+                's_total_raw_points' => $s_total_raw_points,
+                'n_total_raw_points' => $n_total_raw_points,
+                'd_total_raw_points' => $d_total_raw_points,
+                'vd_total_raw_points' => $vd_total_raw_points,
+                'total_raw_points' => $total_raw_points,
+            ];
+
+            //Part 1 Quarter 1 total scores
+            $x_vs_total = $vs_total_raw_points * 5; 
+            $x_s_total = $s_total_raw_points * 4; 
+            $x_n_total = $n_total_raw_points * 3; 
+            $x_d_total = $d_total_raw_points * 3; 
+            $x_vd_total = $vd_total_raw_points * 1; 
+            $x_total_score =  $x_vs_total +  $x_s_total +  $x_n_total +  $x_d_total + $x_vd_total;
+            
+            $vs_grand_total_score += $x_vs_total ;
+            $s_grand_total_score += $x_s_total ;
+            $ndvd_grand_total_score += $x_n_total +  $x_d_total + $x_vd_total ;
+            $grand_total_score += $x_total_score ;
+
+            $p1_total_scores[$dimensionId] = [ 
+                'x_vs_total' => $x_vs_total,
+                'x_s_total' => $x_s_total,
+                'x_n_total' => $x_n_total,
+                'x_d_total' => $x_d_total,
+                'x_vd_total' => $x_vd_total, 
+                'x_total_score' => $x_total_score,
+            ];
+
+            // Likert Scale Rating = total score / grand total of total raw points
+            if($total_raw_points != 0 ){
+                $vs_lsr_total =   number_format(($x_vs_total  /  $total_raw_points),2);
+                $s_lsr_total =    number_format(($x_s_total /  $total_raw_points),2);
+                $n_lsr_total =   number_format(($x_n_total /  $total_raw_points),2);
+                $d_lsr_total =   number_format(($x_d_total /  $total_raw_points),2);
+                $vd_lsr_total =   number_format(($x_vd_total /  $total_raw_points),2);
+                $lsr_total =  number_format(($vs_lsr_total +  $s_lsr_total  +  $n_lsr_total  +  $d_lsr_total  +  $vd_lsr_total),2);
+                $lsr_grand_total +=  $lsr_total;
+                $lsr_grand_total =number_format(($lsr_grand_total),2);
+                $lsr_average =  number_format(($lsr_grand_total / $dimensionId), 2);
+            }
+            else{
+                $vs_lsr_total =  0;
+                $s_lsr_total =  0;
+                $n_lsr_total =  0;
+                $d_lsr_total = 0;
+                $vd_lsr_total =  0;
+                $lsr_total = 0;
+                $lsr_grand_total +=  0;
+                $lsr_average =  0;
+            }
+
+            $lsr_totals[$dimensionId] = [
+                'vs_lsr_total' => $vs_lsr_total,
+                's_lsr_total' => $s_lsr_total,
+                'n_lsr_total' => $n_lsr_total,
+                'd_lsr_total' => $d_lsr_total,
+                'vd_lsr_total' => $vd_lsr_total,
+                'lsr_total' => $lsr_total,
+            ];
+            
+            // PART II
+              // first month total responses with its dimensions and rate score
+              $first_month_vi_total = $first_month->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $first_month_i_total = $first_month->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $first_month_mi_total = $first_month->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $first_month_si_total = $first_month->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $first_month_nai_total = $first_month->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+  
+              $first_month_i_grand_total =  $first_month_vi_total + $first_month_i_total + $first_month_mi_total + $first_month_si_total + $first_month_nai_total ; 
+  
+              //  second_month importance total responses with its dimensions and rate score
+              $second_month_vi_total = $second_month->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $second_month_i_total = $second_month->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $second_month_mi_total = $second_month->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $second_month_si_total = $second_month->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $second_month_nai_total = $second_month->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+  
+              $second_month_i_grand_total =  $second_month_vi_total + $second_month_i_total + $second_month_mi_total + $second_month_si_total + $second_month_nai_total ; 
+  
+              //  third month total responses with its dimensions and rate score
+              $third_month_vi_total = $third_month->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $third_month_i_total = $third_month->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $third_month_mi_total = $third_month->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $third_month_si_total = $third_month->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();
+              $third_month_nai_total = $third_month->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->groupBy('customer_id')->count();          
+  
+              $third_month_i_grand_total =  $third_month_vi_total + $third_month_i_total + $third_month_mi_total + $third_month_si_total + $third_month_nai_total ; 
+
+                // Very Important total with specific dimention or attribute
+                $q_vi_totals[$dimensionId] = [
+                    'first_month_vi_total' => $first_month_vi_total,
+                    'second_month_vi_total' => $second_month_vi_total,
+                    'third_month_vi_total' => $third_month_vi_total,
+                ];
+                //Important total with specific dimention or attribute
+                $q_i_totals[$dimensionId] = [
+                    'first_month_i_total' => $first_month_i_total,
+                    'second_month_i_total' => $second_month_i_total,
+                    'third_month_i_total' => $third_month_i_total,
+                ];
+                // Moderately Important total with specific dimention or attribute
+                $q_mi_totals[$dimensionId] = [
+                    'first_month_mi_total' => $first_month_mi_total,
+                    'second_month_mi_total' => $second_month_mi_total,
+                    'third_month_mi_total' => $third_month_mi_total,
+                ];
+                // slightly Important total with specific dimention or attribute
+                $q_si_totals[$dimensionId] = [
+                    'first_month_si_total' => $first_month_si_total,
+                    'second_month_si_total' => $second_month_si_total,
+                    'third_month_si_total' => $third_month_si_total,
+                ];
+
+                $q_nai_totals[$dimensionId] = [
+                    'first_month_nai_total' => $first_month_nai_total,
+                    'second_month_nai_total' => $second_month_nai_total,
+                    'third_month_nai_total' => $third_month_nai_total,
+                ];
+
+                $q_i_grand_totals[$dimensionId] = [
+                    'first_month_i_grand_total' => $first_month_i_grand_total,
+                    'second_month_i_grand_total' => $second_month_i_grand_total,
+                    'third_month_i_grand_total' => $third_month_i_grand_total,
+                ];
+
+                
+            //Importance Total Raw Points totals
+            $vi_total_raw_points = $first_month_vi_total + $second_month_vi_total + $third_month_vi_total;
+            $i_total_raw_points = $first_month_i_total + $second_month_i_total + $third_month_i_total;
+            $mi_total_raw_points = $first_month_mi_total + $second_month_mi_total + $third_month_mi_total;
+            $si_total_raw_points = $first_month_si_total + $second_month_si_total + $third_month_si_total;
+            $nai_total_raw_points = $first_month_nai_total + $second_month_nai_total + $third_month_nai_total;
+            $i_total_raw_points = $vi_total_raw_points + $i_total_raw_points + $mi_total_raw_points +  $si_total_raw_points +  $nai_total_raw_points;           
+
+            $vi_grand_total_raw_points += $vi_total_raw_points;
+            $i_grand_total_raw_points +=  $i_total_raw_points;
+            $misinai_grand_total_raw_points +=  $mi_total_raw_points + $si_total_raw_points + $nai_total_raw_points;
+            $grand_total_raw_points+= $total_raw_points;
+
+            $i_trp_totals[$dimensionId] = [
+                'vi_total_raw_points' => $vi_total_raw_points,
+                'i_total_raw_points' => $i_total_raw_points,
+                'mi_total_raw_points' => $mi_total_raw_points,
+                'si_total_raw_points' => $si_total_raw_points,
+                'nai_total_raw_points' => $nai_total_raw_points,
+                'i_total_raw_points' => $i_total_raw_points,
+            ];
+
+            //Part 1 Quarter 1 total scores
+            $x_vi_total = $vi_total_raw_points * 5; 
+            $x_i_total = $i_total_raw_points * 4; 
+            $x_mi_total = $mi_total_raw_points * 3; 
+            $x_si_total = $si_total_raw_points * 3; 
+            $x_nai_total = $nai_total_raw_points * 1; 
+            $x_i_total_score =  $x_vi_total +  $x_i_total +  $x_mi_total +  $x_si_total + $x_nai_total;
+            
+            $vi_grand_total_score += $x_vi_total ;
+            $i_grand_total_score += $x_si_total ;
+            $misinai_grand_total_score += $x_mi_total +  $x_si_total + $x_nai_total ;
+
+            $i_total_scores[$dimensionId] = [ 
+                'x_vi_total' => $x_vi_total,
+                'x_i_total' => $x_i_total,
+                'x_mi_total' => $x_mi_total,
+                'x_si_total' => $x_si_total,
+                'x_nai_total' => $x_nai_total, 
+                'x_i_total_score' => $x_i_total_score,
+            ];
+
+
+
+            // Calculate all respondents who rated VS 
+            $first_month_vs_grand_total +=  $first_month_vs_total;
+            $second_month_vs_grand_total +=  $second_month_vs_grand_total;
+            $third_month_vs_grand_total +=  $third_month_vs_grand_total; 
+
+            // Calculate all respondents who rated S
+            $first_month_s_grand_total +=  $first_month_s_total;
+            $second_month_s_grand_total +=  $second_month_s_total;
+            $third_month_s_grand_total +=  $third_month_s_total; 
+
+            // Calculate all respondents who rated NDVD
+            $oct_ndvd_total = $oct_n_total + $oct_d_total + $oct_vd_total;
+            $nov_ndvd_total = $nov_n_total + $nov_d_total + $nov_vd_total;
+            $dec_ndvd_total = $dec_n_total + $dec_d_total + $dec_vd_total;
+
+            $oct_ndvd_grand_total +=  $oct_ndvd_total;
+            $nov_ndvd_grand_total +=  $nov_ndvd_total;
+            $dec_ndvd_grand_total +=  $dec_ndvd_total; 
+
+            // Calculate all respondents who rated n/a
+            $oct_na_grand_total +=  $oct_na_total;
+            $nov_na_grand_total +=  $nov_na_total;
+            $dec_na_grand_total +=  $dec_na_total; 
+
+           
+        }
+
+
+        // Calculate all respondents 
+        $oct_grand_total =  $oct_vs_grand_total + $oct_s_grand_total +   $oct_ndvd_grand_total;     
+        $nov_grand_total =  $nov_vs_grand_total + $nov_s_grand_total +  $nov_ndvd_grand_total;
+        $dec_grand_total =  $dec_vs_grand_total + $dec_s_grand_total +  $dec_ndvd_grand_total;
+
+        //Calculate total number of respondents/customer who rated VS/S include N/A
+        // Formula ----> get the sum of total respondents for each dimension who rated VS or S and divide it to dimension total count
+        // here is 9 because I include the overall data in the dimensions
+
+        $oct_vss_total = $oct_vs_grand_total +  $oct_s_grand_total + $oct_na_grand_total;
+        $oct_total_vss_respondents = $oct_vss_total / 9;     
+        $oct_total_vss_respondents = round($oct_total_vss_respondents);  
+
+        $nov_vss_total = $nov_vs_grand_total +  $nov_s_grand_total + $nov_na_grand_total;
+        $nov_total_vss_respondents = $nov_vss_total / 9;     
+        $nov_total_vss_respondents = round($nov_total_vss_respondents);  
+
+        $dec_vss_total = $dec_vs_grand_total +  $dec_s_grand_total + $dec_na_grand_total;
+        $dec_total_vss_respondents = $dec_vss_total / 9;     
+        $dec_total_vss_respondents = round($dec_total_vss_respondents);  
+
+        $total_vss_respondents =   $oct_total_vss_respondents + $nov_total_vss_respondents +   $dec_total_vss_respondents ;
+
+
+        // Total No. of Very Satisfied (VS) Responses of First Quarte
+        // -- octy
+        $oct_total_vs_respondents = $month_oct->where('rate_score',5)->groupBy('customer_id')->count();
+        // -- novust
+        $nov_total_vs_respondents = $month_nov->where('rate_score',5)->groupBy('customer_id')->count();
+        // -- dectember
+        $dec_total_vs_respondents = $month_dec->where('rate_score',5)->groupBy('customer_id')->count();
+
+        // Total No. of Satisfied (S) Responses
+       // -- octy
+       $oct_total_s_respondents = $month_oct->where('rate_score',4)->groupBy('customer_id')->count();
+       // -- novust
+       $nov_total_s_respondents = $month_nov->where('rate_score',4)->groupBy('customer_id')->count();
+       // -- dectember
+       $dec_total_s_respondents = $month_dec->where('rate_score',4)->groupBy('customer_id')->count();
+
+        // Total No. of Other (N, D, VD) Responses
+        // -- octy
+        $oct_total_ndvd_respondents = $month_oct->where('rate_score','<', 4)->groupBy('customer_id')->count();
+        // -- novust
+        $nov_total_ndvd_respondents = $month_nov->where('rate_score','<', 4)->groupBy('customer_id')->count();
+        // -- dectember
+        $dec_total_ndvd_respondents = $month_dec->where('rate_score','<', 4)->groupBy('customer_id')->count();
+          
+        // Total No. of All Responses
+        // -- octy
+        $oct_total_respondents = $month_oct->groupBy('customer_id')->count();
+        // -- novust
+        $nov_total_respondents = $month_nov->groupBy('customer_id')->count();
+        // -- dectember
+        $dec_total_respondents = $month_dec->groupBy('customer_id')->count();
+
+        //Total respondents /Customers
+        $total_respondents = $date_range->groupBy('customer_id')->count();
+    
+        // Frst quarter total number of promoters or respondents who rated 9-10 in recommendation rating
+        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        // octy
+        $oct_total_promoters = $oct_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        // dd(  $oct_total_promoters );
+        // novust
+        $nov_total_promoters = $nov_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        // dectember
+        $dec_total_promoters = $dec_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        
+        // total number of detractors or respondents who rated 0-6 in recommendation rating
+        $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+         // octy
+         $oct_total_detractors = $oct_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+         // novust
+         $nov_total_detractors = $nov_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+         // dectember
+         $dec_total_detractors = $dec_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+  
+          //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
+        $percentage_vss_respondents  = 0;
+        if($total_respondents != 0){
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
+        }
+        $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
+
+        $customer_satisfaction_rating = 0;
+        if($total_vss_respondents != 0){
+            $customer_satisfaction_rating = (($vs_grand_total_score + $s_grand_total_score)/$grand_total_score) * 100;
+        }
+        $customer_satisfaction_rating = number_format( $customer_satisfaction_rating , 2);
+
+        //Percentage of Promoters = number of promoters / total respondents
+        $percentage_promoters = 0;
+        //  Percentage promoters
+        $oct_percentage_promoters = 0.00;
+        $nov_percentage_promoters = 0.00;
+        $dec_percentage_promoters = 0.00;
+
+        // Percentage of promoter
+        $oct_percentage_detractors = 0.00;
+        $nov_percentage_detractors = 0.00;
+        $dec_percentage_detractors = 0.00;
+
+        //nps
+        $oct_net_promoter_score =  0.00;
+        $nov_net_promoter_score = 0.00;
+        $dec_net_promoter_score =  0.00;
+
+        //average
+        $ave_net_promoter_score = 0.00;
+        $average_percentage_promoters =  0.00;
+        $average_percentage_detractors =  0.00;
+
+        if($total_respondents != 0 ){
+            $percentage_promoters = number_format((($total_promoters / $total_respondents) * 100), 2);
+            if($oct_total_respondents !=0){
+                $oct_percentage_promoters = number_format((($oct_total_promoters / $oct_total_respondents) * 100), 2);
+                $oct_percentage_detractors = number_format((($oct_total_detractors / $oct_total_respondents) * 100),2);
+            }
+
+            if($nov_percentage_promoters !=0){
+                $nov_percentage_promoters = number_format((($nov_total_promoters / $nov_total_respondents) * 100), 2);
+                $nov_percentage_detractors = number_format((($nov_total_detractors / $nov_total_respondents) * 100),2);
+            }
+           
+            if($dec_percentage_promoters !=0){
+                $dec_percentage_promoters = number_format((($dec_total_promoters / $dec_total_respondents) * 100), 2);
+                $dec_percentage_detractors = number_format((($dec_total_detractors / $dec_total_respondents) * 100),2);
+            }
+          
+        
+            //Percentage of Promoters = number of promoters / total respondents
+            $percentage_detractors = number_format((($total_detractors / $total_respondents) * 100),2);
+
+            // Net Promotion Scores(NPS) = Percentage of Promoters−Percentage of Detractors
+            $oct_net_promoter_score =  number_format(($oct_percentage_promoters - $oct_percentage_detractors),2);
+            $nov_net_promoter_score =  number_format(($nov_percentage_promoters - $nov_percentage_detractors),2);
+            $dec_net_promoter_score =  number_format(($dec_percentage_promoters - $dec_percentage_detractors),2);
+
+            $ave_net_promoter_score =  number_format((($oct_net_promoter_score + $nov_net_promoter_score + $dec_net_promoter_score)/ 3),2);
+            $average_percentage_promoters =  number_format((($oct_percentage_promoters + $nov_percentage_promoters + $dec_percentage_promoters)/ 3),2);
+            $average_percentage_detractors =  number_format((($oct_percentage_detractors + $nov_percentage_detractors + $dec_percentage_detractors)/ 3),2);
+
+        }
+
+        // get Monthly CSI
+        $first_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 7);
+        $second_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 8);
+        $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 9);
+
+        $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
+
+         //comments and  complaints
+         $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
+                                        ->whereBetween('created_at', [$startDate, $endDate])
+                                        ->whereYear('created_at', $request->selected_year)->get();
+
+        $comments = $comment_list->where('comment','!=','')->pluck('comment'); 
+
+
+
+        $total_comments = $comment_list->where('comment','!=','')->count();
+        $total_complaints = $comment_list->where('is_complaint',1)->count();
+
+        //Respondents list
+        $data = CARResource::collection($respondents_list);
+
+        //send response to front end
+        return Inertia::render('CSI/Index')
+            ->with('cc_data', $cc_data)
+            ->with('user', $user)
+            ->with('assignatorees', $assignatorees)
+            ->with('sub_unit', $sub_unit)
+            ->with('unit_pstos', $unit_pstos)
+            ->with('sub_unit_pstos', $sub_unit_pstos)
+            ->with('sub_unit_types', $sub_unit_types)
+            ->with('dimensions', $dimensions)
+            ->with('service', $request->service)
+            ->with('unit', $request->unit)
+            ->with('respondents_list',$data)
+            ->with('q3_vs_totals', $q3_vs_totals)
+            ->with('q3_s_totals', $q3_s_totals)
+            ->with('q3_n_totals', $q3_n_totals)
+            ->with('q3_d_totals', $q3_d_totals)
+            ->with('q3_vd_totals', $q3_vd_totals)
+            ->with('q3_grand_totals', $q3_grand_totals)
+            ->with('trp_totals', $trp_totals)
+            ->with('grand_total_raw_points', $grand_total_raw_points)
+            ->with('vs_grand_total_raw_points', $vs_grand_total_raw_points)
+            ->with('s_grand_total_raw_points', $s_grand_total_raw_points)
+            ->with('ndvd_grand_total_raw_points', $ndvd_grand_total_raw_points)
+            ->with('p1_total_scores', $p1_total_scores)
+            ->with('vs_grand_total_score', $vs_grand_total_score) 
+            ->with('s_grand_total_score', $s_grand_total_score) 
+            ->with('ndvd_grand_total_score', $ndvd_grand_total_score) 
+            ->with('grand_total_score', $grand_total_score) 
+            ->with('lsr_totals', $lsr_totals)
+            ->with('lsr_grand_total', $lsr_grand_total)
+            ->with('lsr_average', $lsr_average ) 
+            ->with('oct_total_vs_respondents', $oct_total_vs_respondents)
+            ->with('nov_total_vs_respondents', $nov_total_vs_respondents)
+            ->with('dec_total_vs_respondents', $dec_total_vs_respondents)
+            ->with('oct_total_s_respondents', $oct_total_s_respondents)
+            ->with('nov_total_s_respondents', $nov_total_s_respondents)
+            ->with('jun_total_s_respondents', $dec_total_s_respondents)
+            ->with('oct_total_ndvd_respondents', $oct_total_ndvd_respondents)
+            ->with('nov_total_ndvd_respondents', $nov_total_ndvd_respondents)
+            ->with('dec_total_ndvd_respondents', $dec_total_ndvd_respondents)
+            ->with('oct_total_respondents', $oct_total_respondents)
+            ->with('nov_total_respondents', $nov_total_respondents)
+            ->with('dec_total_respondents', $dec_total_respondents)
+            ->with('total_respondents', $total_respondents)
+            ->with('total_vss_respondents', $total_vss_respondents)
+            ->with('percentage_vss_respondents', $percentage_vss_respondents)
+            ->with('total_promoters', $total_promoters)
+            ->with('total_detractors', $total_detractors)
+            ->with('q3_vi_totals', $q3_vi_totals)
+            ->with('q3_i_totals', $q3_i_totals)
+            ->with('q3_mi_totals', $q3_mi_totals)
+            ->with('q3_si_totals', $q3_si_totals)
+            ->with('q3_nai_totals', $q3_nai_totals)
+            ->with('q3_i_grand_totals', $q3_i_grand_totals)
+            ->with('i_trp_totals', $i_trp_totals)
+            ->with('i_grand_total_raw_points', $i_grand_total_raw_points)
+            ->with('vi_grand_total_raw_points', $vi_grand_total_raw_points)
+            ->with('s_grand_total_raw_points', $s_grand_total_raw_points)
+            ->with('misinai_grand_total_raw_points', $misinai_grand_total_raw_points)
+            ->with('i_total_scores', $i_total_scores)
+            ->with('vi_grand_total_score', $vi_grand_total_score) 
+            ->with('i_grand_total_score', $i_grand_total_score) 
+            ->with('misinai_grand_total_score', $misinai_grand_total_score)
+            ->with('percentage_promoters', $percentage_promoters)
+            ->with('oct_percentage_promoters', $oct_percentage_promoters)
+            ->with('nov_percentage_promoters', $nov_percentage_promoters)
+            ->with('dec_percentage_promoters', $dec_percentage_promoters)
+            ->with('average_percentage_promoters', $average_percentage_promoters)
+            ->with('oct_percentage_detractors', $oct_percentage_detractors)
+            ->with('nov_percentage_detractors', $nov_percentage_detractors)
+            ->with('dec_percentage_detractors', $dec_percentage_detractors) 
+            ->with('average_percentage_detractors', $average_percentage_detractors)
+            ->with('oct_net_promoter_score', $oct_net_promoter_score)
+            ->with('nov_net_promoter_score', $nov_net_promoter_score)
+            ->with('dec_net_promoter_score', $dec_net_promoter_score)
+            ->with('ave_net_promoter_score', $ave_net_promoter_score)
+            ->with('customer_satisfaction_rating', $customer_satisfaction_rating)
+            ->with('csi', $customer_satisfaction_index)
+            ->with('first_month_csi', $first_month_csi)
+            ->with('second_month_csi', $second_month_csi)
+            ->with('third_month_csi', $third_month_csi)
+            ->with('oct_vs_grand_total', $oct_vs_grand_total)
+            ->with('nov_vs_grand_total', $nov_vs_grand_total)
+            ->with('dec_vs_grand_total', $dec_vs_grand_total)
+            ->with('oct_s_grand_total', $oct_s_grand_total)
+            ->with('nov_s_grand_total', $nov_s_grand_total)
+            ->with('dec_s_grand_total', $dec_s_grand_total)
+            ->with('oct_ndvd_grand_total', $oct_ndvd_grand_total)
+            ->with('nov_ndvd_grand_total', $nov_ndvd_grand_total)
+            ->with('dec_ndvd_grand_total', $dec_ndvd_grand_total)
+            ->with('oct_grand_total', $oct_grand_total)
+            ->with('nov_grand_total', $nov_grand_total)
+            ->with('dec_grand_total', $dec_grand_total)
+            ->with('total_comments', $total_comments)
+            ->with('total_complaints', $total_complaints)
+            ->with('comments', $comments);
+    }
+
+    public function getCitizenCharterByQuarter($request, $customer_ids){
+         $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id',$customer_ids)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        return  $cc_query;
+    }
+
+    public function getCustomerAttributeRatingByQuarter($request, $customer_ids , $startDate ,$endDate ){
+        $query = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->whereYear('created_at', $request->selected_year)
+        ->when($request->sex, function ($query, $sex) {
+            $query->whereHas('customer', function ($query) use ($sex) {
+                $query->where('sex', $sex);
+            });
+        })
+        ->when($request->age_group, function ($query, $age_group) {
+            $query->whereHas('customer', function ($query) use ($age_group) {
+                $query->where('age_group', $age_group);
+            });
+        })->get(); 
+
+        return  $query;
+   }
+
+
+   public function getCustomerAttributeRatingByQuarterWithMonth($request,$customer_ids, $numeric_month){
+        $query = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            })->get(); 
+
+        return  $query;
+    }
+
+
+    public function getCustomerRecommendationRatingByQuarter($request, $customer_ids,$startDate, $endDate){
+        $query = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->whereYear('created_at', $request->selected_year)
+        ->when($request->sex, function ($query, $sex) {
+            $query->whereHas('customer', function ($query) use ($sex) {
+                $query->where('sex', $sex);
+            });
+        })
+        ->when($request->age_group, function ($query, $age_group) {
+            $query->whereHas('customer', function ($query) use ($age_group) {
+                $query->where('age_group', $age_group);
+            });
+        })->get(); 
+
+        return  $query;
+   }
+
+   
+   public function getCustomerRecommendationRatingByQuarterWithMonth($request,$customer_ids, $numeric_month){
+        $fisrt_month_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+        ->whereMonth('created_at', $numeric_month)
+        ->whereYear('created_at', $request->selected_year)
+        ->when($request->sex, function ($query, $sex) {
+            $query->whereHas('customer', function ($query) use ($sex) {
+                $query->where('sex', $sex);
+            });
+        })
+        ->when($request->age_group, function ($query, $age_group) {
+            $query->whereHas('customer', function ($query) use ($age_group) {
+                $query->where('age_group', $age_group);
+            });
+        })->get();
+
+        return  $fisrt_month_crr;
+    }
+
+    public function getRespondents($request, $customer_ids,$startDate, $endDate){
+        $respondents_list = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->whereYear('created_at', $request->selected_year)
+                    ->when($request->sex, function ($query, $sex) {
+                        $query->whereHas('customer', function ($query) use ($sex) {
+                            $query->where('sex', $sex);
+                        });
+                    })
+                    ->when($request->age_group, function ($query, $age_group) {
+                        $query->whereHas('customer', function ($query) use ($age_group) {
+                            $query->where('age_group', $age_group);
+                        });
+                    })->get();
+
+        return  $respondents_list;
+   }
+
+
+ 
+
+    
+    // YEARLY || ANNUALLY PER UNIT
     public function generateCSIByUnitYearly($request, $region_id, $psto_id)
     {
         $sub_unit = $this->getSubUnit($request);
@@ -4697,6 +5514,8 @@ class ReportController extends Controller
             ->with('total_complaints', $total_complaints)
             ->with('comments', $comments);
     }
+
+
 
     
     public function getSubUnit($request)
