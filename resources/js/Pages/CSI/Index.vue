@@ -27,637 +27,166 @@ const props = defineProps({
     sub_unit_pstos: Object,
     sub_unit_types: Object,
 
-    cc_data: Object,
-    dimensions: Object,
-    respondents_list: Object,
+    //Monthly
     y_totals: Object,
-    likert_scale_rating_totals: Object,
-    lsr_grand_total: Number,
-
     grand_vs_total: Number,
     grand_s_total: Number,
-    grand_n_total: Number,
+    grand_n_total:Number,
     grand_d_total: Number,
     grand_vd_total: Number,
-    grand_total: Number,
-
     x_totals: Object,
     x_grand_total: Object,
-
-    //Importance Attribute Ratings
+    likert_scale_rating_totals: Object,
+    lsr_grand_total: Number,
     importance_rate_score_totals: Object,
     x_importance_totals: Object,
-    importance_ilsr_totals:Object,
-
-    //GAP
+    importance_ilsr_totals: Object,
     gap_totals: Object,
     gap_grand_total: Number,
-    
-    //WF
     wf_totals: Object,
-
-    //SS
+    gap_grand_total: Number,
     ss_totals: Object,
-
-    //WS
     ws_totals: Object,
-
-    //Total Respondents or Customers
     total_respondents: Number,
-
-    // Total REspondents or Cutomers who rated VS/S
     total_vss_respondents: Number,
-
-    // Total Percentage Percentage of Respondents/Customers who rated VS/S
     percentage_vss_respondents: Number,
-
-    // Customer Satisfaction Rating(CSAT)
     customer_satisfaction_rating: Number,
-
-    //Customer SAtisfaction Index(CSI)
     customer_satisfaction_index: Number,
-
-    //Net Promotion Score(NPS)
     net_promoter_score: Number,
-
-    //Percentage of Promoters
     percentage_promoters: Number,
-
-    //Percentage of Detractors
     percentage_detractors: Number,
-
-    //comment and complaints
-    comments: Object,
     total_comments: Number,
     total_complaints: Number,
+    comments: Object,
 
-  // --- QUARTER 1 ----
-
-    //First Quarter  quality attributes totals
-    q1_vs_totals: Object,
-    q1_s_totals: Object,
-    q1_n_totals: Object,
-    q1_d_totals: Object,
-    q1_vd_totals: Object,
-    q1_grand_totals: Object,
-
-    // First Quarter raw totals
-    vs_grand_total_raw_points: Number,
-    s_grand_total_raw_points: Number,
-    ndvd_grand_total_raw_points: Number,
-    grand_total_raw_points: Number,
-    trp_totals: Object,  
-    grand_total_raw_points: Number,
-
-    //Part 1 Q1 Total scores
-    p1_total_scores: Object,
-    vs_grand_total_score: Number,
-    s_grand_total_score: Number,
-    ndvd_grand_total_score: Number,
-    grand_total_score: Number,
-
-    // Likert Scale Rating Quarterly totals
-    lsr_totals: Object,
-    lsr_grand_total: Number,
-    lsr_average: Number,
-
-    // First Quarter very satified respondent totals
-    jan_total_vs_respondents: Number, 
-    feb_total_vs_respondents: Number, 
-    mar_total_vs_respondents: Number, 
-
-    // First Quarter satified respondent totals
-    jan_total_s_respondents: Number, 
-    feb_total_s_respondents: Number, 
-    mar_total_s_respondents: Number, 
-
-    // First Quarter neither, dissasfied, very dissatisfied respondent totals
-    jan_total_ndvd_respondents: Number, 
-    feb_total_ndvd_respondents: Number, 
-    mar_total_ndvd_respondents: Number, 
-
-     // First Quarter  respondent totals
-    jan_total_respondents: Number, 
-    feb_total_respondents: Number, 
-    mar_total_respondents: Number, 
-
-    // grand totals
-    jan_vs_grand_total: Number, 
-    feb_vs_grand_total: Number, 
-    mar_vs_grand_total: Number, 
-
-    jan_s_grand_total: Number, 
-    feb_s_grand_total: Number, 
-    mar_s_grand_total: Number, 
-
-    jan_ndvd_grand_total: Number, 
-    feb_ndvd_grand_total: Number, 
-    mar_ndvd_grand_total: Number, 
-
-    //First Quarter importance quality attributes totals
-    q1_vi_totals: Object,
-    q1_i_totals: Object,
-    q1_mi_totals: Object,
-    q1_si_totals: Object,
-    q1_nai_totals: Object,
-    q1_i_grand_totals: Object,
-
-    // Importance total raw points 
-    vi_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    misinai_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    i_trp_totals: Object,  
-    i_grand_total_raw_points: Number,
-
-    //Imporatance total scores
-    i_total_scores: Object,
-    vi_grand_total_score: Number,
-    i_grand_total_score: Number,
-    misinai_grand_total_score: Number,
-
-    // % promoters
-    jan_percentage_promoters: Number,
-    feb_percentage_promoters: Number,
-    mar_percentage_promoters: Number,
-    average_percentage_promoters: Number,
-
-    // % detractors
-    jan_percentage_detractors: Number,
-    feb_percentage_detractors: Number,
-    mar_percentage_detractors: Number,
-    average_percentage_detractors: Number,
-
-    // % net promoter score
-    jan_net_promoter_score: Number,
-    feb_net_promoter_score: Number,
-    mar_net_promoter_score: Number,
-    ave_net_promoter_score: Number,
-
-    //customer_satisfaction_rating
-    customer_satisfaction_rating: Number,
-
-     // --- QUARTER 2 ----
-
-    //quality attributes totals
-    q2_vs_totals: Object,
-    q2_s_totals: Object,
-    q2_n_totals: Object,
-    q2_d_totals: Object,
-    q2_vd_totals: Object,
-    q2_grand_totals: Object,
-
-    // First Quarter raw totals
-    vs_grand_total_raw_points: Number,
-    s_grand_total_raw_points: Number,
-    ndvd_grand_total_raw_points: Number,
-    grand_total_raw_points: Number,
-    trp_totals: Object,  
-    grand_total_raw_points: Number,
-
-    //Part 1 Q1 Total scores
-    p1_total_scores: Object,
-    vs_grand_total_score: Number,
-    s_grand_total_score: Number,
-    ndvd_grand_total_score: Number,
-    grand_total_score: Number,
-
-    // Likert Scale Rating Quarterly totals
-    lsr_totals: Object,
-    lsr_grand_total: Number,
-    lsr_average: Number,
-
-    // very satified respondent totals
-    apr_total_vs_respondents: Number, 
-    may_total_vs_respondents: Number, 
-    jun_total_vs_respondents: Number, 
-
-    // satified respondent totals
-    apr_total_s_respondents: Number, 
-    may_total_s_respondents: Number, 
-    jun_total_s_respondents: Number, 
-
-    // neither, dissasfied, very dissatisfied respondent totals
-    apr_total_ndvd_respondents: Number, 
-    may_total_ndvd_respondents: Number, 
-    jun_total_ndvd_respondents: Number, 
-
-    // grand totals
-    apr_vs_grand_total: Number, 
-    may_vs_grand_total: Number, 
-    jun_vs_grand_total: Number, 
-
-    apr_s_grand_total: Number, 
-    may_s_grand_total: Number, 
-    jun_s_grand_total: Number, 
-
-    apr_ndvd_grand_total: Number, 
-    may_ndvd_grand_total: Number, 
-    jun_ndvd_grand_total: Number, 
-
-    // respondent totals
-    apr_total_respondents: Number, 
-    may_total_respondents: Number, 
-    jun_total_respondents: Number, 
-
-
-    //importance quality attributes totals
-    q2_vi_totals: Object,
-    q2_i_totals: Object,
-    q2_mi_totals: Object,
-    q2_si_totals: Object,
-    q2_nai_totals: Object,
-    q2_i_grand_totals: Object,
-
-    // Importance total raw points 
-    vi_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    misinai_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    i_trp_totals: Object,  
-    i_grand_total_raw_points: Number,
-
-    //Imporatance total scores
-    i_total_scores: Object,
-    vi_grand_total_score: Number,
-    i_grand_total_score: Number,
-    misinai_grand_total_score: Number,
-
-    // % promoters
-    apr_percentage_promoters: Number,
-    may_percentage_promoters: Number,
-    jun_percentage_promoters: Number,
-    average_percentage_promoters: Number,
-
-    // % detractors
-    apr_percentage_detractors: Number,
-    may_percentage_detractors: Number,
-    jun_percentage_detractors: Number,
-    average_percentage_detractors: Number,
-
-    // % net promoter score
-    apr_net_promoter_score: Number,
-    may_net_promoter_score: Number,
-    jun_net_promoter_score: Number,
-    ave_net_promoter_score: Number,
-
-    //customer_satisfaction_rating
-    customer_satisfaction_rating: Number,
-
-
-     // --- QUARTER 3 ----
-
-    //quality attributes totals
-    q3_vs_totals: Object,
-    q3_s_totals: Object,
-    q3_n_totals: Object,
-    q3_d_totals: Object,
-    q3_vd_totals: Object,
-    q3_grand_totals: Object,
-
-    // First Quarter raw totals
-    vs_grand_total_raw_points: Number,
-    s_grand_total_raw_points: Number,
-    ndvd_grand_total_raw_points: Number,
-    grand_total_raw_points: Number,
-    trp_totals: Object,  
-    grand_total_raw_points: Number,
-
-    //Part 1 Q1 Total scores
-    p1_total_scores: Object,
-    vs_grand_total_score: Number,
-    s_grand_total_score: Number,
-    ndvd_grand_total_score: Number,
-    grand_total_score: Number,
-
-    // Likert Scale Rating Quarterly totals
-    lsr_totals: Object,
-    lsr_grand_total: Number,
-    lsr_average: Number,
-
-    // very satified respondent totals
-    jul_total_vs_respondents: Number, 
-    aug_total_vs_respondents: Number, 
-    sep_total_vs_respondents: Number, 
-
-    // satified respondent totals
-    jul_total_s_respondents: Number, 
-    aug_total_s_respondents: Number, 
-    sep_total_s_respondents: Number, 
-
-    // neither, dissasfied, very dissatisfied respondent totals
-    jul_total_ndvd_respondents: Number, 
-    aug_total_ndvd_respondents: Number, 
-    sep_total_ndvd_respondents: Number, 
-
-    // grand totals
-    jul_vs_grand_total: Number, 
-    aug_vs_grand_total: Number, 
-    sep_vs_grand_total: Number, 
-
-    jul_s_grand_total: Number, 
-    aug_s_grand_total: Number, 
-    sep_s_grand_total: Number, 
-
-    jul_ndvd_grand_total: Number, 
-    aug_ndvd_grand_total: Number, 
-    sep_ndvd_grand_total: Number, 
     
-    jul_grand_total: Number, 
-    aug_grand_total: Number, 
-    sep_grand_total: Number, 
-
-    // respondent totals
-    jul_total_respondents: Number, 
-    aug_total_respondents: Number, 
-    sep_total_respondents: Number, 
-
-
-    //importance quality attributes totals
-    q3_vi_totals: Object,
-    q3_i_totals: Object,
-    q3_mi_totals: Object,
-    q3_si_totals: Object,
-    q3_nai_totals: Object,
-    q3_i_grand_totals: Object,
-
-    // Importance total raw points 
-    vi_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    misinai_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    i_trp_totals: Object,  
-    i_grand_total_raw_points: Number,
-
-    //Imporatance total scores
-    i_total_scores: Object,
-    vi_grand_total_score: Number,
-    i_grand_total_score: Number,
-    misinai_grand_total_score: Number,
-
-    // % promoters
-    jul_percentage_promoters: Number,
-    aug_percentage_promoters: Number,
-    sep_percentage_promoters: Number,
-    average_percentage_promoters: Number,
-
-    // % detractors
-    jul_percentage_detractors: Number,
-    aug_percentage_detractors: Number,
-    sep_percentage_detractors: Number,
-    average_percentage_detractors: Number,
-
-    // % net promoter score
-    jul_net_promoter_score: Number,
-    aug_net_promoter_score: Number,
-    sep_net_promoter_score: Number,
-    sep_net_promoter_score: Number,
-
-    //customer_satisfaction_rating
-    customer_satisfaction_rating: Number,
-
-      // --- QUARTER 4 ----
-
-    //quality attributes totals
-    q4_vs_totals: Object,
-    q4_s_totals: Object,
-    q4_n_totals: Object,
-    q4_d_totals: Object,
-    q4_vd_totals: Object,
-    q4_grand_totals: Object,
-
-    // First Quarter raw totals
+    // Quarterly 
+    cc_data: Object,
+    user: Object,
+    assignatorees: Object,
+    dimensions: Object,
+    service : Object,
+    unit: String,
+    respondents_list : Object,
+    trp_totals: Number,
+    grand_total_raw_points: Number,
+    vs_grand_total_raw_points: Number,
     vs_grand_total_raw_points: Number,
     s_grand_total_raw_points: Number,
-    ndvd_grand_total_raw_points: Number,
-    grand_total_raw_points: Number,
-    trp_totals: Object,  
-    grand_total_raw_points: Number,
-
-    //Part 1 Q1 Total scores
+    ndvd_grand_total_raw_points: Object,
     p1_total_scores: Object,
-    vs_grand_total_score: Number,
-    s_grand_total_score: Number,
-    ndvd_grand_total_score: Number,
+    vs_grand_total_score: Object,
+    s_grand_total_score: Object,
+    ndvd_grand_total_score: Object,
     grand_total_score: Number,
-
-    // Likert Scale Rating Quarterly totals
     lsr_totals: Object,
     lsr_grand_total: Number,
     lsr_average: Number,
-
-    // very satified respondent totals
-    oct_total_vs_respondents: Number, 
-    nov_total_vs_respondents: Number, 
-    dec_total_vs_respondents: Number, 
-
-    // satified respondent totals
-    oct_total_s_respondents: Number, 
-    nov_total_s_respondents: Number, 
-    dec_total_s_respondents: Number, 
-
-    // neither, dissasfied, very dissatisfied respondent totals
-    oct_total_ndvd_respondents: Number, 
-    nov_total_ndvd_respondents: Number, 
-    dec_total_ndvd_respondents: Number, 
-
-    // respondent totals
-    oct_total_respondents: Number, 
-    nov_total_respondents: Number, 
-    dec_total_respondents: Number, 
-
-    // grand totals
-    oct_vs_grand_total: Number, 
-    nov_vs_grand_total: Number, 
-    dec_vs_grand_total: Number, 
-
-    oct_s_grand_total: Number, 
-    nov_s_grand_total: Number, 
-    dec_s_grand_total: Number, 
-
-    oct_ndvd_grand_total: Number, 
-    nov_ndvd_grand_total: Number, 
-    dec_ndvd_grand_total: Number, 
-
-
-    //importance quality attributes totals
-    q4_vi_totals: Object,
-    q4_i_totals: Object,
-    q4_mi_totals: Object,
-    q4_si_totals: Object,
-    q4_nai_totals: Object,
-    q4_i_grand_totals: Object,
-
-    // Importance total raw points 
-    vi_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    misinai_grand_total_raw_points: Number,
-    i_grand_total_raw_points: Number,
-    i_trp_totals: Object,  
-    i_grand_total_raw_points: Number,
-
-    //Imporatance total scores
-    i_total_scores: Object,
-    vi_grand_total_score: Number,
-    i_grand_total_score: Number,
-    misinai_grand_total_score: Number,
-
-    // % promoters
-    oct_percentage_promoters: Number,
-    nov_percentage_promoters: Number,
-    dec_percentage_promoters: Number,
-    average_percentage_promoters: Number,
-
-    // % detractors
-    oct_percentage_detractors: Number,
-    nov_percentage_detractors: Number,
-    dec_percentage_detractors: Number,
-    average_percentage_detractors: Number,
-
-    // % net promoter score
-    oct_net_promoter_score: Number,
-    nov_net_promoter_score: Number,
-    dec_net_promoter_score: Number,
-    sep_net_promoter_score: Number,
-
-    //customer_satisfaction_rating
-    customer_satisfaction_rating: Number,
-
-    // --- Yearly ---
-
-
-  // all quarter totals
     vs_totals: Object,
     s_totals: Object,
     n_totals: Object,
     d_totals: Object,
     vd_totals: Object,
-
     grand_totals: Object,
-    trp_totals: Object,
-    grand_total_raw_points: Object,
-    vs_grand_total_raw_points: Object, 
-    s_grand_total_raw_points: Object,
-    ndvd_grand_total_raw_points: Object,
-    p1_total_scores: Object,
-    vs_grand_total_score: Number,
-    s_grand_total_score: Number,
-    ndvd_grand_total_score: Number,
-    grand_total_score: Number,
-    lsr_totals: Object,
-    lsr_grand_total: Number,
-    lsr_average: Number,
-
-    //all quarter total respondents/customer who rated Very satisfied in attributes rating
-    q1_total_vs_respondents: Number,
-    q2_total_vs_respondents: Number, 
-    q3_total_vs_respondents: Number,
-    q4_total_vs_respondents: Number,
-
-     //by quarter total respondents/customer who rated satisfied in attributes rating
-    q1_total_s_respondents: Number,
-    q2_total_s_respondents: Number,
-    q3_total_s_respondents: Number,
-    q4_total_s_respondents: Number,
-
-     //by quarter total respondents/customer who rated Neither, Dissatisfied and  very Dissatisfied in attributes rating
-    q1_total_ndvd_respondents: Number,
-    q2_total_ndvd_respondents: Number,
-    q3_total_ndvd_respondents: Number,
-    q4_total_ndvd_respondents: Number,
-
-    // By quarter total respondents
-    q1_total_respondents: Number,
-    q2_total_respondents: Number,
-    q3_total_respondents: Number,
-    q4_total_respondents: Number,
-    
-    // grandtotal of total respondents 
+    first_month_total_vs_respondents: Object,
+    second_month_total_vs_respondents: Object,
+    third_month_total_vs_respondents: Object,
+    first_month_total_s_respondents: Object,
+    second_month_total_s_respondents: Object,
+    third_month_total_s_respondents: Object,
+    first_month_total_ndvd_respondents: Object,
+    second_month_total_ndvd_respondents: Object,
+    third_month_total_ndvd_respondents: Object,
+    first_month_total_respondents: Object,
+    second_month_total_respondents: Object,
+    third_month_total_respondents: Object,
     total_respondents: Number,
-
-    // by quarter respondents who rated VS/S
-    q1_total_vss_respondents: Number,
-    q2_total_vss_respondents: Number,
-    q3_total_vss_respondents: Number,
-    q4_total_vss_respondents: Number,
-
-    //grand total of respondents who rated VS/S
     total_vss_respondents: Number,
-    //percentage of respondents who rated VS/S
     percentage_vss_respondents: Number,
-
-    // total number of promoters and detractors
     total_promoters: Number,
     total_detractors: Number,
-
-    // all quarters importance attributes rating totals
     vi_totals: Object,
     i_totals: Object,
     mi_totals: Object,
     si_totals: Object,
     nai_totals: Object,
-
-    // imporatnce grand total
     i_grand_totals: Object,
-
-    // importance attributes total raw score
     i_trp_totals: Object,
-
-    // importance raw points totals
-    i_grand_total_raw_point: Number,
-    vi_grand_total_raw_points: Number,
-    s_grand_total_raw_points: Number,
-    misinai_grand_total_raw_points: Number,
-    i_total_scores: Number,
-
+    i_grand_total_raw_points: Object,
+    vi_grand_total_raw_points: Object,
+    s_grand_total_raw_points: Object,
+    misinai_grand_total_raw_points: Object,
+    i_total_scores: Object,
     vi_grand_total_score: Number,
     i_grand_total_score: Number,
     misinai_grand_total_score: Number,
+    percentage_promoters: Number,
+    first_month_percentage_promoters: Number,
+    second_month_percentage_promoters: Number,
+    third_month_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+    first_month_percentage_detractors: Number,
+    second_percentage_detractors: Number,
+    third_month_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+    first_month_net_promoter_score: Number,
+    second_month_net_promoter_score: Number,
+    third_month_net_promoter_score: Number,
+    average_percentage_detractors: Number,
+    first_month_net_promoter_score: Number,
+    second_month_net_promoter_score: Number,
+    third_month_net_promoter_score: Number,
+    third_month_net_promoter_score: Number,
+    ave_net_promoter_score: Number,
+    customer_satisfaction_rating: Number,
+    csi: Number,
+    first_month_csi: Number,
+    second_month_csi: Number,
+    third_month_csi: Number,
+    first_month_vs_grand_total: Number,
+    second_month_vs_grand_total:Number,
+    third_month_vs_grand_total:Number,
+    first_month_s_grand_total: Number,
+    second_month_s_grand_total: Number,
+    third_month_s_grand_total: Number,
+    first_month_ndvd_grand_total: Number,
+    second_month_ndvd_grand_total: Number,
+    third_month_ndvd_grand_total: Number,
+    first_month_grand_total: Number,
+    second_month_grand_total: Number,
+    third_month_grand_total: Number,
+    total_comments: Number,
+    total_complaints: Number,
+    comments: Object,
 
-    // total promoters by quarter and percentage,  average
+    // Monthly and Date
+    customer_satisfaction_index: Number,
+    net_promoter_score: Number,
+    
+    // Yearly
+
     percentage_promoters: Number,
     q1_percentage_promoters: Number,
     q2_percentage_promoters: Number,
     q3_percentage_promoters: Number,
     q4_percentage_promoters: Number,
     average_percentage_promoters: Number,
-
-    // total detractors by quarter and percentage
     q1_percentage_detractors: Number,
     q2_percentage_detractors: Number,
     q3_percentage_detractors: Number,
     q4_percentage_detractors: Number,
     average_percentage_detractors: Number,
-
-    // total nps by quarter and average
     q1_net_promoter_score: Number,
     q2_net_promoter_score: Number,
     q3_net_promoter_score: Number,
     q4_net_promoter_score: Number,
     ave_net_promoter_score: Number,
-
-    // CSAT
     customer_satisfaction_rating: Number,
-
-    // CSI by quarter
-    csi: Number,
-    first_month_csi: Number, 
-    second_month_csi: Number, 
-    third_month_csi: Number, 
-
-    //CSI By year
     q1_csi: Number,
     q2_csi: Number,
     q3_csi: Number,
     q4_csi: Number,
-
-    //get current user
-    user: Object,
-
-    //get assignatorees
-    assignatorees:Object,
-    
-
+    csi: Number,
 });
 
 
@@ -888,6 +417,9 @@ const printCSIReport = async () => {
           .text-center{
             text-align: center;
           }
+          .bg-blue{
+            background: blue;
+          }
 
         `;
 
@@ -908,7 +440,6 @@ const printCSIReport = async () => {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Customer Satisfaction Index 
-
             </h2>
         </template>
 

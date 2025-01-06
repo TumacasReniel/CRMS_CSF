@@ -7,8 +7,8 @@
             type: Object,
         },
     });
-    const calculate = (ndvd_grand_total_score ,grand_total_score) => {
-        const result = (ndvd_grand_total_score / grand_total_score) * 100;
+    const calculate = (total_score ,grand_total_score) => {
+        const result = (total_score / grand_total_score) * 100;
         return result.toFixed(2);
     };
 </script>
@@ -32,8 +32,8 @@
             <td class="text-left">I know what a CC is and I saw this office's CC</td>
             <td>
                 <span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">
-                    {{data.cc_data.cc1_data.cc1_ans1}}
-                </span>           
+                    {{ data.cc_data.cc1_data.cc1_ans1 }}
+                </span>
             </td>
         </tr>
         <tr>
@@ -41,17 +41,17 @@
             <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
             <td>
                 <span v-if="data.cc_data.cc1_data.cc1_ans2 > 0">
-                    {{data.cc_data.cc1_data.cc1_ans2}}
-                </span>    
+                    {{ data.cc_data.cc1_data.cc1_ans2 }}
+                </span>
             </td>
         </tr>
         <tr>
             <td>3</td>
             <td class="text-left">I learned the CC when I saw this office's CC</td>
             <td>
-                <span v-if="data.cc_data.cc1_data.cc1_ans3 > 0">
-                    {{data.cc_data.cc1_data.cc1_ans3}}
-                </span> 
+                <span v-if=" data.cc_data.cc1_data.cc1_ans3 > 0">
+                    {{ data.cc_data.cc1_data.cc1_ans3 }}
+                </span>       
             </td>
         </tr>
         <tr>
@@ -59,8 +59,8 @@
             <td class="text-left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
             <td>
                 <span v-if="data.cc_data.cc1_data.cc1_ans4 > 0">
-                    {{data.cc_data.cc1_data.cc1_ans4}}
-                </span> 
+                    {{ data.cc_data.cc1_data.cc1_ans4 }}
+                </span>   
             </td>
         </tr>
         <tr class="bg-blue-200" >
@@ -72,8 +72,8 @@
             <td class="text-left">Easy to see</td>
             <td>
                 <span v-if="data.cc_data.cc2_data.cc2_ans1 > 0">
-                    {{data.cc_data.cc2_data.cc2_ans1}}
-                </span> 
+                    {{ data.cc_data.cc2_data.cc2_ans1 }}
+                </span>   
             </td>
         </tr>
         <tr>
@@ -81,8 +81,8 @@
             <td class="text-left">Somewhat easy to see</td>
             <td>
                 <span v-if="data.cc_data.cc2_data.cc2_ans2 > 0">
-                    {{data.cc_data.cc2_data.cc2_ans2}}
-                </span> 
+                    {{ data.cc_data.cc2_data.cc2_ans2 }}
+                </span>        
             </td>
         </tr>
         <tr>
@@ -90,8 +90,8 @@
             <td class="text-left">Difficult to see</td>
             <td>
                 <span v-if="data.cc_data.cc2_data.cc2_ans3 > 0">
-                    {{data.cc_data.cc2_data.cc2_ans3}}
-                </span> 
+                    {{ data.cc_data.cc2_data.cc2_ans3 }}
+                </span>   
             </td>
         </tr>
         <tr>
@@ -99,17 +99,17 @@
             <td class="text-left">Not visible at all</td>
             <td>
                 <span v-if="data.cc_data.cc2_data.cc2_ans4 > 0">
-                    {{data.cc_data.cc2_data.cc2_ans4}}
-                </span> 
+                    {{ data.cc_data.cc2_data.cc2_ans4 }}
+                </span>   
             </td>
         </tr>
         <tr>
             <td>5</td>
             <td class="text-left">N/A</td>
             <td>
-                <span v-if="data.cc_data.cc2_data.cc2_ans5 > 0">
-                    {{data.cc_data.cc2_data.cc2_ans5}}
-                </span> 
+                <span v-if="data.cc_data.cc2_data.cc2_ans > 0">
+                    {{ data.cc_data.cc2_data.cc2_ans }}
+                </span>   
             </td>
         </tr>
         <tr class="bg-blue-200">
@@ -121,8 +121,8 @@
             <td class="text-left">Helped Very Much</td>
             <td>
                 <span v-if="data.cc_data.cc3_data.cc3_ans1 > 0">
-                    {{data.cc_data.cc3_data.cc3_ans1}}
-                </span> 
+                    {{ data.cc_data.cc3_data.cc3_ans1 }}
+                </span>   
             </td>
         </tr>
         <tr>
@@ -130,8 +130,8 @@
             <td class="text-left">Somewhat helped</td>
             <td>
                 <span v-if="data.cc_data.cc3_data.cc3_ans2 > 0">
-                    {{data.cc_data.cc3_data.cc3_ans2}}
-                </span>
+                    {{ data.cc_data.cc3_data.cc3_ans2 }}
+                </span>  
             </td>
         </tr>
         <tr>
@@ -139,8 +139,8 @@
             <td class="text-left">Did not help</td>
             <td>
                 <span v-if="data.cc_data.cc3_data.cc3_ans3 > 0">
-                    {{data.cc_data.cc3_data.cc3_ans3}}
-                </span>
+                    {{ data.cc_data.cc3_data.cc3_ans3 }}
+                </span>  
             </td>
         </tr>
         <tr>
@@ -148,358 +148,360 @@
             <td class="text-left">N/A</td>
             <td>
                 <span v-if="data.cc_data.cc3_data.cc3_ans4 > 0">
-                    {{data.cc_data.cc3_data.cc3_ans4}}
-                </span>
+                    {{ data.cc_data.cc3_data.cc3_ans4 }}
+                </span>  
+
             </td>
         </tr>
     </table>
     </v-card>
-
+    
     <v-card class="mb-3">
-                <v-card-title class="bg-gray-500 text-white">
-                    PART II: CUSTOMER RATING OF SERVICE QUALITY 
-                </v-card-title>
-                <table class="w-full border ">
-                    <tr class="text-left font-bold text-center bg-blue-200">
-                        <th colspan="3">Service Quality Attributes</th>
-                        <th>OCT</th>
-                        <th>NOV</th>
-                        <th>DEC</th>
-                        <th>Total Raw Points</th>
-                        <th>Total Score</th>
-                        <th >Likert Scale Rating</th>
+        <v-card-title class="bg-gray-500 text-white">
+            PART I: CUSTOMER RATING OF SERVICE QUALITY 
+        </v-card-title>
+        <table class="w-full border ">
+            <tr class="text-left font-bold text-center bg-blue-200">
+                <th colspan="3">Service Quality Attributes</th>
+                <th >OCT</th>
+                <th >NOV</th>
+                <th >DEC</th>
+                <th>Total Raw Points</th>
+                <th>Total Score</th>
+                <th >Likert Scale Rating</th>
+            </tr>
+
+            <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
+                    <tr>
+                        <td class="text-center" rowspan="7">
+                            [{{ index + 1 }}] {{ dimension.name }}    
+                        </td>             
+                    </tr> 
+                    <tr>
+                        <td class="text-left pl-3">5</td>
+                        <td>Very Satisfied</td>
+                        <td v-if="data.vs_totals" class="text-center"  v-for="total in data.vs_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }} 
+                            </span>
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            <span v-if="data.trp_totals[index+1].vs_total_raw_points > 0">
+                                {{ data.trp_totals[index+1].vs_total_raw_points }} 
+                            </span>
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_vs_total > 0">
+                                {{ data.p1_total_scores[index+1].x_vs_total }}
+                            </span>
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            <span v-if="data.lsr_totals[index+1].vs_lsr_total > 0">
+                                {{ data.lsr_totals[index+1].vs_lsr_total }} 
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td>Satisfied</td>
+                        <td v-if="data.s_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.s_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }}
+                            </span>
+                        </td>
+                        <td v-if="data.trp_totals"  class="text-center" >
+                            <span v-if="data.trp_totals[index+1].s_total_raw_points > 0">
+                                {{ data.trp_totals[index+1].s_total_raw_points }}
+                            </span>
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_s_total > 0">
+                                {{ data.p1_total_scores[index+1].x_s_total }}
+                            </span>
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            <span v-if="data.lsr_totals[index+1].s_lsr_total > 0">
+                                {{ data.lsr_totals[index+1].s_lsr_total }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td>Neither</td>
+                        <td v-if="data.n_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.n_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }}
+                            </span>
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            <span v-if="data.trp_totals[index+1].n_total_raw_points > 0">
+                                {{ data.trp_totals[index+1].n_total_raw_points }}
+                            </span>
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_n_total > 0">
+                                {{ data.p1_total_scores[index+1].x_n_total }}
+                            </span>
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_n_total > 0">
+                                {{ data.lsr_totals[index+1].n_lsr_total }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                            <td>Dissatisfied</td>
+                        <td v-if="data.d_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.d_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }}
+                            </span>
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            <span v-if="data.trp_totals[index+1].d_total_raw_points > 0">
+                                {{ data.trp_totals[index+1].d_total_raw_points }}
+                            </span>
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_d_total > 0">
+                                {{ data.p1_total_scores[index+1].x_d_total }}
+                            </span>
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            <span v-if="data.lsr_totals[index+1].d_lsr_total > 0">
+                                {{ data.lsr_totals[index+1].d_lsr_total }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">1</td>
+                            <td>Very Dissatisfied</td>
+                        <td v-if="data.vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.vd_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }} 
+                            </span>
+                        </td>
+                        <td v-if="data.trp_totals" class="text-center" >
+                            <span v-if="data.trp_totals[index+1].vd_total_raw_points > 0">
+                                {{ data.trp_totals[index+1].vd_total_raw_points }}
+                            </span>
+                        </td>
+                        <td v-if="data.p1_total_scores" class="text-center" >
+                            <span v-if="data.p1_total_scores[index+1].x_vd_total > 0">
+                                {{ data.p1_total_scores[index+1].x_vd_total }}
+                            </span>
+                        </td>
+                        <td v-if="data.lsr_totals" class="text-center" >
+                            <span v-if="data.lsr_totals[index+1].vd_lsr_total > 0">
+                                {{ data.lsr_totals[index+1].vd_lsr_total }} 
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center" colspan="2"></td>
+                        <td v-if="data.grand_totals" class="text-center bg-gray-300"  v-for="total in data.grand_totals[index+1]">
+                            <span v-if="total > 0">
+                                {{ total }} 
+                            </span>
+                        </td>        
+                        <td v-if="data.trp_totals" class="text-center bg-gray-200" >
+                            <span v-if="data.trp_totals[index+1].total_raw_points > 0">
+                                {{ data.trp_totals[index+1].total_raw_points }}
+                            </span>
+                        </td>  
+                        <td v-if="data.p1_total_scores" class="text-center bg-gray-200" >
+                            <span v-if="data.p1_total_scores[index+1].x_total_score > 0">
+                                {{ data.p1_total_scores[index+1].x_total_score }}
+                            </span>
+                        </td>   
+                        <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
+                            <span v-if="data.lsr_totals[index+1].lsr_total > 0">
+                                {{ data.lsr_totals[index+1].lsr_total }}
+                            </span>
+                        </td>             
                     </tr>
 
-                    <template v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                            <tr>
-                               <td class="text-left pl-3" rowspan="7">
-                                 [{{ index + 1 }}] {{ dimension.name }}    
-                                </td>             
-                            </tr> 
-                            <tr>
-                                <td class="text-center">5</td>
-                                <td>Very Satisfied</td>
-                                <td v-if="data.q4_vs_totals" class="text-center"  v-for="total in data.q4_vs_totals[index+1]">                      
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    <span v-if="data.trp_totals[index+1].vs_total_raw_points > 0">
-                                        {{ data.trp_totals[index+1].vs_total_raw_points }}
-                                    </span>
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    <span v-if="data.p1_total_scores[index+1].x_vs_total > 0">
-                                        {{ data.p1_total_scores[index+1].x_vs_total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].vs_lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].vs_lsr_total }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">4</td>
-                                <td>Satisfied</td>
-                                <td v-if="data.q4_s_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q4_s_totals[index+1]">
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>
-                                  <td v-if="data.trp_totals"  class="text-center" >
-                                    <span v-if="data.trp_totals[index+1].s_total_raw_points > 0">
-                                        {{ data.trp_totals[index+1].s_total_raw_points }}
-                                    </span>
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    <span v-if="data.p1_total_scores[index+1].x_s_total > 0">
-                                        {{ data.p1_total_scores[index+1].x_s_total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].s_lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].s_lsr_total }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">3</td>
-                                <td>Neither</td>
-                                <td v-if="data.q4_n_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q4_n_totals[index+1]">
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    <span v-if="data.trp_totals[index+1].n_total_raw_points > 0">
-                                        {{ data.trp_totals[index+1].n_total_raw_points }}
-                                    </span>
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    <span v-if="data.p1_total_scores[index+1].x_n_total > 0">
-                                        {{ data.p1_total_scores[index+1].x_n_total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].n_lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].n_lsr_total }}
-                                    </span>               
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">2</td>
-                                 <td>Dissatisfied</td>
-                                <td v-if="data.q4_d_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q4_d_totals[index+1]">
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].n_lsr_total > 0">
-                                        {{ data.trp_totals[index+1].d_total_raw_points }}
-                                    </span>
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    <span v-if="data.p1_total_scores[index+1].x_d_total > 0">
-                                        {{ data.p1_total_scores[index+1].x_d_total }}
-                                    </span>
-                                </td>
-                                   <td v-if="data.lsr_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].d_lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].d_lsr_total }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">1</td>
-                                 <td>Very Dissatisfied</td>
-                                <td v-if="data.q4_vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.q4_vd_totals[index+1]">
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.trp_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].d_lsr_total > 0">
-                                        {{ data.trp_totals[index+1].vd_total_raw_points }}
-                                    </span>
-                                </td>
-                                <td v-if="data.p1_total_scores" class="text-center" >
-                                    <span v-if="data.p1_total_scores[index+1].x_vd_total > 0">
-                                        {{ data.p1_total_scores[index+1].x_vd_total }}
-                                    </span>
-                                </td>
-                                <td v-if="data.lsr_totals" class="text-center" >
-                                    <span v-if="data.lsr_totals[index+1].vd_lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].vd_lsr_total }}
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center" colspan="2"></td>
-                                <td v-if="data.q4_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q4_grand_totals[index+1]">
-                                    <span v-if="total > 0">
-                                        {{ total }}
-                                    </span>
-                                </td>        
-                                <td v-if="data.trp_totals" class="text-center bg-gray-200" >
-                                    <span v-if="data.trp_totals[index+1].total_raw_points > 0">
-                                        {{ data.trp_totals[index+1].total_raw_points }}
-                                    </span>
-                                </td>  
-                                <td v-if="data.p1_total_scores" class="text-center bg-gray-200" >
-                                    <span v-if="data.p1_total_scores[index+1].x_total_score > 0">
-                                        {{ data.p1_total_scores[index+1].x_total_score }}
-                                    </span>
-                                </td>   
-                                <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
-                                    <span v-if="data.lsr_totals[index+1].lsr_total > 0">
-                                        {{ data.lsr_totals[index+1].lsr_total }}
-                                    </span>
-                                </td>             
-                            </tr>
+            </template>   
 
-                    </template>   
+            <!-- totals   -->
+            <tr>
+                <td></td>
+            </tr>
+                <tr>
+                <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
+                <td class="text-center">
+                    <span v-if="data.first_month_vs_grand_total > 0">
+                        {{ data.first_month_vs_grand_total }} 
+                    </span>
+                </td>
+                <td class="text-center"> 
+                    <span v-if="data.second_month_vs_grand_total  > 0">
+                        {{ data.second_month_vs_grand_total  }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.third_month_vs_grand_total   > 0">
+                        {{ data.third_month_vs_grand_total   }}
+                    </span>
+                 </td>
+                <td class="text-center">
+                    <span v-if="data.vs_grand_total_raw_points  > 0">
+                        {{ data.vs_grand_total_raw_points   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.vs_grand_total_score  > 0">
+                        {{ data.vs_grand_total_score   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score">
+                        {{ calculate(data.vs_grand_total_score, data.grand_total_score) }} 
+                    </span>  
+                </td>
 
-                    <!-- totals   -->
-                    <tr>
-                        <td></td>
-                    </tr>
-                     <tr>
-                        <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
-                        <td class="text-center">
-                            <span v-if="data.oct_vs_grand_total > 0">
-                                {{ data.oct_vs_grand_total }}
-                            </span>
-                        </td>
-                        <td class="text-center"> 
-                            <span v-if="data.nov_vs_grand_total  > 0">
-                                {{ data.nov_vs_grand_total  }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.dec_vs_grand_total   > 0">
-                                {{ data.dec_vs_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.vs_grand_total_raw_points  > 0">
-                                {{ data.vs_grand_total_raw_points   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.vs_grand_total_score  > 0">
-                                {{ data.vs_grand_total_score   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score">
-                                {{ calculate(data.vs_grand_total_score, data.grand_total_score) }}
-                            </span>  
-                        </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
+                <td class="text-center">
+                    <span v-if="data.first_mmonth_s_grand_total  > 0">
+                        {{ data.first_month_s_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center"> 
+                    <span v-if="data.second_month_s_grand_total  > 0">
+                        {{ data.second_month_s_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.third_month_s_grand_total  > 0">
+                        {{ data.third_month_s_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.s_grand_total_raw_points  > 0">
+                        {{ data.s_grand_total_raw_points   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.s_grand_total_score  > 0">
+                        {{ data.s_grand_total_score   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.s_grand_total_score  > 0 && data.grand_total_score  > 0">
+                        {{ calculate(data.s_grand_total_score, data.grand_total_score) }}
+                    </span>
+                </td>
 
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of Satisfied (S) Responses:</td>
-                        <td class="text-center">
-                            <span v-if="data.oct_s_grand_total  > 0">
-                                {{ data.oct_s_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center"> 
-                            <span v-if="data.nov_s_grand_total  > 0">
-                                {{ data.nov_s_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.dec_s_grand_total  > 0">
-                                {{ data.dec_s_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.s_grand_total_raw_points  > 0">
-                                {{ data.s_grand_total_raw_points   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.s_grand_total_score  > 0">
-                                {{ data.s_grand_total_score   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.s_grand_total_score  > 0 && data.grand_total_score  > 0">
-                                {{ calculate(data.s_grand_total_score, data.grand_total_score) }}
-                            </span>
-                        </td>
- 
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
-                        <td class="text-center">
-                            <span v-if="data.oct_ndvd_grand_total  > 0">
-                                {{ data.oct_ndvd_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.nov_ndvd_grand_total  > 0">
-                                {{ data.nov_ndvd_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.dec_ndvd_grand_total  > 0">
-                                {{ data.dec_ndvd_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.ndvd_grand_total_raw_points  > 0">
-                                {{ data.ndvd_grand_total_raw_points   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.ndvd_grand_total_score  > 0">
-                                {{ data.ndvd_grand_total_score   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.ndvd_grand_total_score  > 0 && data.grand_total_score  > 0">
-                                {{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}
-                            </span>     
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right">Total No. of All Responses::</td>
-                        <td class="text-center">
-                            <span v-if="data.oct_grand_total  > 0">
-                                {{ data.oct_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.nov_grand_total  > 0">
-                                {{ data.nov_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.dec_grand_total  > 0">
-                                {{ data.dec_grand_total   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.grand_total_raw_points  > 0">
-                                {{ data.grand_total_raw_points   }}
-                            </span>
-                        </td>
-                        <td class="text-center">
-                            <span v-if="data.grand_total_score  > 0">
-                                {{ data.grand_total_score   }}
-                            </span>
-                        </td>
-                        <td class="text-center"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
-                        <td class="text-center">
-                            <span v-if="data.total_respondents > 0">
-                                {{ data.total_respondents }}
-                            </span>
-                        </td>
-                    </tr>
 
-                    <tr>
-                        <td colspan="8" class="text-right">Total No. of Respondents/Customers who rated VS or S:</td>
-                        <td class="text-center">
-                            <span v-if="data.total_vss_respondents > 0">
-                                {{ data.total_vss_respondents }}
-                            </span>
-                        </td>
-                    </tr>
-                      <tr>
-                        <td colspan="8" class="text-right">Percentage No. of Respondents/Customers who rated VS or S:</td>
-                        <td class="text-center">
-                            <span v-if="data.percentage_vss_respondents > 0">
-                                {{ data.percentage_vss_respondents }}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="8" class="text-right"> Likert Scale Rating (Average):</td>      
-                        <td class="text-center">
-                            <span v-if="data.lsr_average > 0">
-                                {{ data.lsr_average }}
-                            </span>
-                        </td>
-                    </tr>              
-                </table> 
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
+                <td class="text-center">
+                    <span v-if="data.first_month_ndvd_grand_total  > 0">
+                        {{ data.first_month_ndvd_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.second_month_ndvd_grand_total  > 0">
+                        {{ data.second_month_ndvd_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.third_month_ndvd_grand_total  > 0">
+                        {{ data.third_month_ndvd_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.ndvd_grand_total_raw_points  > 0">
+                        {{ data.ndvd_grand_total_raw_points   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.ndvd_grand_total_score  > 0">
+                        {{ data.ndvd_grand_total_score   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.ndvd_grand_total_score  > 0 && data.grand_total_score  > 0">
+                        {{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}
+                    </span>     
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">Total No. of All Responses:</td>
+                <td class="text-center">
+                    <span v-if="data.first_month_grand_total  > 0">
+                        {{ data.first_month_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.second_month_grand_total  > 0">
+                        {{ data.second_month_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.third_month_grand_total  > 0">
+                        {{ data.third_month_grand_total   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.grand_total_raw_points  > 0">
+                        {{ data.grand_total_raw_points   }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    <span v-if="data.grand_total_score  > 0">
+                        {{ data.grand_total_score   }}
+                    </span>
+                </td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td colspan="8" class="text-right">Total No. of Respondents/Customers:</td>
+                <td class="text-center">
+                    <span v-if="data.total_respondents  > 0">
+                        {{ data.total_respondents   }}
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="8" class="text-right">Total No. of Respondents/Customers who rated VS or S:</td>
+                <td class="text-center">
+                    <span v-if="data.total_vss_respondents > 0">
+                        {{ data.total_vss_respondents    }}
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                <td colspan="8" class="text-right">Percentage No. of Respondents/Customers who rated VS or S:</td>
+                <td class="text-center">
+                    <span v-if="data.percentage_vss_respondents  > 0">
+                        {{ data.percentage_vss_respondents   }}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="8" class="text-right"> Likert Scale Rating (Average):</td>      
+                <td class="text-center">
+                    <span v-if="data.lsr_average > 0">
+                        {{ data.lsr_average   }}
+                    </span>
+                </td>
+            </tr>              
+        </table> 
     </v-card> 
             
     <v-card class="mb-3">
         <v-card-title class="bg-gray-500 text-white">
-            PART III: IMPORTANCE OF THIS ATTRIBUTE   
+            PART II: IMPORTANCE OF THIS ATTRIBUTE   
         </v-card-title>
             <table class="w-full border ">
             <tr class="text-left font-bold text-center bg-blue-200">
                 <th  colspan="3">Importance Service Quality Attributes</th>
-                    <th >OCT</th>
+                <th >OCT</th>
                 <th >NOV</th>
                 <th >DEC</th>
                 <th >Total Raw Points</th>
@@ -515,57 +517,57 @@
                     <tr>
                         <td class="text-center">5</td>
                         <td>Very Important</td>
-                        <td v-if="data.q4_vi_totals" class="text-center"  v-for="total in data.q4_vi_totals[index+1]">
+                        <td v-if="data.vi_totals" class="text-center"  v-for="total in data.vi_totals[index+1]">       
                             <span v-if="total > 0">
                                 {{ total }}
-                            </span>                      
+                            </span>
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
                             <span v-if="data.i_trp_totals[index+1].vi_total_raw_points > 0">
                                 {{ data.i_trp_totals[index+1].vi_total_raw_points }}
-                            </span>    
+                            </span>                    
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
-                            <span v-if="data.i_total_scores[index+1].x_vi_total > 0">
+                            <span v-if="data.i_total_scores[index+1].x_vi_total  > 0">
                                 {{ data.i_total_scores[index+1].x_vi_total }}
-                            </span>    
+                            </span>     
                         </td>
                     </tr>
                     <tr>
                         <td class="text-center">4</td>
-                        <td>Important</td>
-                        <td v-if="data.q4_i_totals" class="text-center"  v-for="total in data.q4_i_totals[index+1]">
+                            <td>Important</td>
+                        <td v-if="data.i_totals" class="text-center"  v-for="total in data.i_totals[index+1]">
                             <span v-if="total > 0">
                                 {{ total }}
-                            </span>     
+                            </span>
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
-                            <span v-if="data.i_trp_totals[index+1].i_total_raw_points > 0">
+                            <span v-if="data.i_trp_totals[index+1].i_total_raw_points  > 0">
                                 {{ data.i_trp_totals[index+1].i_total_raw_points }}
-                            </span>   
+                            </span>     
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
-                            <span v-if="data.i_total_scores[index+1].x_i_total > 0">
+                            <span v-if="data.i_total_scores[index+1].x_i_total  > 0">
                                 {{ data.i_total_scores[index+1].x_i_total }}
-                            </span>  
+                            </span>     
                         </td>
                     </tr>
                     <tr>
                         <td class="text-center">3</td>
                         <td>Moderately Important</td>
-                        <td v-if="data.q4_mi_totals" class="text-center"  v-for="total in data.q4_mi_totals[index+1]">
+                        <td v-if="data.mi_totals" class="text-center"  v-for="total in data.mi_totals[index+1]">
                             <span v-if="total > 0">
                                 {{ total }}
-                            </span>     
+                            </span>
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
                             <span v-if="data.i_trp_totals[index+1].mi_total_raw_points  > 0">
-                                {{ data.i_trp_totals[index+1].mi_total_raw_points  }}
+                                {{ data.i_trp_totals[index+1].mi_total_raw_points }}
                             </span>  
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
-                            <span v-if="data.i_total_scores[index+1].x_mi_total  > 0">
-                                {{ data.i_total_scores[index+1].x_mi_total  }}
+                            <span v-if="data.i_total_scores[index+1].x_mi_total > 0">
+                                {{ data.i_total_scores[index+1].x_mi_total }}
                             </span>  
                         </td>
                         
@@ -573,57 +575,57 @@
                     <tr>
                         <td class="text-center">2</td>
                             <td>Slightly Important</td>
-                        <td v-if="data.q4_si_totals" class="text-center"  v-for="total in data.q4_si_totals[index+1]">
+                        <td v-if="data.si_totals" class="text-center"  v-for="total in data.si_totals[index+1]">
                             <span v-if="total > 0">
                                 {{ total }}
-                            </span>     
+                            </span>
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
-                            <span v-if="data.i_trp_totals[index+1].si_total_raw_points   > 0">
-                                {{ data.i_trp_totals[index+1].si_total_raw_points   }}
+                            <span v-if="data.i_trp_totals[index+1].si_total_raw_points > 0">
+                                {{ data.i_trp_totals[index+1].si_total_raw_points }}
                             </span>  
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
-                            <span v-if="data.i_trp_totals[index+1].si_total_raw_points   > 0">
-                                {{ data.i_total_scores[index+1].x_si_total }}
-                            </span>
+                            <span v-if="data.i_total_scores[index+1].x_si_total  > 0">
+                                {{  data.i_total_scores[index+1].x_si_total  }}
+                            </span>  
                         </td>
                     </tr>
                     <tr>
                         <td class="text-center">1</td>
                             <td>Not all Important</td>
-                        <td v-if="data.q4_nai_totals" class="text-center"  v-for="total in data.q4_nai_totals[index+1]">
+                        <td v-if="data.nai_totals" class="text-center"  v-for="total in data.nai_totals[index+1]">
                             <span v-if="total > 0">
                                 {{ total }}
-                            </span>     
+                            </span>
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
-                            <span v-if="data.i_trp_totals[index+1].nai_total_raw_points > 0">
-                                {{ data.i_trp_totals[index+1].nai_total_raw_points }}
-                            </span>
+                            <span v-if="data.i_trp_totals[index+1].nai_total_raw_points  > 0">
+                                {{  data.i_trp_totals[index+1].nai_total_raw_points  }}
+                            </span>  
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
-                            <span v-if="data.i_total_scores[index+1].x_nai_total > 0">
-                                {{ data.i_total_scores[index+1].x_nai_total }}
-                            </span>
+                            <span v-if="data.i_total_scores[index+1].x_nai_total  > 0">
+                                {{  data.i_total_scores[index+1].x_nai_total  }}
+                            </span>  
                         </td>
                     </tr>
                     <tr class="text-center">
                         <td colspan="3"></td>
-                        <td v-if="data.q4_grand_totals" class="text-center bg-gray-300"  v-for="total in data.q4_grand_totals[index+1]">
+                            <td v-if="data.grand_totals" class="text-center bg-gray-300"  v-for="total in data.grand_totals[index+1]">
                             <span v-if="total > 0">
-                                {{ total }}
-                            </span>     
-                        </td>        
-                        <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >              
-                            <span v-if="data.i_trp_totals[index+1].i_total_raw_points > 0">
-                                {{ data.i_trp_totals[index+1].i_total_raw_points }}
+                                {{ total }} 
                             </span>
+                        </td>        
+                        <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
+                            <span v-if="data.i_trp_totals[index+1].total_raw_points  > 0">
+                                {{  data.i_trp_totals[index+1].total_raw_points  }} 
+                            </span>  
                         </td>  
                         <td v-if="data.i_total_scores" class="text-center bg-gray-200" >
-                            <span v-if="data.i_total_scores[index+1].x_i_total_score > 0">
-                                {{ data.i_total_scores[index+1].x_i_total_score }} 
-                            </span>         
+                            <span v-if="data.i_total_scores[index+1].x_i_total_score  > 0">
+                                {{  data.i_total_scores[index+1].x_i_total_score  }} 
+                            </span>  
                         </td>             
                     </tr>
             </template>                 
@@ -635,9 +637,9 @@
 
                 <tr class="text-center bg-blue-200">
                 <td colspan="3"></td>
-                <td>OCT</td>
-                <td>NOV</td>
-                <td>DEC</td>
+                <th >OCT</th>
+                <th >NOV</th>
+                <th >DEC</th>
                 <td colspan="2">AVERAGE(%)</td>
 
             </tr>
@@ -645,95 +647,96 @@
             <tr>
                 <td colspan="3" class="text-right">% of Promoters:</td>
                 <td class="text-center" >
-                    <span v-if="data.oct_percentage_promoters > 0">
-                        {{ data.oct_percentage_promoters}} 
-                    </span>      
+                    <span v-if="data.first_month_percentage_promoters  > 0">
+                        {{  data.first_month_percentage_promoters  }}
+                    </span>  
                 </td>  
-                <td class="text-center" >
-                    <span v-if="data.nov_percentage_promoters > 0">
-                        {{ data.nov_percentage_promoters}} 
-                    </span>      
+                <td  class="text-center " >
+                    <span v-if="data.second_month_percentage_promoters  > 0">
+                        {{  data.second_month_percentage_promoters  }}
+                    </span>  
                 </td>
-                <td class="text-center" >
-                    <span v-if="data.dec_percentage_promoters > 0">
-                        {{ data.dec_percentage_promoters}} 
-                    </span>     
+                <td  class="text-center" >
+                    <span v-if="data.third_month_percentage_promoters  > 0">
+                        {{  data.third_month_percentage_promoters  }}
+                    </span>  
                 </td>
-                <td colspan="2"  class="text-center">
-                    <span v-if="data.average_percentage_promoters > 0">
-                        {{ data.average_percentage_promoters}} 
-                    </span>   
+                <td  colspan="2"  class="text-center">
+                    <span v-if="data.average_percentage_promoters  > 0">
+                        {{  data.average_percentage_promoters  }}
+                    </span>  
                 </td>
 
             </tr>
             <tr>
                 <td colspan="3" class="text-right">% of Detractors:</td>
-                <td class="text-center" >
-                    <span v-if="data.oct_percentage_detractors > 0">
-                        {{ data.oct_percentage_detractors}} 
-                    </span>   
+                <td  class="text-center" >
+                    <span v-if="data.first_month_percentage_detractors  > 0">
+                        {{  data.first_month_percentage_detractors  }}
+                    </span>  
                 </td>  
                 <td  class="text-center " >
-                    <span v-if="data.nov_percentage_detractors > 0">
-                        {{ data.nov_percentage_detractors}} 
-                    </span>   
-                </td>
-                <td  class="text-center" >
-                    <span v-if="data.dec_percentage_detractors > 0">
-                        {{ data.dec_percentage_detractors}} 
+                    <span v-if="data.second_month_percentage_detractors  > 0">
+                        {{  data.second_month_percentage_detractors  }}
                     </span>  
                 </td>
-                <td v-if="data.average_percentage_detractors" colspan="2"  class="text-center">
+                <td  class="text-center" >
+                    <span v-if="data.third_month_percentage_detractors  > 0">
+                        {{  data.third_month_percentage_detractors  }}
+                    </span>  
+                </td>
+                <td  colspan="2"  class="text-center">
                     <span v-if="data.average_percentage_detractors > 0">
-                        {{ data.average_percentage_detractors}} 
+                        {{  data.average_percentage_detractors  }}
                     </span>  
                 </td>
 
             </tr>
             <tr>
                 <td colspan="3" class="text-right">Net Promoter Score:</td>
-                <td  class="text-center" >
-                    <span v-if="data.oct_net_promoter_score > 0">
-                        {{ data.oct_net_promoter_score}} 
-                    </span>  
+                <td class="text-center" >
+                    <span v-if="data.first_month_net_promoter_score > 0">
+                        {{  data.first_month_net_promoter_score  }}
+                    </span> 
                 </td>  
-                <td  class="text-center " >
-                    <span v-if="data.nov_percentage_detractors > 0">
-                        {{ data.nov_percentage_detractors}} 
-                    </span>  
+                <td class="text-center " >
+                    <span v-if="data.second_month_net_promoter_score > 0">
+                        {{  data.second_month_net_promoter_score  }}
+                    </span> 
                 </td>
                 <td class="text-center" >
-                    <span v-if="data.dec_net_promoter_score > 0">
-                        {{ data.dec_net_promoter_score}} 
-                    </span>  
+                    <span v-if="data.third_month_net_promoter_score > 0">
+                        {{  data.third_month_net_promoter_score  }}
+                    </span> 
+
                 </td>
                 <td colspan="2"  class="text-center">
                     <span v-if="data.ave_net_promoter_score > 0">
-                        {{ data.ave_net_promoter_score}} 
-                    </span>  
+                        {{  data.ave_net_promoter_score  }}
+                    </span> 
                 </td>
             </tr>
             <tr>
                 <td colspan="3" class="text-right">Customer Satisfaction Index (CSI):</td>
                 <td class="text-center" >
-                    <span v-if="data.first_month_csi > 0">
-                        {{ data.first_month_csi}} 
-                    </span>  
+                    <span v-if="data.first_month_csi > 0" >
+                        {{  data.first_month_csi  }}
+                    </span> 
                 </td>
-                <td class="text-center" >
-                    <span v-if="data.second_month_csi > 0">
-                        {{ data.second_month_csi}} 
-                    </span>  
+                <td class="text-center">
+                    <span v-if="data.second_month_csi > 0" >
+                        {{  data.second_month_csi  }}
+                    </span>
                 </td>
-                <td class="text-center" >
-                    <span v-if="data.third_month_csi > 0">
-                        {{ data.third_month_csi}} 
-                    </span>  
+                <td class="text-center">
+                    <span v-if="data.third_month_csi > 0" >
+                        {{  data.third_month_csi  }}
+                    </span>
                 </td>
-                <td class="text-center" colspan="2">
-                    <span v-if="data.csi > 0">
-                        {{ data.csi}} 
-                    </span>  
+                <td  colspan="2" class="text-center">
+                    <span v-if="data.csi > 0" >
+                        {{  data.csi  }}
+                    </span>
                 </td>
             </tr> 
             <tr>
@@ -744,8 +747,8 @@
                 <td colspan="3" class="text-right">Customer Satisfaction Rating  :</td>
                 <td colspan="5" class="text-center" >
                     <span v-if="data.customer_satisfaction_rating > 0">
-                        {{ data.customer_satisfaction_rating}} 
-                    </span>  
+                        {{ data.customer_satisfaction_rating }}
+                    </span>   
                 </td>
             </tr>                                   
         </table>   
@@ -759,12 +762,16 @@
                 <v-row>
                 <div class="ml-10">Comments
                 <v-chip color="primary">
-                    {{ data.total_comments }}
+                    <span v-if="data.total_comments">
+                        {{ data.total_comments }}
+                    </span>    
                 </v-chip>
                 </div>
                 <div class="">Complaints
                     <v-chip color="red">
-                    {{ data.total_complaints }}
+                        <span v-if="data.total_complaints">
+                            {{ data.total_complaints }}
+                        </span>
                     </v-chip>
                 </div>
 
@@ -776,6 +783,7 @@
             </v-row>
         </v-card-content>
     </v-card>
+
 
     <v-card class="mb-3">
         <v-card-title>

@@ -260,10 +260,10 @@
                     <v-col cols="6" >
                         <v-card class="mb-2">
                                 <v-card-title class="bg-gray-500 text-white">
-                                    Customer Satifaction Index(CSI)
+                                    Customer Satifaction Index(CSI) hey {{ data.customer_satisfaction_index}}
                             </v-card-title>
-                            <v-card-content class="p-10 m-5 text-lg " >
-                                <span v-if="data.customer_satisfaction_index != 0">{{ data.customer_satisfaction_index }} %</span>
+                            <v-card-content class="p-10 m-5 text-lg text-danger" >
+                                <span v-if="data.customer_satisfaction_index > 0">{{ data.customer_satisfaction_index }} %</span>
                             </v-card-content>
                         </v-card>
 
@@ -272,7 +272,7 @@
                                     Net Promotion Score(NPS)
                             </v-card-title>
                             <v-card-content class="p-5 m-5 text-lg">
-                                <span v-if="data.net_promoter_score != 0">{{ data.net_promoter_score }} %</span>
+                                <span v-if="data.net_promoter_score > 0">{{ data.net_promoter_score }} %</span>
                             </v-card-content>
                         </v-card>
             
@@ -291,10 +291,10 @@
                                 <v-col>
                                 <v-card class="mb-2">
                                         <v-card-title class="bg-gray-500 text-white">
-                                    Percentage of Detractors
-                                    </v-card-title>
+                                            Percentage of Detractors
+                                        </v-card-title>
                                     <v-card-content class="p-5 m-5 text-lg">
-                                        <span v-if="data.percentage_detractors != 0">{{ data.percentage_detractors }} %</span>
+                                        <span v-if="data.percentage_detractors > 0">{{ data.percentage_detractors }} %</span>
                                     </v-card-content>                                        
                                 </v-card>
                             </v-col>
