@@ -29,12 +29,14 @@ class AccountController extends Controller
 
         $regions = Region::all();
         $services = Services::all();
+        
 
         $accounts = User::when($search, function ($query,  $search) {
             $query->where('name', 'like', '%' . $search . '%')
                   ->orWhere('email', 'like', '%' . $search . '%')
                   ->orWhere('region_id', 'like', '%' . $search . '%');
         })
+        ->where('region_id',$user->region_id)
         ->orderByDesc('created_at')
         ->paginate(10);
 
