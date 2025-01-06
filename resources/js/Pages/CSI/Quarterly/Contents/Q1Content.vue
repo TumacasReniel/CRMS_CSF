@@ -221,7 +221,7 @@
                         </td>
                         <td v-if="data.lsr_totals" class="text-center" >
                             <span v-if="data.lsr_totals[index+1].s_lsr_total > 0">
-                                {{ data.lsr_totals[index+1].s_lsr_total }}
+                                {{ data.lsr_totals[index+1].s_lsr_total }} 
                             </span>
                         </td>
                     </tr>
@@ -601,7 +601,7 @@
                         </td>
                         <td v-if="data.i_trp_totals" class="text-center" >
                             <span v-if="data.i_trp_totals[index+1].nai_total_raw_points  > 0">
-                                {{  data.i_trp_totals[index+1].nai_total_raw_points  }}
+                                {{  data.i_trp_totals[index+1].nai_total_raw_points  }} 
                             </span>  
                         </td>
                         <td v-if="data.i_total_scores" class="text-center" >
@@ -618,8 +618,8 @@
                             </span>
                         </td>        
                         <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
-                            <span v-if="data.i_trp_totals[index+1].i_total_raw_points  > 0">
-                                {{  data.i_trp_totals[index+1].i_total_raw_points  }} 
+                            <span v-if="data.i_trp_totals[index+1].total_raw_points  > 0">
+                                {{  data.i_trp_totals[index+1].total_raw_points  }} 
                             </span>  
                         </td>  
                         <td v-if="data.i_total_scores" class="text-center bg-gray-200" >

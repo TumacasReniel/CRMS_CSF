@@ -338,12 +338,12 @@
                                     </span> 
                                 </td>  
                                 <td v-if="data.p1_total_scores" class="text-center bg-gray-200" >
-                                    <span v-if="data.p1_total_scores[index+1].x_total_scor > 0">
-                                        {{ data.p1_total_scores[index+1].x_total_scor }}
+                                    <span v-if="data.p1_total_scores[index+1].x_total_score > 0">
+                                        {{ data.p1_total_scores[index+1].x_total_score }}
                                     </span> 
                                 </td>   
                                 <td v-if="data.lsr_totals" class="text-center bg-gray-200" >
-                                    <span v-if="data.lsr_totals[index+1].lsr_totaltal > 0">
+                                    <span v-if="data.lsr_totals[index+1].lsr_total > 0">
                                         {{ data.lsr_totals[index+1].lsr_total }}
                                     </span> 
                                 </td>             
@@ -358,7 +358,7 @@
                      <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                         <td class="text-center">
-                            <span v-if="data.first_month_vs_grand_total > 0">
+                            <span  v-if="data.first_month_vs_grand_total > 0">
                                 {{ data.first_month_vs_grand_total }}
                             </span>
                         </td>
@@ -642,8 +642,8 @@
                                     </span> 
                                 </td>        
                                 <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
-                                    <span v-if="data.i_trp_totals[index+1].i_total_raw_points > 0 ">
-                                        {{ data.i_trp_totals[index+1].i_total_raw_points }}
+                                    <span v-if="data.i_trp_totals[index+1].total_raw_points > 0 ">
+                                        {{ data.i_trp_totals[index+1].total_raw_points }}
                                     </span> 
                                 </td>  
                                 <td v-if="data.i_total_scores" class="text-center bg-gray-200" >

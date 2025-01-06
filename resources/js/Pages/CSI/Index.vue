@@ -27,6 +27,40 @@ const props = defineProps({
     sub_unit_pstos: Object,
     sub_unit_types: Object,
 
+    //Monthly
+    y_totals: Object,
+    grand_vs_total: Number,
+    grand_s_total: Number,
+    grand_n_total:Number,
+    grand_d_total: Number,
+    grand_vd_total: Number,
+    x_totals: Object,
+    x_grand_total: Object,
+    likert_scale_rating_totals: Object,
+    lsr_grand_total: Number,
+    importance_rate_score_totals: Object,
+    x_importance_totals: Object,
+    importance_ilsr_totals: Object,
+    gap_totals: Object,
+    gap_grand_total: Number,
+    wf_totals: Object,
+    gap_grand_total: Number,
+    ss_totals: Object,
+    ws_totals: Object,
+    total_respondents: Number,
+    total_vss_respondents: Number,
+    percentage_vss_respondents: Number,
+    customer_satisfaction_rating: Number,
+    customer_satisfaction_index: Number,
+    net_promoter_score: Number,
+    percentage_promoters: Number,
+    percentage_detractors: Number,
+    total_comments: Number,
+    total_complaints: Number,
+    comments: Object,
+
+    
+    // Quarterly 
     cc_data: Object,
     user: Object,
     assignatorees: Object,
@@ -124,6 +158,35 @@ const props = defineProps({
     total_comments: Number,
     total_complaints: Number,
     comments: Object,
+
+    // Monthly and Date
+    customer_satisfaction_index: Number,
+    net_promoter_score: Number,
+    
+    // Yearly
+
+    percentage_promoters: Number,
+    q1_percentage_promoters: Number,
+    q2_percentage_promoters: Number,
+    q3_percentage_promoters: Number,
+    q4_percentage_promoters: Number,
+    average_percentage_promoters: Number,
+    q1_percentage_detractors: Number,
+    q2_percentage_detractors: Number,
+    q3_percentage_detractors: Number,
+    q4_percentage_detractors: Number,
+    average_percentage_detractors: Number,
+    q1_net_promoter_score: Number,
+    q2_net_promoter_score: Number,
+    q3_net_promoter_score: Number,
+    q4_net_promoter_score: Number,
+    ave_net_promoter_score: Number,
+    customer_satisfaction_rating: Number,
+    q1_csi: Number,
+    q2_csi: Number,
+    q3_csi: Number,
+    q4_csi: Number,
+    csi: Number,
 });
 
 
@@ -353,6 +416,9 @@ const printCSIReport = async () => {
           }
           .text-center{
             text-align: center;
+          }
+          .bg-blue{
+            background: blue;
           }
 
         `;

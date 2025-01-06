@@ -618,8 +618,8 @@
                             </span>
                         </td>        
                         <td v-if="data.i_trp_totals" class="text-center bg-gray-200" >
-                            <span v-if="data.i_trp_totals[index+1].i_total_raw_points  > 0">
-                                {{  data.i_trp_totals[index+1].i_total_raw_points  }} 
+                            <span v-if="data.i_trp_totals[index+1].total_raw_points  > 0">
+                                {{  data.i_trp_totals[index+1].total_raw_points  }} 
                             </span>  
                         </td>  
                         <td v-if="data.i_total_scores" class="text-center bg-gray-200" >
