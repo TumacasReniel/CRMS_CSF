@@ -126,7 +126,7 @@ const props = defineProps({
     third_month_percentage_promoters: Number,
     average_percentage_promoters: Number,
     first_month_percentage_detractors: Number,
-    second_percentage_detractors: Number,
+    second_month_percentage_detractors: Number,
     third_month_percentage_detractors: Number,
     average_percentage_detractors: Number,
     first_month_net_promoter_score: Number,
