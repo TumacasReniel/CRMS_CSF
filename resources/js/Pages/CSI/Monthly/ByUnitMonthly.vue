@@ -136,7 +136,7 @@
                 <div style="margin-top: -10px; margin-bottom: 40px; ">
                     <div style="font-size: 12px;margin-right:20px; margin-bottom:15px; font-weight: bold">PART II: CUSTOMER RATING OF SERVICE QUALITY  </div>
                     <table style="font-size: 13px;width:100%; border: 1px solid #333; border-collapse: collapse;  padding: 3px">
-                        <tr style="border: 1px solid #333; text-align: center; background-color:blue">
+                        <tr style="border: 1px solid #333; text-align: center;">
                             <td style="border: 1px solid #333; padding:2px;" rowspan="2">Service Quality Attributes</td>
                             <td style="border: 1px solid #333;">5</td>
                             <td style="border: 1px solid #333;">4</td>
