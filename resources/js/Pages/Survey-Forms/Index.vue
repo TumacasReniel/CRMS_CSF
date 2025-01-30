@@ -166,6 +166,7 @@ onMounted(() => {
 
 
 const saveCSF = async () => {
+    console.log(form,99);
     formSubmitted.value = true;
 
     // const canvas = document.querySelector('.signature-pad');
@@ -223,6 +224,10 @@ const updateIsComplaint = (index ,rate_score)=> {
     }
     else{
         form.complaint_scanner.value[index] = false; 
+    }
+
+    if(form.dimension_form.rate_score[index] == 6){
+        form.dimension_form.importance_rate_score[index] = 5;
     }
 
 
@@ -553,7 +558,7 @@ watch(
                                                     </v-btn-toggle> 
                                                     <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
                                                 </div>
-                                                <div class="overflow-hidden mb-3" v-if="form.dimension_form.rate_score[index]">
+                                                <div class="overflow-hidden mb-3" v-if="form.dimension_form.rate_score[index]  && form.dimension_form.rate_score[index] !=6" >
                                                     <div>How important is this attribute?</div>
                                                     <div>
                                                         <div class="ml-2 mb-3">
