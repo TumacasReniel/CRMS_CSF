@@ -260,7 +260,7 @@
                     <v-col cols="6" >
                         <v-card class="mb-2">
                                 <v-card-title class="bg-gray-500 text-white">
-                                    Customer Satifaction Index(CSI) hey {{ data.customer_satisfaction_index}}
+                                    Customer Satifaction Index(CSI)
                             </v-card-title>
                             <v-card-content class="p-10 m-5 text-lg text-danger" >
                                 <span v-if="data.customer_satisfaction_index > 0">{{ data.customer_satisfaction_index }} %</span>

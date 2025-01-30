@@ -83,7 +83,7 @@ class UnitSeeder extends Seeder
             ],
             [
                 'services_id' => 1,
-                'unit_name' => 'Management Information Sytem',
+                'unit_name' => 'Management Information System',
             ],
             [
                 'services_id' => 3,
