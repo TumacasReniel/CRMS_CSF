@@ -424,9 +424,9 @@ watch(
                                                                 label="Age Group*"
                                                                 variant="outlined"
                                                                 v-model="form.age_group"
-                                                                :items="['19 or lower','20-34','35-49','50-59','60+', 'Prefer not to say']"
+                                                                :items="['19 or lower','20-34','35-49','50-64','65+', 'Prefer not to say']"
                                                                 :rules="[
-                                                                    (v) => !!v || errors.sex ||  'This field is required',]
+                                                                    (v) => !!v || errors.age_group ||  'This field is required',]
                                                                 "
                                                             >
                                                             </v-select>                                  
