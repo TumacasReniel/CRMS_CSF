@@ -18,6 +18,12 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+
+    user_list: {
+        type: Object,
+        default: null,
+    },
+
     value: {
         type: Boolean,
         default: false,
@@ -28,6 +34,8 @@ const props = defineProps({
     generated:{
         type: Boolean,
     }
+
+
 
 });
 

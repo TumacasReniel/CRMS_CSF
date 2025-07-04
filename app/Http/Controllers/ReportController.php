@@ -1023,7 +1023,7 @@ class ReportController extends Controller
             break;
             case 'SECOND QUARTER':
                 $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
-                $endDate = Carbon::create($request->selected_year, 5, 31)->endOfDay();
+                $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
 
                 $numeric_first_month = 4;
                 $numeric_second_month = 5;
@@ -1051,7 +1051,7 @@ class ReportController extends Controller
         }  
         
         // search and check list of forms query  and get customers list ids
-       $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
+        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
         // get CC Data
         $cc_query = $this->getCitizenCharterByQuarter($request, $customer_ids, $startDate ,$endDate);
@@ -1061,7 +1061,6 @@ class ReportController extends Controller
 
         // get Customer Attribute Rating with specific quarter date range
         $date_range = $this->getCustomerAttributeRatingByQuarter($request,$customer_ids,$startDate ,$endDate);
-
         // get first month of Specific Quarter Selected 
         $first_month = $this->getCustomerAttributeRatingByQuarterWithMonth($request, $customer_ids, $numeric_first_month);
         // get second month of Specific Quarter Selected 
