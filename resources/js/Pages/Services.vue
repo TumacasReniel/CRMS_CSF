@@ -26,54 +26,54 @@ const goBack = async () => {
 
 </script>
 
-<template >
-    <Head title="Services" />   
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
+<template>
+    <Head title="Services" />
+     <nav
+        data-aos="fade-down"
+        data-aos-duration="500"
+        data-aos-delay="500"
          style="backdrop-filter: blur(2px);"
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
+        class="navbar navbar-light bg-white fixed-top border-bottom">
+            <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <img src="../../../public/images/dost-logo.jpg" class="me-3" alt="DOST Logo" style="height: 2rem;">
+                <span class="fw-bold fs-4">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
             </a>
 
             </div>
 
-        
-    </nav>  
-    <v-container fill-height>
-        <v-row class="mx-15" style="margin-top: 100px;" >
-            <v-col>
-                <div class="w-full border bg-blue">
-                <v-card-title class="text-center">SERVICES</v-card-title>
+
+    </nav>
+    <div class="container-fluid d-flex flex-column min-vh-100">
+        <div class="row mx-5" style="margin-top: 100px;" >
+            <div class="col">
+                <div class="w-full border bg-primary">
+                <h5 class="card-title text-center text-white">SERVICES</h5>
              </div>
-            </v-col>
-        </v-row>
-        <v-row class="mx-10 mt-5" justify="center" align="center">
-            <v-col v-for="service in services" :key="service.id" cols="12" sm="6" md="6" lg="6" justify="center" align="center">
+            </div>
+        </div>
+        <div class="row mx-4 mt-5 justify-content-center align-items-center">
+            <div v-for="service in services" :key="service.id" class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-content-center align-items-center">
             <Link @click="goServiceUnits(region_id, service.id)" class="card-link">
-                <div class="card mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column align-left justify-center" style="height:180px; text-align: center;">
-                <v-icon color="blue" size="x-large" class="p-3">mdi-check-circle</v-icon>
-                <p class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white text-left">
+                <div class="card mx-5 p-4 bg-white border shadow d-flex flex-column align-items-center justify-content-center" style="height:180px; text-align: center;">
+                <i class="ri-check-circle-line text-primary fs-1 p-3"></i>
+                <p class="mb-2 fs-5 fw-semibold text-dark text-start">
                     {{ service.services_name }}
                 </p>
                 </div>
             </Link>
-            </v-col>
-        </v-row>
-        <v-row>
-            <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 130px">Back</v-btn>
-            </Link>
-        </v-row>
-        
-     
-  
-</v-container>
-        
+            </div>
+        </div>
+        <div class="row">
+            <button @click="goBack()" class="btn btn-outline-primary ms-5">
+                <i class="ri-arrow-left-line"></i> Back
+            </button>
+        </div>
+
+
+
+</div>
+
 </template>
 
 <style scoped>

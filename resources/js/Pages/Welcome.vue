@@ -1,10 +1,8 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { reactive, watch, ref, onMounted } from "vue";
- import AOS from 'aos'
+import AOS from 'aos'
 import 'aos/dist/aos.css'
-
-import * as THREE from 'three';
 
 AOS.init();
 
@@ -15,78 +13,556 @@ defineProps({
     phpVersion: String,
 });
 
+// Animation counters for stats
+const animateCounters = () => {
+    const counters = document.querySelectorAll('.animate-count');
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000; // 2 seconds
+        const step = target / (duration / 16); // 60fps
+        let current = 0;
 
+        const timer = setInterval(() => {
+            current += step;
+            if (current >= target) {
+                counter.textContent = target.toLocaleString() + (target === 95 ? '%' : '+');
+                clearInterval(timer);
+            } else {
+                counter.textContent = Math.floor(current).toLocaleString() + (target === 95 ? '%' : '+');
+            }
+        }, 16);
+    });
+};
+
+// Intersection Observer for animations
+onMounted(() => {
+    // Animate counters when stats section is visible
+    const statsSection = document.getElementById('stats');
+    if (statsSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(animateCounters, 500);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        observer.observe(statsSection);
+    }
+
+    // Add hover effects to feature cards
+    const featureCards = document.querySelectorAll('.hover-lift');
+    featureCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px)';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Smooth scroll for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector(link.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
 </script>
 
 <template >
     <Head title="Homepage" />   
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
-         style="backdrop-filter: blur(2px);"
-        class="bg-transparent dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">Department of Science and Technology</span>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center text-decoration-none">
+                <img src="../../../public/images/dost-logo.jpg" alt="DOST Logo" class="me-2" style="height: 40px; width: auto;">
+                <span class="fs-5 fw-bold text-white">Department of Science and Technology</span>
             </a>
-            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <a  href="/services/csf/regions">
-                        <v-btn variant="outlined" id="mega-menu-full-dropdown-button" data-collapse-toggle="mega-menu-full-dropdown" class="hover:bg-blue  flex items-center justify-between w-full py-2 px-3 text-gray-900 rounded md:w-auto hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
-                            Get Started
-                        </v-btn>
-                    </a>
-                    <!-- <a :href="route('login')">
-                        <button class="mr-3 ml-5 text-blue-800 bg-gray-200 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            Login
-                        </button>
-                    </a> -->
-                
-                <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-                    </svg>
-                </button>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a href="/services/csf/regions" class="btn btn-outline-light me-2">Get Started</a>
+                    <!-- <a :href="route('login')" class="btn btn-primary">Login</a> -->
+                </div>
             </div>
-          
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="position-relative vh-100 d-flex align-items-center justify-content-center overflow-hidden" style="background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #312e81 100%); padding-top: 76px;">
+        <!-- Animated Background Elements -->
+        <div class="position-absolute w-100 h-100">
+            <div class="position-absolute bg-primary rounded-circle opacity-25 animate-pulse" style="top: 10%; left: 10%; width: 8rem; height: 8rem;"></div>
+            <div class="position-absolute bg-info rounded-circle opacity-25 animate-pulse" style="bottom: 10%; right: 10%; width: 6rem; height: 6rem; animation-delay: 1s;"></div>
+            <div class="position-absolute bg-warning rounded-circle opacity-25 animate-pulse" style="top: 50%; left: 50%; width: 4rem; height: 4rem; animation-delay: 2s; transform: translate(-50%, -50%);"></div>
         </div>
 
-    </nav> 
+        <!-- Tech Animation Elements -->
+        <div class="position-absolute w-100 h-100 overflow-hidden">
+            <!-- Moving Circuit Lines -->
+            <div class="position-absolute w-100 h-100">
+                <svg class="w-100 h-100 opacity-25" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="circuit-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0d6efd;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#6610f2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Horizontal Lines -->
+                    <line x1="0" y1="200" x2="1000" y2="200" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="8s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="0" y1="400" x2="1000" y2="400" stroke="url=#circuit-gradient" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="10s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="0" y1="600" x2="1000" y2="600" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="12s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="0" y1="800" x2="1000" y2="800" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="9s" repeatCount="indefinite"/>
+                    </line>
+                    <!-- Vertical Lines -->
+                    <line x1="200" y1="0" x2="200" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="11s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="400" y1="0" x2="400" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="13s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="600" y1="0" x2="600" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="7s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="800" y1="0" x2="800" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="15s" repeatCount="indefinite"/>
+                    </line>
+                    <!-- Diagonal Lines -->
+                    <line x1="0" y1="0" x2="1000" y2="1000" stroke="url(#circuit-gradient)" stroke-width="1" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1414;1414,0" dur="20s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="1000" y1="0" x2="0" y2="1000" stroke="url(#circuit-gradient)" stroke-width="1" class="animate-pulse">
+                        <animate attributeName="stroke-dasharray" values="0,1414;1414,0" dur="18s" repeatCount="indefinite"/>
+                    </line>
+                </svg>
+            </div>
 
-    <div style="display: flex;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                width: 100%;     
-                "
-                 data-aos="zoom-out" 
-                data-aos-duration="500" 
-                data-aos-delay="500" >
-        <h1 style="font-size: 70px; font-weight: bold; text-shadow: -2px -2px 4px black, 5px 5px 10px black;text-align:center; margin-left: 10%;margin-right: 10%; ">Customer Relation Management System</h1>
-      
-    </div><br>
-   <div>
+            <!-- Floating Geometric Shapes -->
+            <div class="position-absolute border border-info rotate-45 animate-bounce" style="top: 25%; left: 25%; width: 2rem; height: 2rem; animation-duration: 6s;"></div>
+            <div class="position-absolute border border-primary rounded-circle animate-spin" style="bottom: 25%; right: 25%; width: 1.5rem; height: 1.5rem; animation-duration: 8s; animation-delay: 2s;"></div>
+            <div class="position-absolute bg-warning opacity-50 animate-ping" style="top: 50%; left: 50%; width: 1rem; height: 1rem; animation-duration: 4s; animation-delay: 1s; transform: translate(-50%, -50%);"></div>
+            <div class="position-absolute border border-light opacity-50 rotate-12 animate-pulse" style="bottom: 25%; right: 33%; width: 2.5rem; height: 2.5rem; animation-duration: 5s; animation-delay: 3s;"></div>
+            <div class="position-absolute bg-light opacity-75 rounded-circle animate-bounce" style="top: 17%; right: 17%; width: 0.75rem; height: 0.75rem; animation-duration: 7s; animation-delay: 1.5s;"></div>
+        </div>
 
-   </div>
+        <!-- Main Content -->
+        <div class="position-relative text-center px-4 container z-index-10">
 
 
+            <!-- Main Title with Enhanced White Text and Dark Shadow -->
+            <h1 class="display-1 fw-bold mb-6 animate-fade-in-up position-relative text-white" style="animation-delay: 0.4s; text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 4px 4px 8px rgba(0,0,0,0.6), 6px 6px 12px rgba(0,0,0,0.4); filter: drop-shadow(0 0 15px rgba(0,0,0,0.5));">
+                <span class="d-block position-relative animate-pulse" style="animation-delay: 0.1s; animation-duration: 3s;">
+                    Customer Relation
+                </span>
+                <span class="d-block fs-1 fw-bold position-relative animate-pulse" style="animation-delay: 0.5s; animation-duration: 3s;">
+                    Management System
+                </span>
+            </h1>
+
+            <!-- Enhanced Animated Underline -->
+            <div class="d-flex justify-content-center mb-8 position-relative">
+                <div class="bg-white rounded-pill shadow-lg animate-grow-width" style="width: 8rem; height: 0.25rem; animation-delay: 0.8s;"></div>
+                <div class="position-absolute top-0 start-50 translate-middle-x bg-gradient-to-r from-blue-400 to-purple-400 rounded-pill animate-grow-width" style="width: 4rem; height: 0.125rem; animation-delay: 1.0s;"></div>
+            </div>
+
+            <!-- Enhanced Subtitle with Typing Effect -->
+            <div class="mb-12 container position-relative">
+                <p class="fs-4 text-white-50 lead animate-fade-in-up position-relative" style="animation-delay: 0.6s;">
+                    Transform citizen feedback into actionable insights with our
+                    <span class="fw-bold text-white position-relative">
+                        comprehensive platform
+                        <svg class="position-absolute top-0 end-0 translate-middle-x text-white animate-bounce" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation-delay: 1.8s;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </span>
+                    designed for excellence and innovation
+                </p>
+
+                <!-- Decorative Quote Marks -->
+                <div class="position-absolute top-0 start-0 text-white-25 fs-1 fw-bold animate-fade-in" style="animation-delay: 0.8s; margin-top: -1rem; margin-left: -1rem;">"</div>
+                <div class="position-absolute bottom-0 end-0 text-white-25 fs-1 fw-bold animate-fade-in" style="animation-delay: 0.8s; margin-bottom: -1rem; margin-right: -1rem;">"</div>
+            </div>
+
+            <!-- Enhanced Premium CTA Buttons with Hover Effects -->
+            <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center align-items-center mb-5 animate-fade-in-up" style="animation-delay: 0.8s;">
+                <a href="/services/csf/regions" class="btn btn-light btn-lg px-5 py-3 rounded-pill shadow-lg position-relative overflow-hidden group transition-all duration-500 hover-transform">
+                    <div class="position-absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <svg class="me-3 position-relative z-10 animate-pulse" width="1.5rem" height="1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span class="fw-semibold position-relative z-10">Start Your Survey</span>
+                    <div class="position-absolute inset-0 rounded-pill border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </a>
+
+                <a href="#stats" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill border-2 position-relative overflow-hidden group transition-all duration-500 hover-bg-white hover-text-dark">
+                    <div class="position-absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <svg class="me-3 position-relative z-10" width="1.25rem" height="1.25rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                    <span class="fw-semibold position-relative z-10 group-hover:text-dark transition-colors duration-500">Learn More</span>
+                </a>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="d-flex flex-column flex-sm-row gap-4 justify-content-center align-items-center text-white-75 animate-fade-in-up" style="animation-delay: 1.0s;">
+                <div class="d-flex align-items-center">
+                    <svg class="me-2 text-success" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="fs-6">Trusted by 1000+ Organizations</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <svg class="me-2 text-warning" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="fs-6">24/7 Support Available</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Scroll Indicator -->
+        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4">
+            <div class="d-flex flex-column align-items-center text-white-50">
+                <span class="fs-6 mb-2">Scroll to explore</span>
+                <div class="border border-white border-opacity-50 rounded-circle d-flex justify-content-center align-items-center animate-bounce" style="width: 3rem; height: 4rem;">
+                    <div class="bg-white bg-opacity-75 rounded-pill animate-pulse" style="width: 0.5rem; height: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div id="stats" class="py-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+        <!-- Background Pattern -->
+        <div class="position-absolute top-0 start-0 w-100 h-100 opacity-5">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="stats-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <circle cx="20" cy="20" r="1" fill="#3b82f6"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#stats-pattern)"/>
+            </svg>
+        </div>
+
+        <div class="container-fluid px-4 px-lg-5 position-relative">
+            <div class="text-center mb-5">
+                <!-- Premium Badge -->
+                <div class="badge bg-primary bg-opacity-10 text-primary fs-6 px-4 py-2 mb-4 border border-primary border-opacity-25 rounded-pill">
+                    <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="fw-semibold">Trusted by Organizations</span>
+                </div>
+
+                <!-- Main Heading -->
+                <h2 class="display-4 fw-bold text-dark mb-4">
+                    Proven Results &
+                    <span class="text-primary position-relative">
+                        Impact
+                        <div class="position-absolute bottom-0 start-0 w-100 bg-primary rounded-pill" style="height: 0.25rem;"></div>
+                    </span>
+                </h2>
+
+                <!-- Subtitle -->
+                <p class="fs-5 text-muted container lead">
+                    Join thousands of satisfied users who trust our platform for their
+                    <span class="fw-bold text-primary">citizen feedback management</span>.
+                </p>
+
+                <!-- Decorative Elements -->
+                <div class="d-flex justify-content-center mt-4 gap-2">
+                    <div class="bg-primary rounded-pill" style="width: 3rem; height: 0.25rem;"></div>
+                    <div class="bg-info rounded-pill" style="width: 1rem; height: 0.25rem;"></div>
+                    <div class="bg-success rounded-pill" style="width: 2rem; height: 0.25rem;"></div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="row g-4 mb-5">
+                <!-- Stat Card 1 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-transform transition-all duration-300" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-primary to-primary-dark opacity-10"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 translate-middle-x bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body text-center p-4 position-relative">
+                            <div class="display-4 fw-bold text-primary mb-3 animate-count" data-target="10000">10,000+</div>
+                            <div class="text-muted fw-semibold fs-5">Surveys Completed</div>
+                            <div class="mt-3">
+                                <div class="progress bg-light rounded-pill" style="height: 0.375rem;">
+                                    <div class="progress-bar bg-primary rounded-pill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-transform transition-all duration-300" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-success to-success-dark opacity-10"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 translate-middle-x bg-success rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body text-center p-4 position-relative">
+                            <div class="display-4 fw-bold text-success mb-3 animate-count" data-target="95">95%</div>
+                            <div class="text-muted fw-semibold fs-5">Satisfaction Rate</div>
+                            <div class="mt-3">
+                                <div class="progress bg-light rounded-pill" style="height: 0.375rem;">
+                                    <div class="progress-bar bg-success rounded-pill" style="width: 95%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-transform transition-all duration-300" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-info to-info-dark opacity-10"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 translate-middle-x bg-info rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body text-center p-4 position-relative">
+                            <div class="display-4 fw-bold text-info mb-3 animate-count" data-target="50">50+</div>
+                            <div class="text-muted fw-semibold fs-5">Service Units</div>
+                            <div class="mt-3">
+                                <div class="progress bg-light rounded-pill" style="height: 0.375rem;">
+                                    <div class="progress-bar bg-info rounded-pill" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-transform transition-all duration-300" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-warning to-warning-dark opacity-10"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 translate-middle-x bg-warning rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body text-center p-4 position-relative">
+                            <div class="display-4 fw-bold text-warning mb-3">24/7</div>
+                            <div class="text-muted fw-semibold fs-5">Support Available</div>
+                            <div class="mt-3">
+                                <div class="progress bg-light rounded-pill" style="height: 0.375rem;">
+                                    <div class="progress-bar bg-warning rounded-pill" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Features Preview -->
+    <div id="features" class="py-5 bg-light">
+        <div class="container px-4 px-lg-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold text-dark mb-4">
+                    Powerful Features for
+                    <span class="text-primary">Better Insights</span>
+                </h2>
+                <p class="fs-5 text-muted container">
+                    Everything you need to collect, analyze, and act on customer feedback effectively.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Feature 1 -->
+                <div class="col-12 col-md-4">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-lift transition-all duration-500" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-primary to-primary-dark opacity-5"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 bg-primary rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 0.5rem; margin-right: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body p-4 position-relative">
+                            <!-- Feature Number -->
+                            <div class="badge bg-primary bg-opacity-10 text-primary fs-6 px-3 py-1 mb-3 rounded-pill">01</div>
+
+                            <h3 class="card-title fs-4 fw-bold text-dark mb-3">Advanced Analytics</h3>
+                            <p class="card-text text-muted mb-4">
+                                Comprehensive reporting and real-time analytics to track customer satisfaction metrics and trends with beautiful dashboards.
+                            </p>
+
+                            <!-- Feature List -->
+                            <ul class="list-unstyled">
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-primary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Real-time dashboards</span>
+                                </li>
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-primary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Custom reports</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <svg class="text-primary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Trend analysis</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="col-12 col-md-4">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-lift transition-all duration-500" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-success to-success-dark opacity-5"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 bg-success rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 0.5rem; margin-right: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body p-4 position-relative">
+                            <!-- Feature Number -->
+                            <div class="badge bg-success bg-opacity-10 text-success fs-6 px-3 py-1 mb-3 rounded-pill">02</div>
+
+                            <h3 class="card-title fs-4 fw-bold text-dark mb-3">Smart Management</h3>
+                            <p class="card-text text-muted mb-4">
+                                Intelligent user management with role-based access and automated workflow systems for seamless operations.
+                            </p>
+
+                            <!-- Feature List -->
+                            <ul class="list-unstyled">
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-success me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Role-based access</span>
+                                </li>
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-success me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Automated workflows</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <svg class="text-success me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span class="text-sm">Team collaboration</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="col-12 col-md-4">
+                    <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden hover-lift transition-all duration-500" style="transform: translateY(0);">
+                        <!-- Gradient Background -->
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-br from-secondary to-secondary-dark opacity-5"></div>
+
+                        <!-- Floating Icon -->
+                        <div class="position-absolute top-0 end-0 bg-secondary rounded-circle d-flex align-items-center justify-content-center shadow-lg" style="width: 4rem; height: 4rem; margin-top: 0.5rem; margin-right: 1rem;">
+                            <svg class="text-white" width="2rem" height="2rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+
+                        <div class="card-body p-4 position-relative">
+                            <!-- Feature Number -->
+                            <div class="badge bg-secondary bg-opacity-10 text-secondary fs-6 px-3 py-1 mb-3 rounded-pill">03</div>
+
+                            <h3 class="card-title fs-4 fw-bold text-dark mb-3">Survey Builder</h3>
+                            <p class="card-text text-muted mb-4">
+                                Create engaging surveys with customizable questions and advanced response tracking for better insights.
+                            </p>
+
+                            <!-- Feature List -->
+                            <ul class="list-unstyled">
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-secondary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-sm">Custom questions</span>
+                                </li>
+                                <li class="d-flex align-items-center mb-2">
+                                    <svg class="text-secondary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                    <span class="text-sm">Response tracking</span>
+                                </li>
+                                <li class="d-flex align-items-center">
+                                    <svg class="text-secondary me-2 flex-shrink-0" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="text-sm">Advanced analytics</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
-
 <style>
-    #app {
-        background: url(https://cdn.dribbble.com/users/6117646/screenshots/14975149/media/8f26446e227baeb76f1ae01e8dc1c558.gif);
-         width:100vw;
-         height: 100vh;
-         z-index:1;
-         margin: 0;
-        padding: 0;
-        background-color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 
 </style>
+

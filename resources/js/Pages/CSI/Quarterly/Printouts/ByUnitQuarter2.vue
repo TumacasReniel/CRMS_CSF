@@ -63,9 +63,9 @@
                         <td>1</td>
                         <td style="text-align: left">I know what a CC is and I saw this office's CC</td>
                         <td>
-                            <span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">
+                            <span>
                                 {{data.cc_data.cc1_data.cc1_ans1}}
-                            </span>                           
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -81,9 +81,9 @@
                         <td>3</td>
                         <td style="text-align: left">I learned the CC when I saw this office's CC</td>
                         <td>
-                            <span v-if="data.cc_data.cc1_data.cc1_ans3 > 0">
+                            <span>
                                 {{data.cc_data.cc1_data.cc1_ans3}}
-                            </span>   
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -358,34 +358,34 @@
                      <tr>
                         <td colspan="3" class="text-right">Total No. of Very Satisfied (VS) Responses:</td>
                         <td class="text-center">
-                            <span v-if="data.first_month_vs_grand_total > 0">
+                            <span>
                                 {{ data.first_month_vs_grand_total }}
                             </span>
                         </td>
-                        <td class="text-center"> 
-                            <span v-if="data.second_month_vs_grand_total  > 0">
+                        <td class="text-center">
+                            <span>
                                 {{ data.second_month_vs_grand_total  }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.third_month_vs_grand_total   > 0">
+                            <span>
                                 {{ data.third_month_vs_grand_total   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.vs_grand_total_raw_points  > 0">
+                            <span>
                                 {{ data.vs_grand_total_raw_points   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.vs_grand_total_score  > 0">
+                            <span>
                                 {{ data.vs_grand_total_score   }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span v-if="data.vs_grand_total_score  > 0 && data.grand_total_score">
                                 {{ calculate(data.vs_grand_total_score, data.grand_total_score) }}
-                            </span>  
+                            </span>
                         </td>
 
                     </tr>
@@ -426,34 +426,34 @@
                     <tr>
                         <td colspan="3" class="text-right">Total No. of Other (N, D, VD) Responses:</td>
                         <td class="text-center">
-                            <span v-if="data.first_month_ndvd_grand_total  > 0">
+                            <span>
                                 {{ data.first_month_ndvd_grand_total   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.second_month_ndvd_grand_total  > 0">
+                            <span>
                                 {{ data.second_month_ndvd_grand_total   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.third_month_ndvd_grand_total  > 0">
+                            <span>
                                 {{ data.third_month_ndvd_grand_total   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.ndvd_grand_total_raw_points  > 0">
+                            <span>
                                 {{ data.ndvd_grand_total_raw_points   }}
                             </span>
                         </td>
                         <td class="text-center">
-                            <span v-if="data.ndvd_grand_total_score  > 0">
+                            <span>
                                 {{ data.ndvd_grand_total_score   }}
                             </span>
                         </td>
                         <td class="text-center">
                             <span v-if="data.ndvd_grand_total_score  > 0 && data.grand_total_score  > 0">
                                 {{ calculate(data.ndvd_grand_total_score, data.grand_total_score) }}
-                            </span>     
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -670,25 +670,25 @@
 
                     <tr>
                         <td colspan="3" class="text-right">% of Promoters:</td>
-                         <td class="text-center" >
-                            <span v-if="data.first_month_percentage_promoter > 0 ">
+                        <td class="text-center" >
+                            <span>
                                 {{ data.first_month_percentage_promoter }}
-                            </span> 
-                        </td>  
+                            </span>
+                        </td>
                         <td class="text-center " >
-                            <span v-if="data.second_month_percentage_promoters > 0 ">
+                            <span>
                                 {{ data.second_month_percentage_promoters }}
-                            </span> 
+                            </span>
                         </td>
                         <td class="text-center" >
-                            <span v-if="data.third_month_percentage_promoters > 0 ">
+                            <span>
                                 {{ data.third_month_percentage_promoters }}
-                            </span> 
+                            </span>
                         </td>
                         <td colspan="2"  class="text-center">
-                            <span v-if="data.average_percentage_promoters > 0 ">
+                            <span>
                                 {{ data.average_percentage_promoters }}
-                            </span> 
+                            </span>
                         </td>
 
                     </tr>
@@ -719,24 +719,24 @@
                     <tr>
                         <td colspan="3" class="text-right">Net Promoter Score:</td>
                         <td class="text-center" >
-                            <span v-if="data.first_month_net_promoter_score > 0 ">
+                            <span>
                                 {{ data.first_month_net_promoter_score }}
-                            </span> 
-                        </td>  
+                            </span>
+                        </td>
                         <td class="text-center " >
-                            <span v-if="data.second_month_percentage_detractors > 0 ">
+                            <span>
                                 {{ data.second_month_percentage_detractors }}
-                            </span> 
+                            </span>
                         </td>
                         <td class="text-center" >
-                            <span v-if="data.third_month_net_promoter_score > 0 ">
+                            <span>
                                 {{ data.third_month_net_promoter_score }}
-                            </span> 
+                            </span>
                         </td>
                         <td  colspan="2"  class="text-center">
-                            <span v-if="data.ave_net_promoter_score > 0 ">
+                            <span>
                                 {{ data.ave_net_promoter_score }}
-                            </span> 
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -769,9 +769,9 @@
                    <tr>
                         <td colspan="3" class="text-right">Customer Satisfaction Rating  :</td>
                         <td colspan="5">
-                            <span v-if="data.customer_satisfaction_rating > 0 ">
+                            <span>
                                 {{ data.customer_satisfaction_rating }}
-                            </span> 
+                            </span>
                         </td>
                     </tr>                                   
                 </table>   

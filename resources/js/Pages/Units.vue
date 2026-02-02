@@ -1,9 +1,10 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 import { reactive, watch, ref, onMounted } from "vue";
- import AOS from 'aos'
+import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { router } from '@inertiajs/vue3'
+import '../../css/card-animations.css'
 
 
 AOS.init();
@@ -50,46 +51,39 @@ const goBack = async () => {
 
         
     </nav>  
-    <v-container fill-height>
-        <v-row class="mx-15" style="margin-top: 100px;" >
-            <v-col>
-                <div class="w-full border bg-blue">
-                <v-card-title class="text-center">{{ service.services_name }}</v-card-title>
+    <div class="container-fluid min-vh-100">
+        <div class="row mx-15" style="margin-top: 100px;" >
+            <div class="col">
+                <div class="w-full bg-gradient-primary text-white p-4 rounded-3 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="text-center fw-bold fs-3 mb-0">{{ service.services_name }}</h5>
              </div>
-            </v-col>
-        </v-row>
-        <v-row   class=" mx-15 mt-5" align="center" justify="center">        
-                <v-col v-for="unit in service_units" cols="12"sm="4" md="4" lg="4">
+            </div>
+        </div>
+        <div class="row mx-15 mt-5 align-items-center justify-content-center">
+                <div v-for="(unit, index) in service_units" class="col-12 col-sm-4 col-md-4 col-lg-4">
                     <Link @click="goNext(unit.id, region_id, service_id)">
-                        <div style="height:150px"  class="card mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <v-icon color="blue" size="x-large" class="p-3" >mdi-check-circle</v-icon>
-                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                        <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden card-amazing mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" :style="{ animationDelay: `${index * 0.5}s` }">
+                                <i class="bi bi-check-circle text-primary fs-1 p-3 icon-main"></i>
+                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white card-title">
                                     {{ unit.unit_name }}
-                                </h5>      
-                        </div>     
+                                </h5>
+                        </div>
                     </Link>
-                </v-col>
-        </v-row>
-        <v-row>
+                </div>
+        </div>
+        <div class="row">
             <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 120px">Back</v-btn>
+            <button class="btn btn-primary ms-5" style="margin-left: 120px"><i class="bi bi-arrow-left me-2"></i>Back</button>
             </Link>
-        </v-row>
-        
-     
-  
-</v-container>
+        </div>
+
+
+
+</div>
         
 
 </template>
 <style scoped>
-.card {
-  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-}
-
-.card:hover {
-  box-shadow:  10px 10px 15px rgba(0, 0, 0, 0.2);
-}
 </style>
 
 

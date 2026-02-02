@@ -232,7 +232,7 @@ const closeDialog = (value) => {
                             label="Region*"
                             v-model="form.region"
                             variant="outlined"
-                            :items="data.regions"
+                            :items="data?.regions || []"
                             item-title="name"
                             item-value="id"
                             required
@@ -276,7 +276,7 @@ const closeDialog = (value) => {
                             label="Service*"
                             v-model="form.service"
                             variant="outlined"
-                            :items="data.services"
+                            :items="data?.services || []"
                             item-title="services_name"
                             item-value="id"
                             clearable

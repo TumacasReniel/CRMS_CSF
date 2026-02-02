@@ -777,7 +777,7 @@
                     </span>
                 </td>
                 <td class="text-center">
-                    <span v-if="data.qw_csi > 0">
+                    <span v-if="data.q2_csi > 0">
                         {{ data.q2_csi }}
                     </span>       
                 </td>

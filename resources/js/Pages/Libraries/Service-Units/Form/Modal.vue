@@ -1,7 +1,9 @@
-<script setup lang="ts">
-import { reactive, watch, ref, onMounted } from "vue";
-import { Head, Link, router } from '@inertiajs/vue3';
+<script setup>
+import { reactive, watch, ref, nextTick } from "vue";
+import { router } from '@inertiajs/vue3';
+
 const emit = defineEmits(["input"]);
+
 const props = defineProps({
     data: {
         type: Object,
@@ -11,60 +13,36 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-
     action_clicked: {
         type: String,
         default: null,
     },
-
     selected_service: {
         type: Object,
         default: null,
     },
-
 });
-
-watch(
-    () => props.account,
-    (value) => {
-        if(value){
-            form.id = value.id;
-            form.name = value.name;
-            form.email = value.email;
-            form.selected_region = value.region;
-        }
-    }
-     
-);
 
 const form = reactive({
     service_id: null,
-    service_name:null,
-    unit_name:null,
+    service_name: null,
+    unit_name: null,
 });
 
-
 const show_form_modal = ref(false);
+
 watch(
     () => props.value,
-    (value) => {
+    async (value) => {
         show_form_modal.value = value;
-    }
-);
-
-
-const action_clicked = ref('');
-watch(
-    () => props.action,
-    (value) => {
-        action_clicked.value = value;
-    }
-);
-
-watch(
-    () => form.selected_service,
-    (value) => {
-        form.selected_unit = null;
+        if (value) {
+            // Focus the first input when modal opens
+            await nextTick();
+            const firstInput = document.querySelector(props.action_clicked === 'add_new_service' ? '#service_name' : '#unit_name');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
     }
 );
 
@@ -73,89 +51,86 @@ const closeDialog = (value) => {
 };
 
 const saveService = () => {
-    if(props.actioned_clicked == 'add_new_service'){
-          router.post('/services/add', form );
-    }
-    else{
+    if (props.action_clicked == 'add_new_service') {
+        router.post('/services/add', form);
+    } else {
         form.service_id = props.selected_service.id;
-        router.post('/services/unit/add', form );
+        router.post('/services/unit/add', form);
     }
-   
+
     emit("input", false);
 };
-
-
-
-
-
 </script>
 
 <template>
-    <v-dialog v-model="show_form_modal" width="600" scrollable persistent>
-        <v-card>
-            <v-card-title class="bg-indigo mb-5">
-                <span class="text-h5" v-if="props.action_clicked == 'add_new_service'">Add New Service</span>
-                 <span class="text-h5" v-if="props.action_clicked == 'add_new_unit'">Add New Unit</span>
-            </v-card-title>
-            <v-card-text>
-
-                
-            <v-row style="margin-bottom:-30px;" v-if="props.action_clicked=='add_new_service'">
-                <v-col cols="12" >
-                    <v-text-field
-                        prepend-icon="mdi-account"
-                        label="Service Name"
-                        v-model="form.service_name"
-                        variant="outlined"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-
-            <v-row style="margin-bottom:-30px;" v-if="props.action_clicked=='add_new_unit'">
-                <v-col cols="12" >
-                      <v-text-field
-                        prepend-icon="mdi-account"
-                        label="Service"
-                        v-model="props.selected_service.services_name"
-                        variant="outlined"
-                    ></v-text-field>
-                </v-col>
-                 <v-col cols="12" >
-                      <v-text-field
-                        prepend-icon="mdi-account"
-                        label="Unit Name"
-                        v-model="form.unit_name"
-                        variant="outlined"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-
-
-
-            </v-card-text>
-            <v-spacer></v-spacer>
-            <v-card-action >
-                <v-divider></v-divider>
-                <div style="text-align: center">
-                    <v-btn
-                        class="ma-2"
-                        color="blue-grey-lighten-2"
-                        @click="closeDialog(false)"
-                    >
-                        <v-icon start icon="mdi-cancel"></v-icon>
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                        class="ma-2"
-                        color="green-darken-1"
-                        type="button"
-                        @click="saveService()"
-                    >
-                        Save
-                        <v-icon end icon="mdi-check"></v-icon>
-                    </v-btn>
+    <div class="modal fade" :class="{ 'show d-block': show_form_modal }" tabindex="-1" role="dialog" style="z-index: 1055; position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="ri-add-circle-line me-2"></i>
+                        {{ props.action_clicked == 'add_new_service' ? 'Add New Service' : 'Add New Unit' }}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" @click="closeDialog(false)"></button>
                 </div>
-            </v-card-action>
-        </v-card>
-    </v-dialog>
+                <div class="modal-body">
+                    <form @submit.prevent="saveService()">
+                        <div v-if="props.action_clicked == 'add_new_service'" class="mb-3">
+                            <label for="service_name" class="form-label">Service Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="ri-service-line"></i></span>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="service_name"
+                                    v-model="form.service_name"
+                                    placeholder="Enter service name"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div v-if="props.action_clicked == 'add_new_unit'">
+                            <div class="mb-3">
+                                <label for="service" class="form-label">Service</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="ri-building-line"></i></span>
+                                    <input
+                                        type="text"
+                                        class="form-control-plaintext"
+                                        id="service"
+                                        :value="props.selected_service?.services_name"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="unit_name" class="form-label">Unit Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="ri-home-line"></i></span>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="unit_name"
+                                        v-model="form.unit_name"
+                                        placeholder="Enter unit name"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @click="closeDialog(false)">
+                        <i class="ri-close-line me-1"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="saveService()">
+                        <i class="ri-save-line me-1"></i>Save
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div v-if="show_form_modal" class="modal-backdrop fade show" style="z-index: 1050; opacity: 0.3;"></div>
+    </div>
 </template>

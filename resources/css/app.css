@@ -1,8 +1,6 @@
-/* @tailwind base; */
-@tailwind components;
-@tailwind utilities;
-
-
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'remixicon/fonts/remixicon.css';
+@import 'sidebar.scss';
 
 [x-cloak] {
     display: none;
@@ -10,19 +8,19 @@
 
 /* Your custom base styles */
 
-
-a {
+a:not(nav a) {
     text-decoration: none;
     color: black; /* Set text color to black */
-    
 }
 ul {
     list-style-type: none;
-  }
+}
 
 ul li {
-  color: black; /* Set text color to black */
+    color: black; /* Set text color to black */
 }
+
+
 
 
   

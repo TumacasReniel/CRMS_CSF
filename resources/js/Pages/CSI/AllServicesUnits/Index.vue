@@ -6,6 +6,10 @@ import { Printd } from "printd";
 import Swal from 'sweetalert2';
 import MonthlyContent from '@/Pages/CSI/AllServicesUnits/Monthly/Content.vue';
 import VueMultiselect from "vue-multiselect";
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+
+AOS.init();
 const props = defineProps({
   services_units: Object,
   cc_data: Object,
@@ -145,143 +149,110 @@ const generateCSIReport = async () => {
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AppLayout title="Customer Satisfaction Index">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Customer Satisfaction Index 
+                Customer Satisfaction Index
             </h2>
         </template>
 
-        <div class="py-10"  style="margin-left:80px; margin-right:80px">
-            <div class="max-w-7x1 mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                     <v-card class="mb-3">
-                        <v-card-title class="m-3" >
-                            <div>
-                                All SERVICES UNITS
+        <div class="container-fluid py-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10">
+                    <div class="card shadow-lg border-0" data-aos="fade-up">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="card-title mb-0">
+                                <i class="ri-bar-chart-line me-2"></i>
+                                All Services Units
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info border-0 shadow-sm" role="alert" data-aos="fade-in" data-aos-delay="200">
+                                <div class="d-flex align-items-center">
+                                    <i class="ri-information-line fs-4 me-3 text-info"></i>
+                                    <div>
+                                        <h6 class="alert-heading mb-2 fw-bold">Manual Excel Reporting Required</h6>
+                                        <p class="mb-0">Please generate traditional manual reports on Excel for all units reports:</p>
+                                    </div>
+                                </div>
                             </div>
-                           
-                        </v-card-title>
-                    </v-card>
-                  
-                     <v-card class="mb-3 my-auto">   
-                   <v-divider class="border-opacity-100"></v-divider>         
-                        <!-- <v-row class="p-3 overflow-visible" style="margin-top: -20px;">
-                          <v-divider class="border-opacity-100"></v-divider>
-                              <v-col class="my-auto overflow-visible">
-                                <div class="my-auto overflow-visible"> 
-                                  <vue-multiselect
-                                      v-model="form.csi_type"
-                                      prepend-icon="mdi-account"
-                                      :options="['By Month', 'By Quarter', 'By Year/Annual']"
-                                      :multiple="false"
-                                      placeholder="Select Type*"
-                                      :allow-empty="false"
-                                    >         
-                                    </vue-multiselect>        
-                                  </div>
-                              </v-col>
-  
-                           
-                        </v-row>
-                        <v-row class="p-3" v-if="form.csi_type == 'By Month'">
-                                <v-col class="my-auto">
-                                      <v-select v-model="form.selected_month" 
-                                            class="m-3" label="Select Month" 
-                                            variant="outlined" 
-                                            :items="months" 
-                                            outlined="none"> 
-                                      </v-select>
-                                </v-col> 
-                                <v-col class="my-auto">
-                                    <v-select v-model="form.selected_year" 
-                                            class="m-3" label="Select Year" 
-                                            variant="outlined" 
-                                            :items="years" 
-                                            outlined="none"> 
-                                      </v-select>
-                                </v-col>  
-                                <v-col class="ml-5 mt-3">
-                                  <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                </v-col>
-                              <v-col class="text-end mr-5 m-3">
-                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                              </v-col> 
-                        </v-row>
-                        <v-row class="p-3" v-if="form.csi_type == 'By Quarter'">
-                                <v-col class="my-auto">
-                                      <v-combobox v-model="form.selected_quarter" 
-                                            class="m-3" label="Select Quarter" 
-                                            variant="outlined" 
-                                            :items="['FIRST QUARTER', 'SECOND QUARTER', 'THIRD QUARTER', 'FOURTH QUARTER']" 
-                                            outlined="none"> 
-                                      </v-combobox>
-                                </v-col> 
-                                <v-col class="my-auto">
-                                    <v-combobox v-model="form.selected_year" 
-                                            class="m-3" label="Select Year" 
-                                            variant="outlined" 
-                                            :items="years" 
-                                            outlined="none"> 
-                                      </v-combobox>
-                                </v-col>   
-                                <v-col class="ml-5 mt-3">
-                                  <v-btn @click="generateCSIReport(service, unit)" >Generate</v-btn>
-                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                </v-col>
-                              <v-col class="text-end mr-5 m-3">
-                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                              </v-col>
-                        </v-row>
-                        <v-row class="p-3" v-if="form.csi_type == 'By Year/Annual'">
-                                <v-col class="my-auto">
-                                    <v-combobox v-model="form.selected_year" 
-                                            class="m-3" label="Select Year" 
-                                            variant="outlined" 
-                                            :items="years" 
-                                            outlined="none"> 
-                                      </v-combobox>
-                                </v-col>   
-                                <v-col class="ml-5 mt-3">
-                                  <v-btn @click="generateCSIReport()" >Generate</v-btn>
-                                  <v-btn @click="refresh()" icon="mdi-refresh" v-if="generated" variant="text"></v-btn>
-                                </v-col>
-                              <v-col class="text-end mr-5 m-3">
-                                <v-btn  :disabled="generated == false" prepend-icon="mdi-printer" @click="printCSIReport()">Print</v-btn>
-                              </v-col>
-                        </v-row>   
-                         -->
-                        <v-divider class="border-opacity-100"></v-divider>       
 
-                      <v-card-text class="ml-5">
-                         <span class="font-black">PLEASE DO THE TRADITIONAL MANUAL REPORT ON EXCEL FOR ALL UNITS REPORT </span><br>
-                          <span class="ml-10">
-                            <p>-By Monthly</p>
-                            <p>-By First Quarter</p>
-                            <p>-By Second Quarter</p>
-                            <p>-By Third Quarter</p>
-                            <p>-By Fourth Quarter</p>
-                            <p>-By Yearly/Annual</p>
-        
-                            <b>THANK YOU!</b>
-                          </span>
-                       </v-card-text>
-                     </v-card>
-                     <v-card>
-                        <!-- Content Preview-->
-                        <MonthlyContent v-if="form.csi_type == 'By Month' &&  generated == true" :form="form"  :data="props" />
-                     </v-card>
+                            <div class="row g-4 mt-3">
+                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                                    <div class="card h-100 border-primary border-2">
+                                        <div class="card-body text-center">
+                                            <i class="ri-calendar-line text-primary fs-1 mb-3"></i>
+                                            <h5 class="card-title fw-bold">Monthly Reports</h5>
+                                            <p class="card-text text-muted">Generate reports by specific months</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                                    <div class="card h-100 border-success border-2">
+                                        <div class="card-body text-center">
+                                            <i class="ri-time-line text-success fs-1 mb-3"></i>
+                                            <h5 class="card-title fw-bold">Quarterly Reports</h5>
+                                            <p class="card-text text-muted">First, Second, Third, and Fourth Quarter reports</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                                    <div class="card h-100 border-warning border-2">
+                                        <div class="card-body text-center">
+                                            <i class="ri-calendar-todo-line text-warning fs-1 mb-3"></i>
+                                            <h5 class="card-title fw-bold">Annual Reports</h5>
+                                            <p class="card-text text-muted">Complete yearly/annual reports</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                     
+                            <div class="mt-4 p-3 bg-light rounded" data-aos="fade-in" data-aos-delay="600">
+                                <h6 class="fw-bold text-primary mb-3">
+                                    <i class="ri-file-excel-line me-2"></i>
+                                    Report Types Available:
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Monthly</li>
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By First Quarter</li>
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Second Quarter</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Third Quarter</li>
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Fourth Quarter</li>
+                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Yearly/Annual</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <span class="badge bg-primary fs-6 px-3 py-2">
+                                        <i class="ri-heart-line me-1"></i>
+                                        THANK YOU!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- Content Preview Card -->
+                    <div v-if="form.csi_type == 'By Month' && generated == true" class="card mt-4 shadow" data-aos="fade-in">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="card-title mb-0">
+                                <i class="ri-file-chart-line me-2"></i>
+                                Report Preview
+                            </h5>
+                        </div>
+                        <div class="card-body print-id">
+                            <MonthlyContent :form="form" :data="props" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-      
-
-              
     </AppLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

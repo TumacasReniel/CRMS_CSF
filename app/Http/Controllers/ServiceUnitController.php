@@ -77,6 +77,8 @@ class ServiceUnitController extends Controller
         $service->services_name = strtoupper($request->service_name);
         $service->slug = Str::slug($request->service_name, '-');
         $service->save();
+
+        return redirect()->back()->with('success', 'Service added successfully');
     }
 
     
@@ -87,6 +89,8 @@ class ServiceUnitController extends Controller
         $unit->services_id = $request->service_id;
         $unit->unit_name = strtoupper($request->unit_name);
         $unit->save();
+
+        return redirect()->back()->with('success', 'Unit added successfully');
     }
 
 
@@ -146,7 +150,6 @@ class ServiceUnitController extends Controller
 
     public function sub_unit_psto_index(Request $request)
     {
-        dd($sub_unit);
         //get user
         $user = Auth::user();
 

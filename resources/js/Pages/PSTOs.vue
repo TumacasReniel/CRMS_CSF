@@ -42,22 +42,22 @@ const goBack = async (sub_unit_id) => {
 
 <template >
     <Head title="Service Units" />   
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
+     <nav
+        data-aos="fade-down"
+        data-aos-duration="500"
+        data-aos-delay="500"
          style="backdrop-filter: blur(2px);"
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
+        class="navbar navbar-light bg-white fixed-top border-bottom">
+            <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <img src="../../../public/images/dost-logo.jpg" class="me-3" alt="DOST Logo" style="height: 2rem;">
+                <span class="fw-bold fs-4">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
             </a>
 
             </div>
 
-        
-    </nav>  
+
+    </nav>
     <v-container fill-height>
         <v-row class="mx-15" style="margin-top: 100px;" >
             <v-col>

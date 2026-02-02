@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\CustomerAttributeRating;
 use App\Models\CustomerComment;
 use App\Models\CustomerCCRating;
+use App\Models\User;
 use App\Http\Resources\Unit as UnitResource;
 use App\Models\CustomerRecommendationRating;
 use App\Http\Resources\Services as ServiceResource;
@@ -38,6 +39,10 @@ class ReportController extends Controller
 
         //get assignatoree list
         $assignatorees = Assignatorees::all();
+
+        //get all users for prepared by dropdown
+        $users = User::all();
+
 
         $dimensions = Dimension::all();
         $service = Services::findOrFail($request->service_id);
@@ -78,7 +83,8 @@ class ReportController extends Controller
             ->with('sub_unit_pstos', $sub_unit_pstos)
             ->with('sub_unit_types', $sub_unit_types)
             ->with('user', $user)
-            ->with('sub_unit', $sub_unit);
+            ->with('sub_unit', $sub_unit)
+            ->with('users', $users);
     }
 
 
@@ -90,7 +96,7 @@ class ReportController extends Controller
         $dimensions = Dimension::all();
         $service = Services::findOrFail($request->service_id);
 
-        $units = Unit::where('id',$request->unit_id)->get();
+        $units = Unit::where('id',$request->unit_id)->with('sub_units')->get();
         $unit = UnitResource::collection($units);
 
          //get unit pstos
@@ -123,47 +129,57 @@ class ReportController extends Controller
     }
 
 
-    public function generateReports(Request $request )
+    public function generateReports(Request $request)
     {
-        //dd($request->all());
-        $psto_id = null;
-        if($request->selected_unit_psto){
-            $psto_id = $request->selected_unit_psto;
-        }
-        else if($request->selected_sub_unit_psto){
-            $psto_id = $request->selected_sub_unit_psto;
-        }
-       
-        //get user
+        // Get PSTO ID from either unit or sub-unit selection
+        $psto_id = $request->selected_unit_psto ?: $request->selected_sub_unit_psto;
+
+        // Get authenticated user
         $user = Auth::user();
 
-        if($request->csi_type == 'By Date'){
-            return $this->generateCSIByUnitByDate($request , $user->region_id, $psto_id);
+        // For GET requests, convert array data back to objects
+        if ($request->isMethod('get')) {
+            $request = $this->convertArraysToObjects($request);
         }
-        else if($request->csi_type == "By Month"){
-            return $this->generateCSIByUnitMonthly($request , $user->region_id, $psto_id);
+
+        // Route to appropriate generation method based on CSI type
+        switch ($request->csi_type) {
+            case 'By Date':
+                return $this->generateCSIByUnitByDate($request, $user->region_id, $psto_id);
+            case 'By Month':
+                return $this->generateCSIByUnitMonthly($request, $user->region_id, $psto_id);
+            case 'By Quarter':
+                return $this->generateCSIByQuarter($request, $user->region_id, $psto_id);
+            case 'By Year/Annual':
+                return $this->generateCSIByUnitYearly($request, $user->region_id, $psto_id);
+            default:
+                abort(400, 'Invalid CSI type specified');
         }
-        else if($request->csi_type == "By Quarter"){
-            // if($request->selected_quarter == "FIRST QUARTER"){
-            //     return $this->generateCSIByUnitFirstQuarter($request , $user->region_id, $psto_id);
-            // }
-            // else if($request->selected_quarter == "SECOND QUARTER"){
-            //     return $this->generateCSIByUnitSecondQuarter($request , $user->region_id, $psto_id);
-            // }
-            // else if($request->selected_quarter == "THIRD QUARTER"){
-            //     return $this->generateCSIByUnitThirdQuarter($request , $user->region_id, $psto_id);
-            // }
-            // else if($request->selected_quarter == "FOURTH QUARTER"){
-            //     return $this->generateCSIByUnitFourthQuarter($request , $user->region_id, $psto_id);
-            // }
-            return $this->generateCSIByQuarter($request, $user->region_id, $psto_id);
-          
-        }
-        else if($request->csi_type == "By Year/Annual"){
-            return $this->generateCSIByUnitYearly($request , $user->region_id, $psto_id);  
-        }
-    
     }
+
+    /**
+     * Convert array data to objects for GET requests and return modified request
+     */
+    private function convertArraysToObjects(Request $request): Request
+    {
+        $data = $request->all();
+        $modifiedData = $data;
+
+        if (isset($data['service']) && is_array($data['service'])) {
+            $modifiedData['service'] = (object) $data['service'];
+        }
+
+        if (isset($data['unit']) && is_array($data['unit'])) {
+            $modifiedData['unit'] = (object) $data['unit'];
+        }
+
+        return new Request($modifiedData, $request->query->all(), $request->attributes->all(),
+                          $request->cookies->all(), $request->files->all(), $request->server->all());
+    }
+
+
+
+
 
 
     public function generateCSIByUnitByDate($request, $region_id, $psto_id)
@@ -177,14 +193,19 @@ class ReportController extends Controller
         $user = Auth::user();
         //get assignatoree list
         $assignatorees = Assignatorees::all();
+
+        //get users lists
+        $users = User::all();
+
+      
         
-        $service_id = $request->service['id'];
+        $service_id = $request->service->id;
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
-        $client_type = $request->client_type; 
-        $sub_unit_type = $request->sub_unit_type; 
+        $client_type = $request->client_type;
+        $sub_unit_type = $request->sub_unit_type;
 
-       // search and check list of forms query  
+       // search and check list of forms query
        $customer_ids = $this->querySearchCSF($region_id, $service_id, $unit_id ,$sub_unit_id , $psto_id, $client_type, $sub_unit_type );
 
        $cc_query = CustomerCCRating::whereBetween('created_at', [$request->date_from, $request->date_to])
@@ -511,6 +532,7 @@ class ReportController extends Controller
         return Inertia::render('CSI/Index')    
             ->with('user', $user)
             ->with('assignatorees', $assignatorees)
+            ->with('users', $users)
             ->with('cc_data', $cc_data) 
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
@@ -562,11 +584,14 @@ class ReportController extends Controller
          //get assignatoree list
          $assignatorees = Assignatorees::all();
 
+         //get users lists
+        $users = User::all();
+
         $date_range = null;
         $customer_recommendation_ratings = null;
         $respondents_list = null;
 
-        $service_id = $request->service['id'];
+        $service_id = $request->service->id;
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
@@ -939,6 +964,7 @@ class ReportController extends Controller
             ->with('user', $user)
             ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
+            ->with('users', $users)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -992,13 +1018,15 @@ class ReportController extends Controller
         $user = Auth::user();
         //get assignatoree list
         $assignatorees = Assignatorees::all();
+
+        //get users lists
+        $users = User::all();
         
         $date_range = null;
         $customer_recommendation_ratings = null;
-        $respondents_list = null;
-      
+        $respondents_list = null; 
             
-        $service_id = $request->service['id'];
+        $service_id = $request->service->id;
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
@@ -1566,6 +1594,7 @@ class ReportController extends Controller
         $third_month_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, $numeric_third_month);
 
         $customer_satisfaction_index = number_format((($first_month_csi + $second_month_csi +  $third_month_csi)/3), 2);
+     
 
         if($customer_satisfaction_index > 100){
             $customer_satisfaction_index = number_format(100 , 2);
@@ -1590,6 +1619,7 @@ class ReportController extends Controller
             ->with('cc_data', $cc_data)
             ->with('user', $user)
             ->with('assignatorees', $assignatorees)
+            ->with('users', $users)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -1810,6 +1840,9 @@ class ReportController extends Controller
          //get assignatoree list
          $assignatorees = Assignatorees::all();
 
+         //get users lists
+        $users = User::all();
+
         $date_range = [];
         $q1_date_range = [];
         $q2_date_range = [];
@@ -1817,8 +1850,10 @@ class ReportController extends Controller
         $q4_date_range = [];
         $customer_recommendation_ratings = null;
         $respondents_list = null;
+
+        $ws_grand_total = 0;
           
-        $service_id = $request->service['id'];
+        $service_id = $request->service->id;
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 
@@ -2381,7 +2416,7 @@ class ReportController extends Controller
         //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
         if($total_respondents != 0){
-            $percentage_vss_respondents  = ($total_respondents/$total_vss_respondents) * 100;
+            $percentage_vss_respondents  = ($total_vss_respondents / $total_respondents) * 100;
         }
         $percentage_vss_respondents = number_format( $percentage_vss_respondents , 2);
 
@@ -2444,41 +2479,54 @@ class ReportController extends Controller
            
         }
 
+        // Calculate yearly CSI
+        $ws_grand_total = $ws_grand_total ?? 0;
+      
+        $customer_satisfaction_index = 0;
+        if($ws_grand_total != 0){
+            $customer_satisfaction_index = ($ws_grand_total / 5) * 100;
+        }
+        $customer_satisfaction_index = number_format($customer_satisfaction_index, 2);
 
+        if($customer_satisfaction_index > 100){
+            $customer_satisfaction_index = number_format(100 , 2);
+        }
+
+  
         // get Yearly CSI
         $jan_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 1);
         $feb_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 2);
         $mar_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 3);
 
         $q1_csi = 0;
-        $q1_csi =  $jan_csi +  $feb_csi + $mar_csi;
+        $q1_csi = number_format(($jan_csi +  $feb_csi + $mar_csi) / 3, 2);
 
         $apr_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 4);
         $may_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 5);
         $jun_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 6);
-        
-        $q2_csi = 0;
-        $q2_csi =  $apr_csi +  $may_csi + $jun_csi;
 
-        $oct_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 7);
-        $nov_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 8);
-        $dec_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 9);
+        $q2_csi = 0;
+        $q2_csi = number_format(($apr_csi +  $may_csi + $jun_csi) / 3, 2);
+
+        $jul_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 7);
+        $aug_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 8);
+        $sep_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 9);
 
         $q3_csi = 0;
-        $q3_csi =  $oct_csi +  $nov_csi + $dec_csi;
+        $q3_csi = number_format(($jul_csi +  $aug_csi + $sep_csi) / 3, 2);
 
         $oct_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 10);
         $nov_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 11);
         $dec_csi = $this->getMonthlyCSI($request, $region_id, $psto_id, 12);
 
         $q4_csi = 0;
-        $q4_csi =  $oct_csi +  $nov_csi + $dec_csi;
+        $q4_csi = number_format(($oct_csi +  $nov_csi + $dec_csi) / 3, 2);
 
-        $customer_satisfaction_index = number_format((($q1_csi + $q2_csi +  $q3_csi + $q4_csi)/4), 2);
-        
-        if($customer_satisfaction_index > 100){
-            $customer_satisfaction_index = number_format(100 , 2);
-        }
+      
+
+        // Calculate average CSI for the year
+        $average_csi = number_format(($q1_csi + $q2_csi + $q3_csi + $q4_csi) / 4, 2);
+
 
          //comments and  complaints
          $comment_list = CustomerComment::whereIn('customer_id', $customer_ids)
@@ -2497,6 +2545,7 @@ class ReportController extends Controller
             ->with('user', $user)
             ->with('cc_data', $cc_data)
             ->with('assignatorees', $assignatorees)
+            ->with('users', $users)
             ->with('sub_unit', $sub_unit)
             ->with('unit_pstos', $unit_pstos)
             ->with('sub_unit_pstos', $sub_unit_pstos)
@@ -2585,7 +2634,7 @@ class ReportController extends Controller
             ->with('q2_csi', $q2_csi)
             ->with('q3_csi', $q3_csi)
             ->with('q4_csi', $q4_csi)
-            ->with('csi', $customer_satisfaction_index)
+            ->with('csi', $average_csi)
             ->with('total_comments', $total_comments)
             ->with('total_complaints', $total_complaints)
             ->with('comments', $comments);
@@ -2605,13 +2654,14 @@ class ReportController extends Controller
     public function getUnitPSTOs($request)
     {
          //get unit pstos
-         $unit_pstos = UnitPsto::where('unit_id',$request->unit)->get();
+     
+         $unit_pstos = UnitPsto::where('unit_id',$request->unit_id)->get();
          $unit_pstos = UnitPSTOResource::collection($unit_pstos);
-   
+
          $unit_pstos = $unit_pstos->pluck('psto');
 
          return $unit_pstos;
-    
+
     }
 
     public function getSubUnitPSTOs($request)
@@ -2688,7 +2738,7 @@ class ReportController extends Controller
     public function getMonthlyCSI($request, $region_id, $psto_id, $month)
     {
 
-        $service_id = $request->service['id'];
+        $service_id = $request->service->id;
         $unit_id = $request->unit_id;
         $sub_unit_id = $request->selected_sub_unit;
         $client_type = $request->client_type; 

@@ -62,19 +62,19 @@ class User extends Authenticatable
     ];
 
     public function region(){
-        return $this->HasOne(Region::class, 'id', 'region_id');
+        return $this->belongsTo(Region::class, 'region_id');
     }
 
     public function service(){
-        return $this->HasOne(Services::class, 'id', 'service_id');
+        return $this->belongsTo(Services::class, 'service_id');
     }
 
     public function unit(){
-        return $this->HasOne(Unit::class, 'id', 'unit_id');
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 
     public function psto(){
-        return $this->HasOne(psto::class, 'id', 'psto_id');
+        return $this->belongsTo(psto::class, 'psto_id');
     }
 
 

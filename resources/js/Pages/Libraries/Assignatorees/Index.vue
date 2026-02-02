@@ -51,6 +51,10 @@
     const reloadAssignatorees = async () => {
         assignatoree.value = {};
     };
+
+    const changePage = async (page) => {
+        router.get('/assignatorees', { page, search: search.value }, { preserveState: true });
+    };
 </script>
 
 
@@ -143,9 +147,10 @@
                                     </span>
                                     <div class="text-center">
                                         <v-pagination
+                                            v-model="assignatorees.current_page"
                                             :length="assignatorees.last_page"
                                             circle
-                                            @click="getAssignatorees"
+                                            @update:model-value="changePage"
                                         ></v-pagination>
                                     </div>   
                                 </div>           

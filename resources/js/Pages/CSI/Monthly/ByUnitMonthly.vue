@@ -7,7 +7,11 @@
             type: Object,
         },
         form_assignatorees: {
-            type: Object, 
+            type: Object,
+        },
+        isPreview: {
+            type: Boolean,
+            default: false,
         }
     });
 </script>
@@ -396,12 +400,12 @@
                  <div style="margin-top: 10px ; font-size: 13px">
                     ANALYSIS : 
                     <div v-if="data.unit && data.service"  style="text-align: justify; margin: 5px">
-                        The  <span>{{ data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF, 
-                        and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated 
-                        the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.unit_name }}</span> unit had a 
-                        <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.net_promotion_score }}</span>. 
-                        The Customer Satisfaction Rating for the <span>{{ data.unit.unit_name }}</span> 
-                        unit is <span>{{ data.customer_satisfaction_rating }}</span>%, 
+                        The  <span>{{ data.unit.data && data.unit.data.length > 0 ? data.unit.data[0].unit_name : data.unit.unit_name }}</span> unit had <span>{{ data.total_respondents }}</span> respondents who rated the CSF,
+                        and <span>{{ data.total_vss_respondents }}</span> (or <span>{{ data.percentage_vss_respondents }}</span>%) of those respondents rated
+                        the unit with satisfied responses (VS & S) for all service quality attributes. The <span>{{ data.unit.data && data.unit.data.length > 0 ? data.unit.data[0].unit_name : data.unit.unit_name }}</span> unit had a
+                        <span>{{ data.customer_satisfaction_index }}</span>% Customer Satisfaction Index as well as a Net Promoter Score of <span>{{ data.net_promoter_score }}</span>.
+                        The Customer Satisfaction Rating for the <span>{{ data.unit.data && data.unit.data.length > 0 ? data.unit.data[0].unit_name : data.unit.unit_name }}</span>
+                        unit is <span>{{ data.customer_satisfaction_rating }}</span>%,
                         which <span v-if="data.customer_satisfaction_rating < 95">does not</span> achieved its functional objective of 95% of customer surveyed are at least satisfied with the S&T services.
                     </div>
                 </div>
