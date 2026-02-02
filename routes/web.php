@@ -102,7 +102,7 @@ Route::middleware([
     Route::get('/csi/all-units', [ReportController::class , 'all_units']);
    
     Route::get('/csi/generate/all-units/monthly', [ReportController::class, 'generateAllUnitReports']);
-    Route::get('/csi/generate', [ReportController::class, 'generateReports']);
+    Route::post('/csi/generate', [ReportController::class, 'generateReports']);
 
 
 

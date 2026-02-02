@@ -243,10 +243,10 @@ const currentYear = ref(getCurrentYear());
    form.service = service;
    form.unit = unit;
    form.unit_id = unit.data[0].id;
-   
+
     if(form.csi_type == 'By Date'){
       if(form.date_from && form.date_to){
-            router.get('/csi/generate', form , { preserveState: true, preserveScroll: true})
+            router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
       }
       else{
         Swal.fire({
@@ -258,12 +258,12 @@ const currentYear = ref(getCurrentYear());
     }
     else if(form.csi_type == 'By Month'){
           form.selected_quarter = "";
-          router.get('/csi/generate', form , { preserveState: true, preserveScroll: true})
+          router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
     }
     else if(form.csi_type == 'By Quarter'){
           form.selected_month = "";
           if(form.selected_quarter){
-              router.get('/csi/generate', form , { preserveState: true, preserveScroll: true})
+              router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
           }
           else{
             Swal.fire({
@@ -276,7 +276,7 @@ const currentYear = ref(getCurrentYear());
       else if(form.csi_type == 'By Year/Annual'){
           form.selected_quarter = "";
           if(form.selected_year ){
-             router.get('/csi/generate', form , { preserveState: true, preserveScroll: true})
+             router.post('/csi/generate', form , { preserveState: true, preserveScroll: true})
           }
           else{
               Swal.fire({
@@ -287,7 +287,7 @@ const currentYear = ref(getCurrentYear());
           }
       }
 
-    
+
   };
 
   function refresh() {
@@ -450,8 +450,9 @@ const printCSIReport = async () => {
                               </h5>
                           </div>
                           <div class="card-body">
-                              <div class="d-flex flex-wrap gap-3 align-items-end">
-                                  <div class="flex-shrink-0">
+                              <div class="row g-3">
+                                  <!-- Row 1: Report Type and Client Type -->
+                                  <div class="col-md-6 col-lg-3">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-calendar-line me-1 text-muted"></i>
                                           Report Type
@@ -463,12 +464,11 @@ const printCSIReport = async () => {
                                           placeholder="Select Type*"
                                           :allow-empty="false"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 180px;"
                                       >
                                       </vue-multiselect>
                                   </div>
 
-                                  <div class="flex-shrink-0" v-if="unit.data[0].id == 8 || user.account_type == 'planning'">
+                                  <div class="col-md-6 col-lg-3" v-if="unit.data[0].id == 8 || user.account_type == 'planning'">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-user-line me-1 text-muted"></i>
                                           Client Type
@@ -480,12 +480,12 @@ const printCSIReport = async () => {
                                           placeholder="Select Client Type"
                                           :allow-empty="true"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 150px;"
                                       >
                                       </vue-multiselect>
                                   </div>
 
-                                  <div class="flex-shrink-0" v-if="unit.data[0].sub_units && unit.data[0].sub_units.length > 0">
+                                  <!-- Row 2: Unit-related filters -->
+                                  <div class="col-md-6 col-lg-3" v-if="unit.data[0].sub_units && unit.data[0].sub_units.length > 0">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-building-line me-1 text-muted"></i>
                                           Sub Unit
@@ -500,12 +500,11 @@ const printCSIReport = async () => {
                                           :allow-empty="false"
                                           :disabled="generated"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 150px;"
                                       >
                                       </vue-multiselect>
                                   </div>
 
-                                  <div class="flex-shrink-0" v-if="unit_pstos.length > 0">
+                                  <div class="col-md-6 col-lg-3" v-if="unit_pstos.length > 0">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-map-pin-line me-1 text-muted"></i>
                                           Unit PSTO
@@ -519,12 +518,12 @@ const printCSIReport = async () => {
                                           track-by="psto_name"
                                           :allow-empty="false"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 150px;"
                                       >
                                       </vue-multiselect>
                                   </div>
 
-                                  <div class="flex-shrink-0" v-if="sub_unit_pstos.length > 0">
+                                  <!-- Row 3: Sub-unit related filters -->
+                                  <div class="col-md-6 col-lg-3" v-if="sub_unit_pstos.length > 0">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-map-pin-2-line me-1 text-muted"></i>
                                           Sub Unit PSTO
@@ -538,12 +537,11 @@ const printCSIReport = async () => {
                                           track-by="psto_name"
                                           :allow-empty="false"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 150px;"
                                       >
                                       </vue-multiselect>
                                   </div>
 
-                                  <div class="flex-shrink-0" v-if="sub_unit_types.length > 0 && form.selected_sub_unit">
+                                  <div class="col-md-6 col-lg-3" v-if="sub_unit_types.length > 0 && form.selected_sub_unit">
                                       <label class="form-label fw-semibold">
                                           <i class="ri-car-line me-1 text-muted"></i>
                                           Driving Type
@@ -557,7 +555,6 @@ const printCSIReport = async () => {
                                           track-by="type_name"
                                           :allow-empty="false"
                                           class="form-control p-0 border-0"
-                                          style="min-width: 150px;"
                                       >
                                       </vue-multiselect>
                                   </div>
@@ -751,7 +748,7 @@ const printCSIReport = async () => {
                   <ByUnitQ2Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'SECOND QUARTER'"  :form="form"  :data="props" />
                   <ByUnitQ3Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'THIRD QUARTER'"  :form="form"  :data="props" />
                   <ByUnitQ4Report v-if="form.csi_type == 'By Quarter' && form.selected_quarter == 'FOURTH QUARTER'"  :form="form"  :data="props" />
-                  <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual'"  :form="form"  :data="props"/>
+                  <ByUnitYearlyReport v-if="form.csi_type == 'By Year/Annual'"  :form="form"  :data="props" />
                  
                   <!-- Modal for Print Preview -->
                   <ModalForm 

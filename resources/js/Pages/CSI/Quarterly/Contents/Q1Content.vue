@@ -2,9 +2,11 @@
     const props = defineProps({
         data: {
             type: Object,
+            default: () => ({}),
         },
         form: {
             type: Object,
+            default: () => ({}),
         },
     });
     const calculate = (total_score ,grand_total_score) => {
@@ -13,7 +15,7 @@
     };
 </script>
 <template>
-    <v-card class="mb-3" v-if="data.cc_data">
+    <v-card class="mb-3" v-if="data && data.cc_data">
     <v-card-title class="bg-gray-500 text-white">
         PART I: CITIZEN'S CHARTER(CC)
     </v-card-title>
@@ -31,8 +33,8 @@
             <td>1</td>
             <td class="text-left">I know what a CC is and I saw this office's CC</td>
             <td>
-                <span v-if="data.cc_data.cc1_data.cc1_ans1 > 0">
-                    {{ data.cc_data.cc1_data.cc1_ans1 }}
+                <span v-if="data?.cc_data?.cc1_data?.cc1_ans1 > 0">
+                    {{ data?.cc_data?.cc1_data?.cc1_ans1 }}
                 </span>
             </td>
         </tr>
@@ -163,7 +165,7 @@
         <table class="w-full border ">
             <tr class="text-left font-bold text-center bg-blue-200">
                 <th colspan="3">Service Quality Attributes</th>
-                <th >JAN</th>
+                <th >JAN</th> 
                 <th >FEB</th>
                 <th >MAR</th>
                 <th>Total Raw Points</th>

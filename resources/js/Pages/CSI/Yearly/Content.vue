@@ -14,10 +14,10 @@
     };
 </script>
 <template>
-    <v-card class="mb-3" v-if="data.cc_data">
-    <v-card-title class="bg-gray-500 text-white">
+    <div class="card mb-3" v-if="data.cc_data">
+    <div class="card-header bg-secondary text-white">
         PART I: CITIZEN'S CHARTER(CC)
-    </v-card-title>
+    </div>
     <table style="width:100%; border: 1px solid #333; border-collapse: collapse; padding: 5px" class="text-center">
         <tr>
             <th></th>
@@ -155,12 +155,12 @@
             </td>
         </tr>
     </table>
-    </v-card>
+    </div>
     
-    <v-card class="mb-3">
-                <v-card-title class="bg-gray-500 text-white">
-                    PART II: CUSTOMER RATING OF SERVICE QUALITY 
-                </v-card-title>
+    <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    PART II: CUSTOMER RATING OF SERVICE QUALITY
+                </div>
                 <table class="w-full border ">
                     <tr class="text-left font-bold text-center bg-blue-200">
                         <th colspan="3">Service Quality Attributes</th>
@@ -523,13 +523,13 @@
                         </span>
                         </td>
                     </tr>              
-                </table> 
-    </v-card> 
+                </table>
+    </div>
             
-    <v-card class="mb-3">
-        <v-card-title class="bg-gray-500 text-white">
-            PART III: IMPORTANCE OF THIS ATTRIBUTE   
-        </v-card-title>
+    <div class="card mb-3">
+        <div class="card-header bg-secondary text-white">
+            PART III: IMPORTANCE OF THIS ATTRIBUTE
+        </div>
             <table class="w-full border ">
             <tr class="text-left font-bold text-center bg-blue-200">
                 <th  colspan="3">Importance Service Quality Attributes</th>
@@ -810,24 +810,24 @@
                   </span>
                 </td>
             </tr>                                   
-        </table>   
-    </v-card> 
+        </table>
+    </div>
         
-    <v-card class="mb-3">
-        <v-card-title>
-            COMMENTS AND COMPLAINTS: 
-        </v-card-title>
-        <v-card-content class="m-5 mb-10">
-                <v-row>
-                <div class="ml-10">Comments
-                <v-chip color="primary">
+    <div class="card mb-3">
+        <div class="card-header">
+            COMMENTS AND COMPLAINTS:
+        </div>
+        <div class="card-body m-5 mb-10">
+                <div class="row">
+                <div class="col ml-10">Comments
+                <span class="badge bg-primary">
                     {{ data.total_comments }}
-                </v-chip>
+                </span>
                 </div>
-                <div class="">Complaints
-                    <v-chip color="red">
+                <div class="col">Complaints
+                    <span class="badge bg-danger">
                     {{ data.total_complaints }}
-                    </v-chip>
+                    </span>
                 </div>
 
                 <template v-for="(comment, index) in data.comments" class="m-5 mb-10">
@@ -835,15 +835,15 @@
                     <p>[{{ index +1 }}] {{ comment }}</p>
                     </table>
                 </template>
-            </v-row>
-        </v-card-content>
-    </v-card>
+            </div>
+        </div>
+    </div>
 
-    <v-card class="mb-3">
-        <v-card-title>
+    <div class="card mb-3">
+        <div class="card-header">
             ANALYSIS:
-        </v-card-title>
-        <v-card-content >
+        </div>
+        <div class="card-body">
             <div class="m-5" style="margin-top: -10px;text-align: justify;">
                 The <span>{{ data.unit.unit_name }}</span>  for the year <span>{{ form.selected_year }}</span> had a total of <span>{{ data.total_respondents }}</span> respondents 
                 who filled out and rated the Customer Satisfaction Feedback. <span>{{ data.total_respondents }}</span> of the respondents rated the CSF as either very satisfied (VS) 
@@ -855,8 +855,8 @@
                 for the year <span>{{ form.selected_year }}</span>, which <span v-if="data.customer_satisfaction_rating < 95">does not</span> achieved its quality objective of at least 95% of customers being satisfied with the S&T services.
 
             </div>
-        </v-card-content>
-    </v-card>
+        </div>
+    </div>
    
 </template>
 
