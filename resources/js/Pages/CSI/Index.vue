@@ -409,12 +409,12 @@ const printCSIReport = async () => {
 <template>
     <AppLayout title="Customer Satisfaction Index" class="overflow-visible">
         <template #header>
-            <div class="flex items-center justify-between">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="fw-semibold fs-4 text-dark mb-0">
                     <i class="ri-bar-chart-line text-primary me-2"></i>
                     Customer Satisfaction Index
                 </h2>
-                <div class="text-sm text-gray-600">
+                <div class="text-muted small">
                     <i class="ri-information-line me-1"></i>
                     Generate and view CSI reports
                 </div>
@@ -422,22 +422,19 @@ const printCSIReport = async () => {
         </template>
 
 
-        <div class="py-8 overflow-visible" style="margin-left:60px; margin-right:60px">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 overflow-visible">
-                <div class="bg-white shadow-xl sm:rounded-lg overflow-visible">
+        <div class="py-5 overflow-visible" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); min-height: 100vh;">
+            <div class="container-fluid px-4 overflow-visible" style="max-width: 1400px;">
+                <div class="bg-white shadow-lg overflow-visible" style="border-radius: 20px;">
                    <div class="card mb-4 overflow-visible border-0 shadow-sm" v-if="service && unit">
-                      <div class="card-header bg-gradient-primary text-white position-relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                      <div class="card-header bg-primary text-white">
                           <div class="d-flex align-items-center">
-                              <div class="me-4">
+                              <div class="me-3">
                                   <i class="ri-building-4-line fs-2"></i>
                               </div>
                               <div>
                                   <h5 class="mb-1 fw-bold">{{ service.services_name }}</h5>
                                   <h6 class="mb-0 opacity-75">{{ unit.data[0].unit_name }}</h6>
                               </div>
-                          </div>
-                          <div class="position-absolute top-0 end-0 p-3 opacity-25">
-                              <i class="ri-star-line fs-1"></i>
                           </div>
                       </div>
                     </div>
@@ -463,7 +460,7 @@ const printCSIReport = async () => {
                                           :multiple="false"
                                           placeholder="Select Type*"
                                           :allow-empty="false"
-                                          class="form-control p-0 border-0"
+                                          class="form-control border-0 shadow-sm"
                                       >
                                       </vue-multiselect>
                                   </div>

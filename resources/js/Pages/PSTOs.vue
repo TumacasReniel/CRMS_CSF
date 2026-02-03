@@ -40,65 +40,62 @@ const goBack = async (sub_unit_id) => {
 
 </script>
 
-<template >
-    <Head title="Service Units" />   
-     <nav
+<template>
+    <Head title="Service Units" />
+    <nav
         data-aos="fade-down"
         data-aos-duration="500"
         data-aos-delay="500"
-         style="backdrop-filter: blur(2px);"
-        class="navbar navbar-light bg-white fixed-top border-bottom">
-            <div class="container-fluid">
-            <a href="/" class="navbar-brand d-flex align-items-center">
-                <img src="../../../public/images/dost-logo.jpg" class="me-3" alt="DOST Logo" style="height: 2rem;">
-                <span class="fw-bold fs-4">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
+        class="navbar navbar-expand-lg navbar-light bg-white shadow-sm position-fixed w-100"
+        style="z-index: 1000; backdrop-filter: blur(2px);">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center text-decoration-none">
+                <img src="../../../public/images/dost-logo.jpg" alt="DOST Logo" class="me-2" style="height: 2rem;">
+                <span class="fw-bold fs-5">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
             </a>
-
-            </div>
-
-
+        </div>
     </nav>
-    <v-container fill-height>
-        <v-row class="mx-15" style="margin-top: 100px;" >
-            <v-col>
-                <div class="w-full border bg-blue">
-                <v-card-title class="text-center text-uppercase" v-if="sub_unit">{{ sub_unit.sub_unit_name }}</v-card-title>
-                <v-card-title class="text-center text-uppercase" v-if="unit">{{ unit.unit_name }}</v-card-title>
-             </div>
-            </v-col>
-        </v-row>
-        <v-row   class=" mx-15 mt-5" align="center" justify="center">        
-                <v-col v-for="psto in pstos" cols="12"sm="4" md="4" lg="4">
-                    <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, psto.id)">
-                        <div style="height:150px"  class="card mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <v-icon color="red" size="x-large" class="p-3" >mdi-map-marker-outline</v-icon>
-                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                    {{ psto.psto_name }}
-                                </h5>      
-                        </div>     
+    <div class="bg-primary min-vh-100 d-flex flex-column" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">
+        <div class="container-fluid mt-5 pt-5">
+            <div class="row justify-content-center mb-4">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;">
+                        <div class="card-body text-center py-4">
+                            <h5 class="card-title text-white fw-bold text-uppercase mb-0">
+                                <span v-if="sub_unit">{{ sub_unit.sub_unit_name }}</span>
+                                <span v-if="unit && !sub_unit">{{ unit.unit_name }}</span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div v-for="(psto, index) in pstos" :key="psto.id" :data-aos="'zoom-in'" :data-aos-delay="index * 100" class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, psto.id)" class="text-decoration-none">
+                        <div class="card h-100 border-0 shadow-sm text-center" style="border-radius: 15px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+                            <div class="card-body d-flex flex-column justify-content-center align-items-center py-4">
+                                <i class="ri-map-pin-line display-4 text-primary mb-3"></i>
+                                <h6 class="card-title fw-bold text-dark mb-0">{{ psto.psto_name }}</h6>
+                            </div>
+                        </div>
                     </Link>
-                </v-col>
-        </v-row>
-        <v-row>
-            <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 120px">Back</v-btn>
-            </Link>
-        </v-row>
-        
-     
-  
-</v-container>
-        
-
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <button @click="goBack()" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="ri-arrow-left-line me-2"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
-.card {
-  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-}
-
 .card:hover {
-  box-shadow:  10px 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
 }
 </style>
 

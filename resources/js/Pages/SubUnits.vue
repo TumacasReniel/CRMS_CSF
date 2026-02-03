@@ -100,12 +100,78 @@ const goBack = async (sub_unit_id) => {
 
 </template>
 <style scoped>
-.card {
-  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+.sub-unit-card {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.card:hover {
-  box-shadow:  10px 10px 15px rgba(0, 0, 0, 0.2);
+.sub-unit-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  z-index: 1;
+}
+
+.sub-unit-icon {
+  font-size: 3rem;
+  color: #667eea;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.sub-unit-name {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.card-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.back-button {
+  background-color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 </style>
 

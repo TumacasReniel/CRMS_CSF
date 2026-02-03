@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
-import { reactive, watch, ref, onMounted } from "vue";
+import { reactive, watch, ref, onMounted, computed } from "vue";
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { router } from '@inertiajs/vue3'
@@ -18,6 +18,10 @@ defineProps({
     sub_units: Object,
 });
 
+const getUnitIcon = () => {
+    return 'ri-building-line';
+};
+
 const goNext = async (unit_id, region_id, service_id) => {
     getUnitSubUnits( region_id, service_id,unit_id);
 
@@ -33,57 +37,123 @@ const goBack = async () => {
 
 </script>
 
-<template >
-    <Head title="Service Units" />   
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
-         style="backdrop-filter: blur(2px);"
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
+<template>
+    <Head title="Service Units" />
+    <nav
+        class="navbar navbar-expand-lg navbar-light bg-white shadow-sm"
+        data-aos="fade-down"
+        data-aos-duration="500"
+        data-aos-delay="500"
+        style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; backdrop-filter: blur(2px);">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center text-decoration-none">
+                <img src="../../../public/images/dost-logo.jpg" alt="DOST Logo" class="me-2" style="height: 2rem;">
+                <span class="fw-bold fs-4">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
             </a>
-
-            </div>
-
-        
-    </nav>  
-    <div class="container-fluid min-vh-100">
-        <div class="row mx-15" style="margin-top: 100px;" >
-            <div class="col">
-                <div class="w-full bg-gradient-primary text-white p-4 rounded-3 shadow-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <h5 class="text-center fw-bold fs-3 mb-0">{{ service.services_name }}</h5>
-             </div>
+        </div>
+    </nav>
+    <div class="min-vh-100 d-flex flex-column" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="mt-5 mx-3">
+            <div class="w-100 py-3 text-center text-white fw-bold rounded shadow" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="mb-0">SERVICE UNITS</h5>
             </div>
         </div>
-        <div class="row mx-15 mt-5 align-items-center justify-content-center">
-                <div v-for="(unit, index) in service_units" class="col-12 col-sm-4 col-md-4 col-lg-4">
-                    <Link @click="goNext(unit.id, region_id, service_id)">
-                        <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden card-amazing mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" :style="{ animationDelay: `${index * 0.5}s` }">
-                                <i class="bi bi-check-circle text-primary fs-1 p-3 icon-main"></i>
-                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white card-title">
-                                    {{ unit.unit_name }}
-                                </h5>
+        <div class="container-fluid mt-4">
+            <div class="row justify-content-center">
+                <div v-for="(unit, index) in service_units" :key="unit.id" class="col-lg-6 col-md-4 col-sm-6 mb-4" :data-aos="'zoom-in'" :data-aos-delay="index * 10">
+                    <Link @click="goNext(unit.id, region_id, service_id)" class="text-decoration-none">
+                        <div class="card border-0 shadow-lg hover-lift" style="min-height: 220px;">
+                            <div class="card-body d-flex flex-column align-items-center justify-content-center text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                                <i :class="getUnitIcon(index) + ' display-4 text-primary mb-3'"></i>
+                                <h6 class="card-title fw-bold text-dark mb-0">{{ unit.unit_name }}</h6>
+                                <div class="position-absolute bottom-0 start-0 w-100" style="height: 4px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
+                            </div>
                         </div>
                     </Link>
                 </div>
+            </div>
         </div>
-        <div class="row">
-            <Link @click="goBack()">
-            <button class="btn btn-primary ms-5" style="margin-left: 120px"><i class="bi bi-arrow-left me-2"></i>Back</button>
-            </Link>
+        <div class="mt-auto text-center mb-4">
+            <button @click="goBack()" class="btn btn-light btn-lg rounded-pill shadow hover-lift">
+                <i class="ri-arrow-left-line me-2"></i> Back
+            </button>
         </div>
-
-
-
-</div>
-        
-
+    </div>
 </template>
 <style scoped>
+.unit-card {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.unit-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  z-index: 1;
+}
+
+.unit-icon {
+  font-size: 3rem;
+  color: #667eea;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.unit-name {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.card-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.back-button {
+  background-color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
 </style>
 
 

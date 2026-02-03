@@ -5,6 +5,7 @@ import SignaturePad from 'signature_pad';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Swal from 'sweetalert2';
+import Multiselect from '@/Components/Multiselect.vue';
 
  const props = defineProps({
         cc_questions: Object,
@@ -40,12 +41,12 @@ const cc3_options = [
     { label: "4. N/A", value: '4' },
 ];
 const options = [
-    { label: 'Strongly Agree', value: '5', icon: 'mdi-emoticon-excited', color: '#FFEB3B' },
-    { label: 'Agree', value: '4', icon: 'mdi-emoticon-happy', color: '#FFC107' },
-    { label: 'Neither', value: '3', icon: 'mdi-emoticon-neutral', color: '#263238' },
-    { label: 'Disagree', value: '2', icon: 'mdi-emoticon-sad', color: '#F44336' },
-    { label: 'Very Disagree', value: '1', icon: 'mdi-emoticon-frown', color: '#6200EA' },
-    { label: 'N/A', value: '6', icon: 'mdi-close-circle-outline', color: 'red' },
+    { label: 'Strongly Agree', value: '5', icon: 'ri-emotion-laugh-line', color: '#FFEB3B' },
+    { label: 'Agree', value: '4', icon: 'ri-emotion-happy-line', color: '#FFC107' },
+    { label: 'Neither', value: '3', icon: 'ri-emotion-normal-line', color: '#263238' },
+    { label: 'Disagree', value: '2', icon: 'ri-emotion-sad-line', color: '#F44336' },
+    { label: 'Very Disagree', value: '1', icon: 'ri-emotion-unhappy-line', color: '#6200EA' },
+    { label: 'N/A', value: '6', icon: 'ri-close-circle-line', color: 'red' },
 ];
 const attribute_numbers = [
     { label: '5', value: '5' },
@@ -166,7 +167,6 @@ onMounted(() => {
 
 
 const saveCSF = async () => {
-    console.log(form,99);
     formSubmitted.value = true;
 
     // const canvas = document.querySelector('.signature-pad');
@@ -280,378 +280,418 @@ watch(
     <Head title="CSF Form" />
     
 
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center lg:text-2xl md:text-base sm:text-sm font-semibold whitespace-nowrap dark:text-white text-black">Department of Science and Technology </span>
+     <nav
+        data-aos="fade-down"
+        data-aos-duration="500"
+        data-aos-delay="500"
+        class="navbar navbar-expand-lg navbar-light bg-white border-bottom position-fixed w-100"
+        style="z-index: 1020;">
+        <div class="container-fluid">
+            <a href="/" class="navbar-brand d-flex align-items-center">
+                <img src="../../../../public/images/dost-logo.jpg" class="me-3" style="height: 2rem;" alt="DOST Logo">
+                <span class="fw-semibold fs-5 text-dark">Department of Science and Technology</span>
             </a>
         </div>
     </nav>
-        <v-card
-            class="w-full"
-            data-aos="fade-up" 
-            data-aos-duration="2000" 
-            data-aos-delay="500" 
-        >
-    
+        <div class="min-vh-100 position-relative"
+            data-aos="fade-up"
+            data-aos-duration="2000"
+            data-aos-delay="500"
+            style="background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #312e81 100%);">
+            <!-- Animated Background Elements -->
+            <div class="position-absolute w-100 h-100">
+                <div class="position-absolute bg-primary rounded-circle opacity-25 animate-pulse" style="top: 10%; left: 10%; width: 8rem; height: 8rem;"></div>
+                <div class="position-absolute bg-info rounded-circle opacity-25 animate-pulse" style="bottom: 10%; right: 10%; width: 6rem; height: 6rem; animation-delay: 1s;"></div>
+                <div class="position-absolute bg-warning rounded-circle opacity-25 animate-pulse" style="top: 50%; left: 50%; width: 4rem; height: 4rem; animation-delay: 2s; transform: translate(-50%, -50%);"></div>
+            </div>
 
-            <v-row justify="center" class="py-3 bg-gray-200 w-full">
-                <v-col cols="12" md="8" sm="6">
-                    <v-form class="max-w" @submit.prevent="saveCSF">
-                        <div class="py-20 bg-gray-200 ">
-                            <v-card class="mb-3 md:mb-0 sm:mb-0 text-center" >
-                                <v-card-title class="m-5 font-black flex flex-col items-center">
-                                    <div>
+            <!-- Tech Animation Elements -->
+            <div class="position-absolute w-100 h-100 overflow-hidden">
+                <!-- Moving Circuit Lines -->
+                <div class="position-absolute w-100 h-100">
+                    <svg class="w-100 h-100 opacity-25" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="circuit-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#0d6efd;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#6610f2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Horizontal Lines -->
+                        <line x1="0" y1="200" x2="1000" y2="200" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="8s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="0" y1="400" x2="1000" y2="400" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="10s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="0" y1="600" x2="1000" y2="600" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="12s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="0" y1="800" x2="1000" y2="800" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="9s" repeatCount="indefinite"/>
+                        </line>
+                        <!-- Vertical Lines -->
+                        <line x1="200" y1="0" x2="200" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="11s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="400" y1="0" x2="400" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="13s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="600" y1="0" x2="600" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="7s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="800" y1="0" x2="800" y2="1000" stroke="url(#circuit-gradient)" stroke-width="2" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1000;1000,0" dur="15s" repeatCount="indefinite"/>
+                        </line>
+                        <!-- Diagonal Lines -->
+                        <line x1="0" y1="0" x2="1000" y2="1000" stroke="url(#circuit-gradient)" stroke-width="1" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1414;1414,0" dur="20s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="1000" y1="0" x2="0" y2="1000" stroke="url(#circuit-gradient)" stroke-width="1" class="animate-pulse">
+                            <animate attributeName="stroke-dasharray" values="0,1414;1414,0" dur="18s" repeatCount="indefinite"/>
+                        </line>
+                    </svg>
+                </div>
+
+                <!-- Floating Geometric Shapes -->
+                <div class="position-absolute border border-info rotate-45 animate-bounce" style="top: 25%; left: 25%; width: 2rem; height: 2rem; animation-duration: 6s;"></div>
+                <div class="position-absolute border border-primary rounded-circle animate-spin" style="top: 75%; right: 25%; width: 1.5rem; height: 1.5rem; animation-duration: 8s; animation-delay: 2s;"></div>
+                <div class="position-absolute bg-warning opacity-50 animate-ping" style="top: 50%; left: 50%; width: 1rem; height: 1rem; animation-duration: 4s; animation-delay: 1s; transform: translate(-50%, -50%);"></div>
+                <div class="position-absolute border border-light opacity-50 rotate-12 animate-pulse" style="bottom: 25%; right: 33%; width: 2.5rem; height: 2.5rem; animation-duration: 5s; animation-delay: 3s;"></div>
+                <div class="position-absolute bg-light opacity-75 rounded-circle animate-bounce" style="top: 17%; right: 17%; width: 0.75rem; height: 0.75rem; animation-duration: 7s; animation-delay: 1.5s;"></div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="position-relative z-index-10 w-100 py-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <form class="needs-validation" @submit.prevent="saveCSF" novalidate>
+                        <div class="py-5 bg-light">
+                            <div class="card mb-3 text-center shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="mb-4">
                                         <img
-                                        data-aos="zoom-in" 
-                                        data-aos-duration="500" 
+                                        data-aos="zoom-in"
+                                        data-aos-duration="500"
                                         data-aos-delay="500"
-                                        class="mx-auto sm:mb-0" 
-                                        style="width:200px; height:200px" 
-                                        src="../../../../public/images/dost-logo.jpg" 
-                                        alt="..">
+                                        class="img-fluid mx-auto d-block"
+                                        style="width:200px; height:200px"
+                                        src="../../../../public/images/dost-logo.jpg"
+                                        alt="DOST Logo">
                                     </div>
-                                    <span 
-                                    class="font-black text-base lg:text-2xl md:text-base sm:text-sm"  
-                                    data-aos="fade-down" 
-                                    data-aos-duration="500" 
-                                    data-aos-delay="500"
-                                    >CUSTOMER SATISFACTION FEEDBACK 
-                                </span><br>
-
-                                
-                                </v-card-title>                           
-                            </v-card>
+                                    <h2
+                                    class="fw-bold fs-3"
+                                    data-aos="fade-down"
+                                    data-aos-duration="500"
+                                    data-aos-delay="500">
+                                        CUSTOMER SATISFACTION FEEDBACK
+                                    </h2>
+                                </div>
+                            </div>
 
                         
-                            <v-card 
-                                data-aos="zoom-out-up" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto text-base md:text-base sm:text-sm"
-                                >
-                                    <a href="#">
-                                        <img class="rounded-t-lg" src="/docs/images/blog/image-1.jpg" alt="" />
-                                        </a>
-                                        <div class="p-5">
-                                            <a href="#">
-                                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                                    <span> {{ unit.data[0].unit_name }} </span> <br>
-                                                    <span v-if="sub_unit.data.length > 0"> {{ sub_unit.data[0].sub_unit_name }}</span>
-                                                    <span v-if="unit_psto.data.length > 0"> {{ unit_psto.data[0].psto['psto_name'] }} </span>  
-                                                    <span v-if="sub_unit_psto.data.length > 0" class="ml-3"> {{ sub_unit_psto.data[0].psto['psto_name'] }}</span>
-                                                    <span v-if="form.sub_unit_type" class="ml-3"> {{ form.sub_unit_type }}</span>
-                                                </h5>
-                                            </a>
-                                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 ">This questionaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
-                                            <div>
+                            <div
+                                data-aos="zoom-out-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm">
+                                <div class="card-body p-4">
+                                    <h4 class="card-title fw-bold fs-4 mb-3">
+                                        <span>{{ unit.data[0].unit_name }}</span><br>
+                                        <span v-if="sub_unit.data.length > 0">{{ sub_unit.data[0].sub_unit_name }}</span>
+                                        <span v-if="unit_psto.data.length > 0">{{ unit_psto.data[0].psto['psto_name'] }}</span>
+                                        <span v-if="sub_unit_psto.data.length > 0" class="ms-2">{{ sub_unit_psto.data[0].psto['psto_name'] }}</span>
+                                        <span v-if="form.sub_unit_type" class="ms-2">{{ form.sub_unit_type }}</span>
+                                    </h4>
+                                    <p class="card-text text-muted mb-4">This questionnaire aims to solicit your honest assessment of our services. Please take a minute in filling out this form and help us serve you better.</p>
+                                    <div>
 
-                                                <v-text-field   
-                                                    v-if="date_display[0].is_displayed == 1"                                 
-                                                    v-model="form.date" 
-                                                    type="date" 
-                                                    label="Date"
-                                                    variant="outlined" 
-                                                >
-                                                </v-text-field>
+                                                <div v-if="date_display[0].is_displayed == 1" class="mb-3">
+                                                    <label for="date" class="form-label">Date</label>
+                                                    <input
+                                                        id="date"
+                                                        v-model="form.date"
+                                                        type="date"
+                                                        class="form-control">
+                                                </div>
 
-
-                                                <v-text-field    
-                                                    v-if="form.is_complaint == true"                                
-                                                    v-model="form.email" 
-                                                    type="email" 
-                                                    placeholder="email@gmail.com"
-                                                    label="Email*"
-                                                    variant="outlined" 
-                                                    :rules="[ (v) => !!v || formSubmitted && !form.email ||  'This field is required',]"
-                                                >
-                                                </v-text-field>
-
-                                                <v-text-field      
-                                                    v-else-if="form.is_complaint == false"                                     
-                                                    v-model="form.email" 
-                                                    type="email" 
-                                                    placeholder="email@gmail.com"
-                                                    label="Email(Optional)"
-                                                    variant="outlined" 
-                                                >
-                                                </v-text-field>
-
-                                         
-
-                                                <v-text-field                                    
-                                                    v-model="form.name" 
-                                                        placeholder="Enter your full name"
-                                                        label="Name(Optional)"
-                                                        variant="outlined" 
-                                                >
-                                                </v-text-field>
-
-                                                <v-row class="mb-5"  >
-                                                    <v-col cols="12" md="" sm="4" style="margin-bottom:-23px">
-                                                        <v-select
-                                                            label="Client_type*"
-                                                            variant="outlined"
-                                                            v-model="form.client_type"
-                                                            :items="['General Public','Internal Employees','Business/Organization','Government Employees' ]"
-                                                            :rules="[v => !!v || errors.client_type || 'This field is required']"
-
-                                                        >
-                                                        </v-select>
-                                                    </v-col >
-
-                                                    <v-col cols="12"  md="" sm="4" style="margin-bottom:-23px">
-                                                        <v-select
-                                                            label="Sex*"
-                                                            variant="outlined"
-                                                            v-model="form.sex"
-                                                            :items="['Male','Female','Prefer not to say']"
-                                                            :rules="[
-                                                                (v) => !!v || errors.sex || 'This field is required',]
-                                                            "
-                                                        >
-                                                        </v-select>
-
-                                                    </v-col >
-
-                                                    <v-col cols="12" md="" sm="4" style="margin-bottom:-23px">
-                                                            <v-select
-                                                                label="Age Group*"
-                                                                variant="outlined"
-                                                                v-model="form.age_group"
-                                                                :items="['19 or lower','20-34','35-49','50-64','65+', 'Prefer not to say']"
-                                                                :rules="[
-                                                                    (v) => !!v || errors.age_group ||  'This field is required',]
-                                                                "
-                                                            >
-                                                            </v-select>                                  
-                                                    </v-col >
-
-                                                </v-row>
-<!-- 
-                                                <div class="border border-w-2 p-3 mb-5">
-                                                    <div>
-                                                        Other Informations
-                                                        (<span class="text-blue-500">Optional</span>)
+                                                <div v-if="form.is_complaint == true" class="mb-3">
+                                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                                    <input
+                                                        id="email"
+                                                        v-model="form.email"
+                                                        type="email"
+                                                        class="form-control"
+                                                        placeholder="email@gmail.com"
+                                                        required>
+                                                    <div class="invalid-feedback" v-if="formSubmitted && !form.email">
+                                                        This field is required
                                                     </div>
-                                                    <v-row>
-                                                        <v-col cols="12"  md="" sm="4" class="flex items-center ps-4  rounded" style="margin-bottom:-25px">
-                                                            <input v-model="form.pwd" id="bordered-checkbox-2" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100  rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                            <label for="bordered-checkbox-2" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Person with Disability</label>
-                                                        </v-col>
-                                                        <v-col cols="12"  md="" sm="4" class="flex items-center ps-4  rounded" style="margin-bottom:-25px">
-                                                            <input  v-model="form.pregnant" id="bordered-checkbox-3" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                            <label for="bordered-checkbox-3" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Pregnant Woman</label>
-                                                        </v-col>
-                                                        <v-col cols="12"  md="" sm="4" class="flex items-center ps-4  rounded " style="margin-bottom:-25px">
-                                                            <input  v-model="form.senior_citizen" id="bordered-checkbox-4" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                                            <label for="bordered-checkbox-4" class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Senior Citizen</label>
-                                                        </v-col>
-                    
-                                                    </v-row>
-                                                </div> -->
+                                                </div>
 
+                                                <div v-else class="mb-3">
+                                                    <label for="email" class="form-label">Email (Optional)</label>
+                                                    <input
+                                                        id="email"
+                                                        v-model="form.email"
+                                                        type="email"
+                                                        class="form-control"
+                                                        placeholder="email@gmail.com">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="name" class="form-label">Name (Optional)</label>
+                                                    <input
+                                                        id="name"
+                                                        v-model="form.name"
+                                                        type="text"
+                                                        class="form-control"
+                                                        placeholder="Enter your full name">
+                                                </div>
+
+                                        <div class="row mb-4">
+                                            <div class="col-12 col-md-4 mb-3">
+                                                <label for="client_type" class="form-label">Client Type <span class="text-danger">*</span></label>
+                                                <Multiselect
+                                                    id="client_type"
+                                                    v-model="form.client_type"
+                                                    placeholder="Please select your client type"
+                                                    :options="['General Public','Internal Employees','Business/Organization','Government Employees']"
+                                                    required/>
+                                                <div class="invalid-feedback" v-if="formSubmitted && !form.client_type">
+                                                    This field is required
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-md-4 mb-3">
+                                                <label for="sex" class="form-label">Sex <span class="text-danger">*</span></label>
+                                                <Multiselect
+                                                    id="sex"
+                                                    v-model="form.sex"
+                                                    placeholder="Please select your sex"
+                                                    :options="['Male','Female', 'Prefer not to say' ]"
+                                                    required/>
+                                                <div class="invalid-feedback" v-if="formSubmitted && !form.sex">
+                                                    This field is required
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-md-4 mb-3">
+                                                <label for="age_group" class="form-label">Age Group <span class="text-danger">*</span></label>
+                                                <Multiselect
+                                                    id="age_group"
+                                                    v-model="form.age_group"
+                                                    placeholder="Please select your age group"
+                                                    :options="['19 or lower', '20-34','35-49', '50-64', '65+', 'Prefer not to say']"
+                                                    label="value"
+                                                    required/>
+                                            
+                                                <div class="invalid-feedback" v-if="formSubmitted && !form.age_group">
+                                                    This field is required
+                                                </div>
+                                            </div>
+                                        </div>
 
                                             </div>
                                         </div>
-                            </v-card >
+                            </div >
                         
                 
-                            <v-card 
-                                data-aos="zoom-out-up" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto text-base sm:text-sm"
-                                
-                            >  
-                                <div class="m-5 text-gray-600">
-                                    <h2>
-                                    Select your answer to the Citizen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
-                                    the services of a government agency/office including its requirements, fees and processing times among others.
-                                    </h2>
-                                </div>
-                                <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-0" >
-                                    <div class="mx-5">
-                                        <div class="font-black">
-                                            <h2>
-                                                {{ cc_question.title }}. {{ cc_question.question }}
-                                            </h2>
+                            <div
+                                data-aos="zoom-out-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm " >
+                                <div class="card-body">
+                                    <h5 class="card-title text-muted mb-4">
+                                        Select your answer to the Citizen's Charter(CC) questions. The Citizen's Charter is an official document that reflects
+                                        the services of a government agency/office including its requirements, fees and processing times among others.
+                                    </h5>
+                                    <div v-for="(cc_question, i) in cc_questions" :key="i" class="mb-4">
+                                        <h6 class="fw-bold mb-3">
+                                            {{ cc_question.title }}. {{ cc_question.question }}
+                                        </h6>
+
+                                        <div v-if="i == 0" class="ms-3">
+                                            <div v-for="(option, index) in cc1_options" :key="index" class="form-check mb-2">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    :name="'cc1'"
+                                                    :id="'cc1_' + index"
+                                                    :value="option.value"
+                                                    v-model="form.cc1"
+                                                    @change="getCC(i, cc_question.id, option.value)">
+                                                <label class="form-check-label" :for="'cc1_' + index">
+                                                    {{ option.label }}
+                                                </label>
+                                            </div>
                                         </div>
 
-                                        <v-radio-group v-if="i == 0" v-model="form.cc1" color="primary" class="mx-2">
-                                            <h5 v-for="(option, index) in cc1_options" :key="index">
-                                                <v-radio 
-                                                    @click="getCC(i, cc_question.id, option.value)"
-                                                    :label="option.label"
+                                        <div v-if="i == 1" class="ms-3">
+                                            <div v-for="(option, index) in cc2_options" :key="index" class="form-check mb-2">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    :name="'cc2'"
+                                                    :id="'cc2_' + index"
                                                     :value="option.value"
-                                                ></v-radio>
-                                            </h5>
-                                        </v-radio-group>
+                                                    v-model="form.cc2"
+                                                    @change="getCC(i, cc_question.id, option.value)">
+                                                <label class="form-check-label" :for="'cc2_' + index">
+                                                    {{ option.label }}
+                                                </label>
+                                            </div>
+                                        </div>
 
-
-                                        <v-radio-group v-if="i == 1" v-model="form.cc2" color="primary" class="mx-2">
-                                            <h5 v-for="(option, index) in cc2_options" :key="index">
-                                                <v-radio 
-                                                    @click="getCC(i, cc_question.id, option.value)"
-                                                    :label="option.label"
+                                        <div v-if="i == 2" class="ms-3">
+                                            <div v-for="(option, index) in cc3_options" :key="index" class="form-check mb-2">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="radio"
+                                                    :name="'cc3'"
+                                                    :id="'cc3_' + index"
                                                     :value="option.value"
-                                                ></v-radio>
-                                            </h5>
-                                        </v-radio-group>
+                                                    v-model="form.cc3"
+                                                    @change="getCC(i, cc_question.id, option.value)">
+                                                <label class="form-check-label" :for="'cc3_' + index">
+                                                    {{ option.label }}
+                                                </label>
+                                            </div>
+                                        </div>
 
-                                        <v-radio-group v-if="i == 2" v-model="form.cc3" color="primary" class="mx-2">
-                                            <h5 v-for="(option, index) in cc3_options" :key="index">
-                                                <v-radio 
-                                                    @click="getCC(i, cc_question.id, option.value)"
-                                                    :label="option.label"
-                                                    :value="option.value"
-                                                ></v-radio>
-                                            </h5>
-                                        </v-radio-group>
+                                        <div class="text-danger ms-3 mt-2" v-if="formSubmitted && !form.cc_form.answer[i]">
+                                            This selection is required
+                                        </div>
                                     </div>
-
-                                    
-                                    <div class="text-red-800 m-5" style="margin-left:80px" v-if="formSubmitted && !form.cc_form.answer[i]  ">{{ 'This selection is required' }}</div> 
                                 </div>
-
-                            </v-card>
+                            </div>
                 
-                            <v-card 
-                                data-aos="fade-left" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto">
-                                <div class=" text-white bg-blue_grey p-3 ">
-                                    <h3>HOW WOULD YOU RATE OUR 
-                                        <!-- <span style="text-transform: uppercase"> {{ unit.data[0].unit_name }} </span>  -->
-                                        SERVICES?</h3>
+                            <div
+                                data-aos="fade-left"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm">
+                                <div class="card-header bg-primary text-white">
+                                    <h4 class="card-title mb-0">HOW WOULD YOU RATE OUR SERVICES?</h4>
                                 </div>
-                                <div>
-            
-                                        <v-card
-                                            data-aos="fade-left" 
-                                            data-aos-duration="1000" 
-                                            data-aos-delay="500" 
-                                            class="text-center over-flowhidden scroll-none mb-1"
-                                            border="1"
-                                            v-for="(dimension, index) in dimensions" :key="dimension.id"
-                                        >
-                                            <h5 class="mt-5 mb-3 text-left mx-5 bg-gray-200 p-3">
-                                                <span  style="font-size: 18px">{{ dimension.id }}. {{ dimension.description }}({{ dimension.name }})</span>
-                                            </h5>
-                                            
-                                            <input type="hidden" :value="getDimension(index, dimension.id)" />  
-                                            <div >
-                                                    <v-btn-toggle class="mb-5" v-model="form.dimension_form.rate_score[index]" v-for="option in options" :key="option.value"
-                                                    :rules="[() => formSubmitted ? !!form.dimension_form.rate_score[index] || 'This selection is required' : true]"
-                                                    >     
-                                                        <v-btn @click="updateIsComplaint(index , form.dimension_form.rate_score[index])"  rounded class="mr-2 bg-gray-200" :value="option.value" color="secondary" >
-                                                            <v-icon :color="form.dimension_form.rate_score[index] === option.value ? option.color : 'gray'" size="40">{{ option.icon }}</v-icon><br>
-                                                            <label>{{ option.label }}</label>
-                                                        </v-btn>      
+                                <div class="card-body">
+                                    <div
+                                        data-aos="fade-left"
+                                        data-aos-duration="1000"
+                                        data-aos-delay="500"
+                                        class="card mb-3 border"
+                                        v-for="(dimension, index) in dimensions" :key="dimension.id">
+                                        <div class="card-body text-center">
+                                            <h6 class="card-title text-start bg-light p-3 mb-4 rounded">
+                                                {{ dimension.id }}. {{ dimension.description }} ({{ dimension.name }})
+                                            </h6>
 
-                                                    </v-btn-toggle> 
-                                                    <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.rate_score[index]">{{ 'This selection is required' }}</div>
+                                            <input type="hidden" :value="getDimension(index, dimension.id)" />
+                                            <div class="mb-4">
+                                                <div class="btn-group d-flex flex-wrap justify-content-center gap-2" role="group">
+                                                    <input type="hidden" v-model="form.dimension_form.rate_score[index]" />
+                                                    <button
+                                                        v-for="option in options"
+                                                        :key="option.value"
+                                                        type="button"
+                                                        class="btn btn-outline-secondary rounded-pill"
+                                                        :class="{ 'active': form.dimension_form.rate_score[index] === option.value }"
+                                                        @click="form.dimension_form.rate_score[index] = option.value; updateIsComplaint(index, form.dimension_form.rate_score[index])">
+                                                        <i :class="option.icon" class="fs-4 d-block mb-1" :style="{ color: option.color }"></i>
+                                                        {{ option.label }}
+                                                    </button>
                                                 </div>
-                                                <div class="overflow-hidden mb-3" v-if="form.dimension_form.rate_score[index]  && form.dimension_form.rate_score[index] !=6" >
-                                                    <div>How important is this attribute?</div>
-                                                    <div>
-                                                        <div class="ml-2 mb-3">
-                                                            <v-btn-toggle  v-model="form.dimension_form.importance_rate_score[index]"  v-for="option in attribute_numbers "  :key="option.value"  mandatory>
-                                                                <v-btn                      
-                                                                    class=" mr-2"
-                                                                    :value="option.value"                        
-                                                                    color="secondary"
-                                                                    style="border-radius:40%;"                         
-                                                                >
-                                                                <v-chip >
-                                                                    <label >{{ option.label }}</label>
-                                                                </v-chip>
-                                                                </v-btn>
+                                                <div class="text-danger mt-2" v-if="formSubmitted && !form.dimension_form.rate_score[index]">
+                                                    This selection is required
+                                                </div>
+                                            </div>
 
-                                                            </v-btn-toggle>
-                                                            <div class="text-red-800" v-if="formSubmitted && !form.dimension_form.importance_rate_score[index]">{{ 'This selection is required' }}</div>
-                                                        </div>
+                                            <div v-if="form.dimension_form.rate_score[index] && form.dimension_form.rate_score[index] != 6" class="mt-4">
+                                                <p class="mb-3 fw-semibold">How important is this attribute?</p>
+                                                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                                    <div class="btn-group" role="group">
+                                                        <input type="hidden" v-model="form.dimension_form.importance_rate_score[index]" />
+                                                        <button
+                                                            v-for="option in attribute_numbers"
+                                                            :key="option.value"
+                                                            type="button"
+                                                            class="btn btn-outline-secondary rounded-circle mx-1"
+                                                            :class="{ 'active': form.dimension_form.importance_rate_score[index] === option.value }"
+                                                            @click="form.dimension_form.importance_rate_score[index] = option.value">
+                                                            {{ option.label }}
+                                                        </button>
                                                     </div>
-
                                                 </div>
-
-                                  
-                                            
-
-                                        </v-card>                     
-
-                                    <v-divider></v-divider> 
-                                
-                                </div>
-                            </v-card>
-                            <v-card 
-                                data-aos="zoom-out-up" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto"
-                            >
-                                <div class="p-3 font-bold text-lg">Considering your complete experience with our agency, how likely would you recommend our services to others? <span class="text-red-800">*</span></div>
-
-                                    <div class="ml-2 mb-3 mx-auto my-auto mb-5 d-flex justify-center text-center" style="margin-right: 50px ; margin-left: 50px">
-                                        <v-btn-toggle 
-                                            v-model="form.recommend_rate_score" 
-                                            mandatory 
-                                            v-for="option in recommendation_numbers "
-                                            :key="option.value"
-                                        >
-                                            <v-btn
-                                                :value="option.value"
-                                                class=" mr-2 "
-                                                :color="form.recommend_rate_score === option.color ? 'secondary' : 'secondary'"
-                                                style="border-radius:40%"
-                                        
-                                            >
-                                                <v-chip>
-                                                    <label >{{ option.label }}</label>
-                                                </v-chip>
-                                            </v-btn>
-
-                                        </v-btn-toggle>            
-                                        </br>
-                                        <div class="text-red-800" v-if="formSubmitted && !form.recommend_rate_score">{{ 'This selection is required' }}</div>
+                                                <div class="text-danger mt-2" v-if="formSubmitted && !form.dimension_form.importance_rate_score[index]">
+                                                    This selection is required
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                
-
-                            </v-card>
-                        
-                            <v-card 
-                                data-aos="zoom-out-up" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto"
-                            >
-                                <div class="p-3 mt-0 font-bold text-lg">Please write your comment/suggestions below.            
-                                <span  v-if="form.is_complaint == true" class="text-red-800">*</span>
-                                    <span  v-else="form.is_complaint == false" class="text-blue-400">(Optional)</span>
                                 </div>
-                                <v-container fluid>
-                                    <v-textarea
-                                        v-if="form.is_complaint == true"
-                                        v-model="form.comment"
-                                        placeholder="Input here!"
-                                        :rules="[ (v) => !!v || formSubmitted && !form.comment ||  'This field is required',]"
-                                    ></v-textarea>     
-                                    <v-textarea
-                                        v-else-if="form.is_complaint == false"
-                                        v-model="form.comment"
-                                        placeholder="Input here"
-                                    ></v-textarea>                         
-                                </v-container>
+                            </div>
+                            <div
+                                data-aos="zoom-out-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">Considering your complete experience with our agency, how likely would you recommend our services to others? <span class="text-danger">*</span></h5>
 
-                                <div class="text-red-800 p-5" v-if="formSubmitted && form.is_complaint == true ">{{ 'This selection is required because you rate low to our services with the options above.' }}<br>
-                                Please input the reason/s why you have rated low.</div>
-                            </v-card>
+                                    <div class="d-flex justify-content-center gap-3 flex-wrap mb-3">
+                                        <div class="btn-group" role="group">
+                                            <input type="hidden" v-model="form.recommend_rate_score" />
+                                            <button
+                                                v-for="option in recommendation_numbers"
+                                                :key="option.value"
+                                                type="button"
+                                                class="btn btn-outline-secondary rounded-circle mx-1"
+                                                :class="{ 'active': form.recommend_rate_score === option.value }"
+                                                @click="form.recommend_rate_score = option.value">
+                                                {{ option.label }}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-danger" v-if="formSubmitted && !form.recommend_rate_score">
+                                        This selection is required
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div
+                                data-aos="zoom-out-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">Please write your comment/suggestions below.
+                                        <span v-if="form.is_complaint == true" class="text-danger">*</span>
+                                        <span v-else class="text-info">(Optional)</span>
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <textarea
+                                            v-if="form.is_complaint == true"
+                                            v-model="form.comment"
+                                            class="form-control"
+                                            rows="4"
+                                            placeholder="Input here!"
+                                            required></textarea>
+                                        <textarea
+                                            v-else
+                                            v-model="form.comment"
+                                            class="form-control"
+                                            rows="4"
+                                            placeholder="Input here"></textarea>
+                                    </div>
+
+                                    <div class="text-danger" v-if="formSubmitted && form.is_complaint == true && !form.comment">
+                                        This selection is required because you rate low to our services with the options above.<br>
+                                        Please input the reason/s why you have rated low.
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- <v-card 
                                 data-aos="zoom-out-up" 
@@ -693,31 +733,33 @@ watch(
                                     </v-container>
                             </v-card> -->
 
-                            <v-card
-                                data-aos="zoom-out-up" 
-                                data-aos-duration="1000" 
-                                data-aos-delay="500" 
-                                class="mb-5 mx-auto"
-                            >
-                                <v-row   class="mt-5 mb-5 text-center">
-
-                                    <v-col cols="6" class="text-right">
-                                        <a href="/" class="btn bg-secondary">
-                                            <v-btn class="bg-secondary">Back</v-btn>
-                                        </a>
-                                    </v-col>
-                                    <v-col cols="6" class="text-left">
-                                        <v-btn color="success" type="submit" class="mr-2" prepend-icon="mdi-send" :disabled="form.processing || form.is_complaint && !form.comment">Submit</v-btn>
-                                    </v-col>
-                            </v-row >
-                            </v-card>
+                            <div
+                                data-aos="zoom-out-up"
+                                data-aos-duration="1000"
+                                data-aos-delay="500"
+                                class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <div class="row mt-4 mb-4 text-center">
+                                        <div class="col-6 text-end">
+                                            <a href="/" class="btn btn-secondary">Back</a>
+                                        </div>
+                                        <div class="col-6 text-start">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success"
+                                                :disabled="form.processing || (form.is_complaint && !form.comment)">
+                                                <i class="ri-send-plane-line me-2"></i>Submit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-
-                    </v-form>
-                </v-col>
-            </v-row>
-        </v-card>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
 
 </template>
 <style>

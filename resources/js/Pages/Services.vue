@@ -44,30 +44,34 @@ const goBack = async () => {
 
 
     </nav>
-    <div class="container-fluid d-flex flex-column min-vh-100">
+    <div class="container-fluid d-flex flex-column min-vh-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
         <div class="row mx-5" style="margin-top: 100px;" >
             <div class="col">
-                <div class="w-full border bg-primary">
-                <h5 class="card-title text-center text-white">SERVICES</h5>
+                <div class="w-full border-0 shadow-lg rounded" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="card-title text-center text-white py-3 fw-bold">SERVICES</h5>
              </div>
             </div>
         </div>
         <div class="row mx-4 mt-5 justify-content-center align-items-center">
-            <div v-for="service in services" :key="service.id" class="col-12 col-sm-6 col-md-6 col-lg-6 d-flex justify-content-center align-items-center">
+            <div v-for="(service, index) in services" :key="service.id" class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center mb-4" :data-aos="'zoom-in'" :data-aos-delay="index * 10">
             <Link @click="goServiceUnits(region_id, service.id)" class="card-link">
-                <div class="card mx-5 p-4 bg-white border shadow d-flex flex-column align-items-center justify-content-center" style="height:180px; text-align: center;">
-                <i class="ri-check-circle-line text-primary fs-1 p-3"></i>
-                <p class="mb-2 fs-5 fw-semibold text-dark text-start">
-                    {{ service.services_name }}
-                </p>
+                <div class="card mx-3 p-4 bg-white border-0 shadow-lg d-flex flex-column align-items-center justify-content-center position-relative overflow-hidden" style="height:220px; text-align: center; border-radius: 15px; transition: all 0.3s ease;">
+                    <div class="card-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); z-index: 1;"></div>
+                    <i class="ri-service-line text-primary fs-1 p-3 position-relative z-2" style="color: #667eea !important;"></i>
+                    <p class="mb-2 fs-5 fw-semibold text-dark text-center position-relative z-2">
+                        {{ service.services_name }}
+                    </p>
+                    <div class="position-absolute bottom-0 start-0 w-100 bg-primary" style="height: 4px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);"></div>
                 </div>
             </Link>
             </div>
         </div>
-        <div class="row">
-            <button @click="goBack()" class="btn btn-outline-primary ms-5">
-                <i class="ri-arrow-left-line"></i> Back
-            </button>
+        <div class="row mt-5">
+            <div class="col text-center">
+                <button @click="goBack()" class="btn btn-light btn-lg shadow-lg px-5 py-3 rounded-pill">
+                    <i class="ri-arrow-left-line me-2"></i> Back to Regions
+                </button>
+            </div>
         </div>
 
 

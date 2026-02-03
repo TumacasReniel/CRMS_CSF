@@ -1,84 +1,51 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
 
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-
 const props = defineProps({
     message: String,
     status: String,
     current_url: String,
 });
-
-
 </script>
 
 <template>
     <Head title="CSF Submission" />
-     <nav 
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600 mb-10">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Department of Science and Technology</span>
-            </a>
-        </div>
-    </nav>
-<v-row>
-    <v-sheet
-         class="pa-4 text-center mx-auto"
-        elevation="12"
-        max-width="600"
-        rounded="lg"
-        width="100%"
-        style="margin-top: 200px"
-    >
-     
-        <div v-if="status == 'success'">
-            <v-icon
-                class="mb-5"
-                color="success"
-                icon="mdi-check-circle"
-                size="112"
-            ></v-icon>
-            <h2 class="text-h5 mb-6">{{ messsage }}</h2>
+    <div class="container-fluid bg-light min-vh-100 d-flex flex-column">
+        <nav class="navbar navbar-light bg-white border-bottom">
+            <div class="container-fluid">
+                <a href="/" class="navbar-brand d-flex align-items-center">
+                    <img src="../../../../public/images/dost-logo.jpg" class="me-3" style="height: 32px;" alt="DOST Logo">
+                    <span class="fw-bold fs-4">Department of Science and Technology</span>
+                </a>
+            </div>
+        </nav>
 
-            <p class="mb-4 text-medium-emphasis text-body-2">
-            Thank you for your feedback.
-            <br>
-            Have a good day!
-            </p>
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+            <div class="card shadow-lg" style="max-width: 600px; width: 100%;">
+                <div class="card-body text-center p-5">
+                    <div v-if="status == 'success'">
+                        <i class="bi bi-check-circle-fill text-success mb-4" style="font-size: 4rem;"></i>
+                        <h2 class="card-title mb-4">{{ message }}</h2>
+                        <p class="card-text text-muted">
+                            Thank you for your feedback.<br>
+                            Have a good day!
+                        </p>
+                    </div>
+                    <div v-else-if="status == 'error'">
+                        <i class="bi bi-exclamation-triangle-fill text-danger mb-4" style="font-size: 4rem;"></i>
+                        <h2 class="card-title mb-4">{{ message }}</h2>
+                        <p class="card-text text-muted">
+                            Something went wrong, please check. Thank you.
+                        </p>
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-end">
+                        <Link :href="props.current_url" class="btn btn-success px-4">
+                            Okay
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div v-else-if="status == 'error'">
-            <v-icon
-                class="mb-5"
-                color="red"
-                icon="mdi-alert-circle"
-                size="112"
-            ></v-icon>
-            <h2 class="text-h5 mb-6">{{ messsage }}</h2>
-
-            <p class="mb-4 text-medium-emphasis text-body-2">
-            Something went wrong please check, Thank you.
-            <br>
-            
-            </p>
-        </div>
-        <v-divider class="mb-4"></v-divider>
-
-        <div class="text-end">
-            <Link :href="props.current_url">
-                <v-btn
-                    class="text-none"
-                    color="success"
-                    variant="flat"
-                    width="90"
-                    rounded
-                >
-                    Okay
-                </v-btn>
-            </Link>
-        </div>
-    </v-sheet>
-   
-  </v-row>
+    </div>
 </template>

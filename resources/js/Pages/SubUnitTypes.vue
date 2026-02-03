@@ -35,58 +35,120 @@ const goBack = async (sub_unit_id) => {
 
 </script>
 
-<template >
-    <Head title="Service Units" />   
-     <nav 
-        data-aos="fade-down" 
-        data-aos-duration="500" 
-        data-aos-delay="500" 
-         style="backdrop-filter: blur(2px);"
-        class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="../../../public/images/dost-logo.jpg" class="h-8" alt="DOST Logo">
-                <span class="self-center text-2xl font-semibold whitespace-nowrap">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
+<template>
+    <Head title="Service Units" />
+    <nav
+        data-aos="fade-down"
+        data-aos-duration="500"
+        data-aos-delay="500"
+        style="backdrop-filter: blur(2px); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: white; border-bottom: 1px solid #e0e0e0;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
+            <a href="/" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+                <img src="../../../public/images/dost-logo.jpg" alt="DOST Logo" style="height: 2rem; margin-right: 1rem;">
+                <span style="font-weight: bold; font-size: 1.5rem;">DOST <span v-if="region">{{ region.code }}</span> Customer Relation Management System</span>
             </a>
-
+        </div>
+    </nav>
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column;">
+        <div style="margin: 100px 3rem 0 3rem;">
+            <div style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h5 style="text-align: center; color: white; padding: 1rem; font-weight: bold; margin: 0; text-transform: uppercase;">{{ sub_unit.sub_unit_name }}</h5>
             </div>
-
-        
-    </nav>  
-    <v-container fill-height>
-        <v-row class="mx-15" style="margin-top: 100px;" >
-            <v-col>
-                <div class="w-full border bg-blue">
-                <v-card-title class="text-center text-uppercase">{{ sub_unit.sub_unit_name }}</v-card-title>
-             </div>
-            </v-col>
-        </v-row>
-        <v-row   class=" mx-15 mt-5" align="center" justify="center">        
-                <v-col v-for="type in types" cols="12"sm="4" md="4" lg="4">
-                    <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, type.type_name)">
-                        <div style="height:150px"  class="mx-5 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <v-icon color="blue" size="x-large" class="p-3" >mdi-check-circle</v-icon>
-                                <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                    {{ type.type_name }}
-                                </h5>      
-                        </div>     
-                    </Link>
-                </v-col>
-        </v-row>
-        <v-row>
-            <Link @click="goBack()">
-            <v-btn prepend-icon="mdi-arrow-left" style="margin-left: 120px">Back</v-btn>
-            </Link>
-        </v-row>
-        
-     
-  
-</v-container>
-        
-
-
-    
-
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 3rem 2rem; gap: 2rem;">
+            <div v-for="(type, index) in types" :key="type.id" :data-aos="'zoom-in'" :data-aos-delay="index * 100" style="flex: 1 1 300px; max-width: 300px; display: flex; justify-content: center; align-items: center;">
+                <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, type.type_name)" style="text-decoration: none;">
+                    <div class="type-card">
+                        <div class="card-bg"></div>
+                        <i class="ri-check-circle-line type-icon"></i>
+                        <p class="type-name">{{ type.type_name }}</p>
+                        <div class="card-bottom"></div>
+                    </div>
+                </Link>
+            </div>
+        </div>
+        <div style="margin-top: 3rem; text-align: center;">
+            <button @click="goBack()" class="back-button">
+                <i class="ri-arrow-left-line"></i> Back
+            </button>
+        </div>
+    </div>
 </template>
+
+<style scoped>
+.type-card {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.type-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+
+.card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  z-index: 1;
+}
+
+.type-icon {
+  font-size: 3rem;
+  color: #667eea;
+  padding: 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.type-name {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.card-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.back-button {
+  background-color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+</style>
 
 
