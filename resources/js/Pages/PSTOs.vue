@@ -74,7 +74,7 @@ const goBack = async (sub_unit_id) => {
                     <Link @click="goNext(region_id, service_id, unit_id, sub_unit_id, psto.id)" class="text-decoration-none">
                         <div class="card h-100 border-0 shadow-sm text-center" style="border-radius: 15px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
                             <div class="card-body d-flex flex-column justify-content-center align-items-center py-4">
-                                <i class="ri-map-pin-line display-4 text-primary mb-3"></i>
+                                <i class="ri-government-line display-4 text-primary mb-3"></i>
                                 <h6 class="card-title fw-bold text-dark mb-0">{{ psto.psto_name }}</h6>
                             </div>
                         </div>

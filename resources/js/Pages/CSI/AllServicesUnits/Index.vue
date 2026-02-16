@@ -166,7 +166,7 @@ const generateCSIReport = async () => {
                                 All Services Units
                             </h4>
                         </div>
-                        <div class="card-body">
+                        <!-- <div class="card-body">
                             <div class="alert alert-info border-0 shadow-sm" role="alert" data-aos="fade-in" data-aos-delay="200">
                                 <div class="d-flex align-items-center">
                                     <i class="ri-information-line fs-4 me-3 text-info"></i>
@@ -235,11 +235,15 @@ const generateCSIReport = async () => {
                                     </span>
                                 </div>
                             </div>
+                        </div> -->
+                        <div class="card-body">
+
+                        
                         </div>
                     </div>
 
                     <!-- Content Preview Card -->
-                    <div v-if="form.csi_type == 'By Month' && generated == true" class="card mt-4 shadow" data-aos="fade-in">
+                    <!-- <div v-if="form.csi_type == 'By Month' && generated == true" class="card mt-4 shadow" data-aos="fade-in">
                         <div class="card-header bg-secondary text-white">
                             <h5 class="card-title mb-0">
                                 <i class="ri-file-chart-line me-2"></i>
@@ -249,7 +253,7 @@ const generateCSIReport = async () => {
                         <div class="card-body print-id">
                             <MonthlyContent :form="form" :data="props" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

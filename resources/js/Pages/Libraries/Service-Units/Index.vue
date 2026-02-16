@@ -1,60 +1,54 @@
 <script setup>
-import VueMultiselect from "vue-multiselect";
-import AppLayout from '@/Layouts/AppLayout.vue';
-import AddServiceModal from '@/Components/AddServiceModal.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { reactive ,ref, watch} from 'vue'
+    import VueMultiselect from 'vue-multiselect'
+    import AppLayout from '@/Layouts/AppLayout.vue'
+    import AddServiceModal from '@/Components/AddServiceModal.vue'
+    import { Head, Link, router } from '@inertiajs/vue3'
+    import { reactive, ref, watch } from 'vue'
 
-const props = defineProps({
-    service_units: Object,
-    sub_units: Object,
-    user: Object,
-});
+    const props = defineProps({
+        service_units: Object,
+        sub_units: Object,
+        user: Object,
+    })
 
-const form = reactive({
-  service_id: null,
-  unit_id: null,
-})
+    const form = reactive({
+        service_id: null,
+        unit_id: null,
+    })
 
-const rating = async (service_id, unit_id) => {
+    const show_modal = ref(false)
+    const action_clicked = ref('')
+    const selected_service = ref({})
 
-   form.service_id = service_id;
-   form.unit_id = unit_id;
-   router.get('/csi', form , { preserveState: true });
-};
-
-const all_service_unit_rating = async () => {
-   form.form_type = "all units";
-   router.get('/csi/all-units', form , { preserveState: true })
-};
-
-const show_modal = ref(false);
-const action_clicked = ref('');
-const selected_service = ref({});
-
-
-const goViewPage = async (service_id, unit_id) => {
-   form.service_id = service_id;
-   form.unit_id = unit_id;
-   router.get('/csi/view', form , { preserveState: true });
-
-};
-
-const showServiceModal = async (is_show, action , service) => {
-    show_modal.value =is_show;
-    action_clicked.value = action;
-    if(service){
-        selected_service.value = service;
+    const rating = async (service_id, unit_id) => {
+        form.service_id = service_id
+        form.unit_id = unit_id
+        router.get('/csi', form, { preserveState: true })
     }
-};
 
-const openPDF = () => {
-    // Replace 'path/to/your/pdf/file.pdf' with the actual path to your PDF file
-    const pdfPath = 'https://drive.google.com/file/d/1s7hgXu2_3znCrcKrXX0PWJUQfwb7SMWU/view?usp=sharing';
+    const all_service_unit_rating = async () => {
+        form.form_type = 'all units'
+        router.get('/csi/all-units', form, { preserveState: true })
+    }
 
-    // Open the PDF in a new tab or window
-    window.open(pdfPath, '_blank');
-};
+    const goViewPage = async (service_id, unit_id) => {
+        form.service_id = service_id
+        form.unit_id = unit_id
+        router.get('/csi/view', form, { preserveState: true })
+    }
+
+    const showServiceModal = async (is_show, action, service) => {
+        show_modal.value = is_show
+        action_clicked.value = action
+        if (service) {
+            selected_service.value = service
+        }
+    }
+
+    const openPDF = () => {
+        const pdfPath = 'https://drive.google.com/file/d/1s7hgXu2_3znCrcKrXX0PWJUQfwb7SMWU/view?usp=sharing'
+        window.open(pdfPath, '_blank')
+    }
 </script>
 
 <template>
@@ -67,31 +61,52 @@ const openPDF = () => {
 
         <div class="container-fluid py-5">
             <div class="row justify-content-center">
-                <div class="col-12 col-lg-10">
-                    <div class="card shadow-lg border-0" data-aos="fade-up">
-                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                            <h4 class="card-title mb-0">
-                                <i class="ri-building-4-line me-2"></i>
-                                Service Units Management
-                            </h4>
-                            <div class="d-flex gap-2">
-                                <button v-if="user.account_type == 'admin'" @click="showServiceModal(true, 'add_new_service', null)"
-                                        class="btn btn-light btn-sm">
-                                    <i class="ri-add-line me-1"></i>Add New Service
+                <div class="col-12 col-lg-11">
+                    <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+                        <div class="card-header text-white position-relative overflow-hidden d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); padding: 20px 25px;">
+                            <div class="position-absolute top-0 end-0 p-3 opacity-25">
+                                <i class="ri-building-4-line" style="font-size: 80px;"></i>
+                            </div>
+                            <div class="position-relative">
+                                <h3 class="card-title mb-0">
+                                    <i class="ri-building-4-line me-2"></i>
+                                    Service Units Management
+                                </h3>
+                                <p class="mb-0 mt-1 opacity-75" style="font-size: 0.9rem;">Configure and manage service units</p>
+                            </div>
+                            <div class="d-flex gap-3 align-items-center">
+                                <button
+                                    v-if="user.account_type == 'admin'"
+                                    @click="showServiceModal(true, 'add_new_service', null)"
+                                    class="btn btn-light btn-sm fw-semibold"
+                                    style="border-radius: 20px;"
+                                >
+                                    <i class="ri-add-line me-1"></i>
+                                    Add New Service
                                 </button>
-                                <button @click="all_service_unit_rating()" class="btn btn-warning btn-sm">
-                                    <i class="ri-file-chart-line me-1"></i>All Unit Ratings
+                                <button
+                                    @click="all_service_unit_rating()"
+                                    class="btn btn-warning btn-sm fw-semibold"
+                                    style="border-radius: 20px;"
+                                >
+                                    <i class="ri-file-chart-line me-1"></i>
+                                    All Unit Ratings
                                 </button>
-                                <button @click="openPDF()" class="btn btn-success btn-sm">
-                                    <i class="ri-printer-line me-1"></i>CSF Form (Manual)
+                                <button
+                                    @click="openPDF()"
+                                    class="btn btn-success btn-sm fw-semibold"
+                                    style="border-radius: 20px;"
+                                >
+                                    <i class="ri-printer-line me-1"></i>
+                                    CSF Form (Manual)
                                 </button>
                             </div>
                         </div>
 
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-dark">
+                                <table class="table table-hover mb-0" style="min-width: 600px;">
+                                    <thead class="table-dark" style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);">
                                         <tr>
                                             <th class="text-center" style="width: 80px;">#</th>
                                             <th>Unit Name</th>
@@ -99,41 +114,67 @@ const openPDF = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-if="service_units" v-for="(service_unit, serviceIndex) in service_units.data" :key="service_unit.id">
+                                        <template
+                                            v-if="service_units"
+                                            v-for="(service_unit, serviceIndex) in service_units.data"
+                                            :key="service_unit.id"
+                                        >
                                             <!-- Service Header Row -->
-                                            <tr class="table-primary">
+                                            <tr class="table-primary service-header-row">
                                                 <td colspan="3" class="fw-bold fs-5">
-                                                    <i class="ri-service-line me-2"></i>
-                                                    {{ service_unit.services_name }}
-                                                    <button v-if="user.account_type == 'admin'"
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="icon-circle me-2" style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, rgba(79, 172, 254, 0.3) 0%, rgba(0, 242, 254, 0.3) 100%); display: flex; align-items: center; justify-content: center;">
+                                                            <i class="ri-service-line text-info"></i>
+                                                        </div>
+                                                        <span>{{ service_unit.services_name }}</span>
+                                                        <button
+                                                            v-if="user.account_type == 'admin'"
                                                             @click="showServiceModal(true, 'add_new_unit', service_unit)"
-                                                            class="btn btn-success btn-sm ms-3">
-                                                        <i class="ri-add-line"></i>
-                                                    </button>
+                                                            class="btn btn-success btn-sm ms-3"
+                                                            style="border-radius: 15px;"
+                                                        >
+                                                            <i class="ri-add-line"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
 
                                             <!-- Unit Rows -->
-                                            <tr v-for="(unit, unitIndex) in service_unit.units" :key="unit.id"
-                                                class="align-middle">
-                                                <td class="text-center fw-bold">{{ unitIndex + 1 }}</td>
+                                            <tr
+                                                v-for="(unit, unitIndex) in service_unit.units"
+                                                :key="unit.id"
+                                                class="align-middle table-row-animated"
+                                            >
+                                                <td class="text-center fw-bold text-muted">
+                                                    {{ unitIndex + 1 }}
+                                                </td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <i class="ri-building-line text-primary me-2"></i>
-                                                        {{ unit.unit_name }}
+                                                        <div class="icon-circle me-2" style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, rgba(79, 172, 254, 0.2) 0%, rgba(0, 242, 254, 0.2) 100%); display: flex; align-items: center; justify-content: center;">
+                                                            <i class="ri-building-line text-blue"></i>
+                                                        </div>
+                                                        <span class="fw-semibold text-dark">{{ unit.unit_name }}</span>
                                                     </div>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <button @click="goViewPage(service_unit.id, unit.id)"
-                                                                class="btn btn-primary me-2"
-                                                                :disabled="user.account_type == 'user' && user.unit_id != unit.id">
-                                                            <i class="ri-eye-line"></i> View
+                                                        <button
+                                                            @click="goViewPage(service_unit.id, unit.id)"
+                                                            class="btn btn-primary"
+                                                            style="border-radius: 15px 0 0 15px;"
+                                                            :disabled="user.account_type == 'user' && user.unit_id != unit.id"
+                                                        >
+                                                            <i class="ri-eye-line me-1"></i>
+                                                            View
                                                         </button>
-                                                        <button @click="rating(service_unit.id, unit.id)"
-                                                                class="btn btn-warning"
-                                                                :disabled="user.account_type == 'user' && user.unit_id != unit.id">
-                                                            <i class="ri-star-line"></i> Rating
+                                                        <button
+                                                            @click="rating(service_unit.id, unit.id)"
+                                                            class="btn btn-warning"
+                                                            style="border-radius: 0 15px 15px 0;"
+                                                            :disabled="user.account_type == 'user' && user.unit_id != unit.id"
+                                                        >
+                                                            <i class="ri-star-line me-1"></i>
+                                                            Rating
                                                         </button>
                                                     </div>
                                                 </td>
@@ -156,22 +197,137 @@ const openPDF = () => {
         />
     </AppLayout>
 </template>
+
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style scoped>
-</style>
+/* Card Enhancements */
+.card {
+    transition: all 0.3s ease;
+}
 
-<style scoped>
-   table {
-    border-collapse: collapse;
-    width: 100%; /* Optional: Set a width for the table */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+}
+
+/* Service Header Row */
+.service-header-row {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%) !important;
+    transition: all 0.3s ease;
+}
+
+.service-header-row:hover {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.25) 0%, rgba(0, 242, 254, 0.25) 100%) !important;
+}
+
+/* Table Row Animations */
+.table-row-animated {
+    transition: all 0.3s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(79, 172, 254, 0.08) !important;
+    transform: translateX(5px);
+}
+
+.table-hover tbody tr:hover td:first-child {
+    border-left: 3px solid #4facfe;
+}
+
+/* Icon Circle */
+.icon-circle {
+    transition: all 0.3s ease;
+}
+
+.table-row-animated:hover .icon-circle {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+}
+
+/* Button Enhancements */
+.btn-group .btn {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-group .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
-  }
-  tr, th,td {
-    border: 1px solid none; /* Optional: Add a border for better visibility */
-    padding: 8px; /* Optional: Add padding for better spacing */
-  }
+}
 
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
 
-  
+.btn-warning {
+    background: linear-gradient(135deg, #fa7268 0%, #f5576c 100%);
+    border: none;
+    color: white;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background: linear-gradient(135deg, #e04860 0%, #d8475c 100%);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #38d96b 0%, #2ee9c7 100%);
+}
+
+.btn-light {
+    color: #4facfe;
+    background: white;
+    border: none;
+}
+
+.btn-light:hover {
+    background: #f8f9fa;
+    color: #00f2fe;
+}
+
+.text-blue {
+    color: #4facfe !important;
+}
+
+.text-info {
+    color: #4facfe !important;
+}
+
+/* Disabled button styling */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+    
+    .card-header > div:last-child {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        border-radius: 15px !important;
+        margin-bottom: 5px;
+    }
+}
 </style>

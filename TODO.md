@@ -1,15 +1,11 @@
-# TODO: Fix NPS Calculation in Yearly View
+# Fix Account Features TODO
 
-## Issues Identified in `app/Http/Controllers/ReportController.php`:
-1. **Missing customer_ids filter**: The `$customer_recommendation_ratings` query in `generateCSIByUnitYearly` is missing `whereIn('customer_id', $customer_ids)` - causing it to count ALL recommendations for the year, not just for the specific unit.
+## Issues to Fix:
+1. Prop naming mismatch in Modal.vue (modelValue vs value) - FIXED
+2. Account list not refreshing after add/update
+3. No validation in AccountController
 
-2. **Incorrect NPS thresholds**: Current code uses:
-   - Promoters: `recommend_rate_score > 6` (includes 7,8,9,10)
-   - Detractors: `recommend_rate_score < 7` (includes 0,1,2,3,4,5,6)
-   - This causes overlap where ratings 7-8 are counted as BOTH promoters and detractors!
-
-## Fix Plan:
-- [ ] Fix the customer_recommendation_ratings query to filter by customer_ids
-- [ ] Change promoter threshold to `>= 9` (correct NPS standard)
-- [ ] Keep detractor threshold as `< 7` (correct NPS standard)
-- [ ] This ensures ratings 7-8 are NOT counted in either (they're "Passives" in NPS)
+## Plan:
+- [x] Fix Modal.vue: Change `modelValue` prop to `value` and update emit
+- [ ] Fix Index.vue: Update `reloadAccounts` to actually reload accounts from server
+- [ ] Fix AccountController.php: Add validation for store and update methods

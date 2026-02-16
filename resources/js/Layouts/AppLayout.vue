@@ -105,7 +105,7 @@ const logout = () => {
             </nav>
 
             <!-- Main Content Area -->
-            <div class="flex-grow-1 bg-light" :style="{ marginLeft: sidebarCollapsed ? '70px' : '250px', marginTop: '60px', transition: 'margin-left 0.3s ease', minHeight: 'calc(100vh - 60px)' }">
+            <div class="flex-grow-1 bg-light" :style="{ marginLeft: sidebarCollapsed ? '70px' : '250px', marginTop: '60px', transition: 'margin-left 0.3s ease', minHeight: 'calc(100vh - 60px)', zIndex: '5', position: 'relative' }">
 
                 <!-- Page Heading -->
                 <header v-if="$slots.header" class="bg-white shadow">
