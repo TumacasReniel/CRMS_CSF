@@ -261,11 +261,11 @@ class ReportController extends Controller
         // total number of respondents/customer who rated VS/S
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
         
-        // total number of promoters or respondents who rated 9-10 in recommendation rating
-        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','8')->groupBy('customer_id')->count();
+        // total number of promoters or respondents who rated 7-10 in recommendation rating
+        $total_promoters = $customer_recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
-        $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $total_detractors = $customer_recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
 
         $ilsr_grand_total =0;
 
@@ -660,10 +660,10 @@ class ReportController extends Controller
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
         
         // total number of promoters or respondents who rated 7-10 in recommendation rating
-        $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        $total_promoters = $customer_recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
-        $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $total_detractors = $customer_recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
 
         $ilsr_grand_total =0;
         // loop for getting importance ls rating grand total for ws rating calculation
@@ -1502,20 +1502,20 @@ class ReportController extends Controller
         // Frst quarter total number of promoters or respondents who rated 9-10 in recommendation rating
         $total_promoters = $customer_recommendation_ratings->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
         // 1st month
-        $first_month_total_promoters = $first_month_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        $first_month_total_promoters = $first_month_crr->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
         // 2nd Month
-        $second_month_total_promoters = $second_month_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        $second_month_total_promoters = $second_month_crr->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
         // 3rd month
-        $third_month_total_promoters = $third_month_crr->where('recommend_rate_score', '>','6')->groupBy('customer_id')->count();
+        $third_month_total_promoters = $third_month_crr->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
         
         // total number of detractors or respondents who rated 0-6 in recommendation rating
-        $total_detractors = $customer_recommendation_ratings->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $total_detractors = $customer_recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
        // 1st month
-        $first_month_total_detractors = $first_month_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $first_month_total_detractors = $first_month_crr->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
         // 2nd Month
-        $second_month_total_detractors = $second_month_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $second_month_total_detractors = $second_month_crr->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
         // 3rd month
-        $third_month_total_detractors = $third_month_crr->where('recommend_rate_score', '<','7')->groupBy('customer_id')->count();
+        $third_month_total_detractors = $third_month_crr->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
   
         //Percentage of Respondents/Customers who rated VS/S = total no. of respondents / total no. respondets who rated vs/s * 100
         $percentage_vss_respondents  = 0;
@@ -1958,7 +1958,9 @@ class ReportController extends Controller
                                                     });
                                                 })->get(); 
 
-        $customer_recommendation_ratings = CustomerRecommendationRating::whereYear('created_at', $request->selected_year)->get();
+        $customer_recommendation_ratings = CustomerRecommendationRating::whereYear('created_at', $request->selected_year)
+                                                ->whereIn('customer_id', $customer_ids)
+                                                ->get();
 
         $q1_crr =  CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
                                                 ->whereBetween('created_at', [$q1_start_date, $q1_end_date])

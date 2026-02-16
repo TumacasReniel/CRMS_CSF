@@ -35,22 +35,22 @@
                         <tr>
                             <td>1</td>
                             <td class="text-left">I know what a CC is and I saw this office's CC</td>
-                            <td class="text-center" v-if="data.cc_data.cc1_data.cc1_ans1 > 0">{{data.cc_data.cc1_data.cc1_ans1}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans1 > 0">{{data.cc_data.cc1_data.cc1_ans1}}</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
-                            <td class="text-center" v-if="data.cc_data.cc1_data.cc1_ans2 > 0">{{data.cc_data.cc1_data.cc1_ans2}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans2 > 0">{{data.cc_data.cc1_data.cc1_ans2}}</td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td class="text-left">I learned the CC when I saw this office's CC</td>
-                            <td class="text-center" v-if="data.cc_data.cc1_data.cc1_ans3 > 0">{{data.cc_data.cc1_data.cc1_ans3}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans3 > 0">{{data.cc_data.cc1_data.cc1_ans3}}</td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td class="text-left">I do not know what a CC is and I did not see one in this office. (Answer 'N/A' on CC2 and CC3)</td>
-                            <td class="text-center" v-if="data.cc_data.cc1_data.cc1_ans4 > 0">{{data.cc_data.cc1_data.cc1_ans4}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans4 > 0">{{data.cc_data.cc1_data.cc1_ans4}}</td>
                         </tr>
                         <tr class="bg-blue-200">
                             <th>CC2</th>
@@ -59,27 +59,27 @@
                         <tr>
                             <td>1</td>
                             <td class="text-left">Easy to see</td>
-                            <td class="text-center" v-if="data.cc_data.cc2_data.cc1_ans1 > 0">{{data.cc_data.cc2_data.cc2_ans1}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc2_data?.cc1_ans1 > 0">{{data.cc_data.cc2_data.cc2_ans1}}</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td class="text-left">Somewhat easy to see</td>
-                            <td class="text-center" v-if="data.cc_data.cc2_data.cc2_ans2 > 0">{{data.cc_data.cc2_data.cc2_ans2}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc2_data?.cc2_ans2 > 0">{{data.cc_data.cc2_data.cc2_ans2}}</td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td class="text-left">Difficult to see</td>
-                            <td class="text-center" v-if="data.cc_data.cc2_data.cc2_ans3 > 0">{{data.cc_data.cc2_data.cc2_ans3}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc2_data?.cc2_ans3 > 0">{{data.cc_data.cc2_data.cc2_ans3}}</td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td class="text-left">Not visible at all</td>
-                            <td class="text-center" v-if="data.cc_data.cc2_data.cc2_ans4 > 0">{{data.cc_data.cc2_data.cc2_ans4}}</td>
+                            <td class="text-center" v-if="data?.cc_data?.cc2_data.cc2_ans4 > 0">{{data.cc_data.cc2_data.cc2_ans4}}</td>
                         </tr>
                         <tr>
                             <td>5</td>
                             <td class="text-left">N/A</td>
-                            <td class="text-center" v-if="data.cc_data.cc2_data.cc2_ans5 > 0">{{data.cc_data.cc2_data.cc2_ans5}}</td>
+                            <td class="text-center" v-if="data?.cc_data?.cc2_data.cc2_ans5 > 0">{{data.cc_data.cc2_data.cc2_ans5}}</td>
                         </tr>
                         <tr class="bg-blue-200">
                             <th>CC3</th>
@@ -88,22 +88,22 @@
                         <tr>
                             <td>1</td>
                             <td class="text-left">Helped Very Much</td>
-                            <td class="text-center" v-if="data.cc_data.cc3_data.cc3_ans1 > 0"><span v-if="data.cc_data.cc3_data.cc3_ans1">{{data.cc_data.cc3_data.cc3_ans1}}</span></td>
+                            <td class="text-center" v-if="data?.cc_data?.cc3_data.cc3_ans1 > 0"><span v-if="data.cc_data.cc3_data.cc3_ans1">{{data.cc_data.cc3_data.cc3_ans1}}</span></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td class="text-left">Somewhat helped</td>
-                            <td class="text-center"><span v-if="data.cc_data.cc3_data.cc3_ans2">{{data.cc_data.cc3_data.cc3_ans2}}</span></td>
+                            <td class="text-center"><span v-if="data.cc_data?.cc3_data.cc3_ans2">{{data.cc_data.cc3_data.cc3_ans2}}</span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td class="text-left">Did not help</td>
-                            <td class="text-center"><span v-if="data.cc_data.cc3_data.cc3_ans3">{{data.cc_data.cc3_data.cc3_ans3}}</span></td>
+                            <td class="text-center"><span v-if="data.cc_data?.cc3_data?.cc3_ans3">{{data.cc_data.cc3_data.cc3_ans3}}</span></td>
                         </tr>
                         <tr>
                             <td>4</td>
                             <td class="text-left">N/A</td>
-                            <td class="text-center"><span v-if="data.cc_data.cc3_data.cc3_ans4">{{data.cc_data.cc3_data.cc3_ans4}}</span></td>
+                            <td class="text-center"><span v-if="data.cc_data?.cc3_data?.cc3_ans4">{{data.cc_data.cc3_data.cc3_ans4}}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -144,7 +144,7 @@
                     <tbody>
 
                     <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">                     
-                            <td class="border-t p-5 pl-3 ">
+                            <td class="border-t p-1 pl-3 ">
                                 {{ index + 1 }}. {{ dimension.name }}
                             </td>
                             <td v-if="data.y_totals" class="text-center"  v-for="total in data.y_totals[index+1]">
@@ -163,8 +163,8 @@
                                 <span v-if="total != 0">{{ total }}</span>
                             </td>                   
                     </tr>
-                    <tr class="text-center font-black p-5 m-5 border border-solid hover:bg-gray-100 focus-within:bg-gray-100" >
-                        <td class="m-5 p-3">TOTAL SCORE</td>
+                    <tr class="text-center font-black p-1 m-3 border border-solid hover:bg-gray-100 focus-within:bg-gray-100" >
+                        <td class="m-5 p-1">TOTAL SCORE</td>
                         <td ><span v-if="data.grand_vs_total != 0">{{ data.grand_vs_total }} </span> </td>
                         <td ><span v-if="data.grand_s_total != 0">{{ data.grand_s_total }} </span></td>
                         <td ><span v-if="data.grand_n_total != 0">{{ data.grand_n_total }}</span></td>
@@ -220,25 +220,25 @@
 
                         <tr v-for="(dimension, index) in data.dimensions" :key="dimension.id" class="border border-solid hover:bg-gray-100 focus-within:bg-gray-100">
                             
-                                <td class="border-t p-3 pl-3 w-1/8 text-left">
+                                <td class="border-t p-2 text-center">
                                     {{ index + 1 }}. {{ dimension.name }}
                                 </td>
-                                <td v-if="data.importance_rate_score_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.importance_rate_score_totals[index+1]">
+                                <td v-if="data.importance_rate_score_totals" class="border-t p-2 text-center"  v-for="total in data.importance_rate_score_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>
-                                <td v-if="data.x_importance_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.x_importance_totals[index+1]">
+                                <td v-if="data.x_importance_totals" class="border-t p-2 text-center"  v-for="total in data.x_importance_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>
-                                <td v-if="data.likert_scale_rating_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.importance_ilsr_totals[index+1]">
+                                <td v-if="data.likert_scale_rating_totals" class="border-t text-center"  v-for="total in data.importance_ilsr_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>  
-                                <td v-if="data.wf_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.wf_totals[index+1]">
+                                <td v-if="data.wf_totals" class="border-t p-2 text-center"  v-for="total in data.wf_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>       
-                                <td v-if="data.ss_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.ss_totals[index+1]">
+                                <td v-if="data.ss_totals" class="border-t p-2 text-center"  v-for="total in data.ss_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>  
-                                <td v-if="data.ws_totals" class="border-t p-5 w-1/8 text-center mr-10"  v-for="total in data.ws_totals[index+1]">
+                                <td v-if="data.ws_totals" class="border-t p-2 text-center mr-10"  v-for="total in data.ws_totals[index+1]">
                                     <span v-if="total != 0">{{ total }}</span>
                                 </td>
                         </tr>

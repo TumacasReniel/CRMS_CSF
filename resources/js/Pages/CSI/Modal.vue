@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch, ref, onMounted } from "vue";
+import { reactive, watch, ref, onMounted, onUnmounted } from "vue";
 import { Head, Link, router } from '@inertiajs/vue3';
 import VueMultiselect from "vue-multiselect";
 import ByUnitMonthlyReport from '@/Pages/CSI/Monthly/ByUnitMonthly.vue';
@@ -105,7 +105,9 @@ const closeDialog = (value) => {
 
        await d.print(document.querySelector(".print-id"), [css]);
 
-        emit("input", false);
+        setTimeout(() => {
+            emit("input", false);
+        }, 100);
 };
 
 

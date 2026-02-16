@@ -18,7 +18,7 @@
     <div class="card-header bg-secondary text-white">
         PART I: CITIZEN'S CHARTER(CC)
     </div>
-    <table style="width:100%; border: 1px solid #333; border-collapse: collapse; padding: 5px" class="text-center">
+    <table style="width:100%; border: 1px solid #333; border-collapse: collapse; padding: 5px; text-align: center;" >
         <tr>
             <th></th>
             <th></th>
@@ -206,7 +206,7 @@
                             <tr>
                                 <td class="text-center">4</td>
                                 <td>Satisfied</td>
-                                <td v-if="data.s_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.s_totals[index+1]">
+                                <td v-if="data.s_totals" class="text-center"  v-for="total in data.s_totals[index+1]">
                                     <span v-if="total > 0">
                                         {{ total }}
                                     </span>
@@ -231,7 +231,7 @@
                             <tr>
                                 <td class="text-center">3</td>
                                 <td>Neither</td>
-                                <td v-if="data.n_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.n_totals[index+1]">
+                                <td v-if="data.n_totals" class=" text-center"  v-for="total in data.n_totals[index+1]">
                                     <span v-if="total > 0">
                                         {{ total }}
                                     </span>
@@ -255,7 +255,7 @@
                             <tr>
                                 <td class="text-center">2</td>
                                  <td>Dissatisfied</td>
-                                <td v-if="data.d_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.d_totals[index+1]">
+                                <td v-if="data.d_totals" class="text-center"  v-for="total in data.d_totals[index+1]">
                                     <span v-if="total > 0">
                                         {{ total }}
                                     </span>
@@ -279,7 +279,7 @@
                             <tr>
                                 <td class="text-center">1</td>
                                  <td>Very Dissatisfied</td>
-                                <td v-if="data.vd_totals" class="border-t p-5 w-1/8 text-center"  v-for="total in data.vd_totals[index+1]">
+                                <td v-if="data.vd_totals" class=" text-center"  v-for="total in data.vd_totals[index+1]">
                                     <span v-if="total > 0">
                                         {{ total }}
                                     </span>

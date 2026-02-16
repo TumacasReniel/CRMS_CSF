@@ -414,15 +414,15 @@
                    <div>
                      Prepared by : <br>
                     <div style="margin-left:50px">
-                        <span v-if="form_assignatorees.prepared_by['name'] "><u>{{ form_assignatorees.prepared_by['name'] }}</u></span><br>
-                        <span v-if="form_assignatorees.prepared_by['designation'] ">{{ form_assignatorees.prepared_by['designation'] }}</span>
+                        <span v-if="form_assignatorees.prepared_by && form_assignatorees.prepared_by['name'] "><u>{{ form_assignatorees.prepared_by['name'] }}</u></span><br>
+                        <span v-if="form_assignatorees.prepared_by && form_assignatorees.prepared_by['designation'] ">{{ form_assignatorees.prepared_by['designation'] }}</span>
                     </div>
                    </div>
                    <div style="margin: auto; margin-left: 180px;  ">
-                     Noted by : 
+                     Noted by :
                     <div style="margin-left:60px">
-                        <span v-if="form_assignatorees.noted_by['name'] "><u>{{ form_assignatorees.noted_by['name'] }}</u></span><br>
-                        <span v-if="form_assignatorees.noted_by['designation'] ">{{ form_assignatorees.noted_by['designation'] }}</span>
+                        <span v-if="form_assignatorees.noted_by && form_assignatorees.noted_by['name'] "><u>{{ form_assignatorees.noted_by['name'] }}</u></span><br>
+                        <span v-if="form_assignatorees.noted_by && form_assignatorees.noted_by['designation'] ">{{ form_assignatorees.noted_by['designation'] }}</span>
                     </div>
 
                     <span></span>

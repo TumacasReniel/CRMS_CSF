@@ -1,19 +1,15 @@
-# TODO: Make Survey-Forms/Index.vue Pretty
+# TODO: Fix NPS Calculation in Yearly View
 
-## Tasks
-- [ ] Add gradient background and improved color scheme
-- [ ] Enhance header section with better styling and animations
-- [ ] Add icons to different sections for visual appeal
-- [ ] Improve button styling with colors, hover effects, and better spacing
-- [ ] Add progress indicators or step visualization
-- [ ] Enhance form sections with better cards and shadows
-- [ ] Add custom CSS for enhanced visual appeal
-- [ ] Improve responsive design and spacing
+## Issues Identified in `app/Http/Controllers/ReportController.php`:
+1. **Missing customer_ids filter**: The `$customer_recommendation_ratings` query in `generateCSIByUnitYearly` is missing `whereIn('customer_id', $customer_ids)` - causing it to count ALL recommendations for the year, not just for the specific unit.
 
-## Files to Edit
-- resources/js/Pages/Survey-Forms/Index.vue
+2. **Incorrect NPS thresholds**: Current code uses:
+   - Promoters: `recommend_rate_score > 6` (includes 7,8,9,10)
+   - Detractors: `recommend_rate_score < 7` (includes 0,1,2,3,4,5,6)
+   - This causes overlap where ratings 7-8 are counted as BOTH promoters and detractors!
 
-## Followup Steps
-- Test the form on different screen sizes
-- Verify animations still work
-- Check form functionality remains intact
+## Fix Plan:
+- [ ] Fix the customer_recommendation_ratings query to filter by customer_ids
+- [ ] Change promoter threshold to `>= 9` (correct NPS standard)
+- [ ] Keep detractor threshold as `< 7` (correct NPS standard)
+- [ ] This ensures ratings 7-8 are NOT counted in either (they're "Passives" in NPS)
