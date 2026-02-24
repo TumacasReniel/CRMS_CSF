@@ -17,6 +17,7 @@ use App\Models\SubUnitType;
 use App\Models\UnitSubUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\CustomerAttributeRating;
 use App\Models\CustomerComment;
 use App\Models\CustomerCCRating;
@@ -3036,9 +3037,16 @@ class ReportController extends Controller
 
         $numeric_month = Carbon::parse("1 {$request->selected_month}")->format('m');
 
-        //PART I: Citizens Charter
+        // Get customer IDs from CSFForm for the region filtered by month and year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        //PART I: Citizens Charter - filter by customer IDs in the region and by month/year
         $cc_query = CustomerCCRating::whereMonth('created_at', $numeric_month)
                                     ->whereYear('created_at', $request->selected_year)
+                                    ->whereIn('customer_id', $csf_forms)
                                     ->when($request->sex, function ($query, $sex) {
                                         $query->whereHas('customer', function ($query) use ($sex) {
                                             $query->where('sex', $sex);
@@ -3059,134 +3067,1447 @@ class ReportController extends Controller
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
-        $services = Services::all();
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
         //all Services and its units
         $services_units = ServiceResource::collection($services);
 
-
-        //OFFICE of the REGIONAL  DIRECTOR
-        // SECRETARIAT
-        //---total number of respondents
-        $secretariat_total_respo = CsfForm::where('region_id',  $user->region_id)
-                ->where('service_id', 1)
-                ->where('unit_id', 1)
-                ->count();
-       // Get customer ids to fetch all customers in the specific unit
-        $customer_ids = CsfForm::where('region_id', $user->region_id)
-                        ->where('service_id', 1)
-                        ->where('unit_id', 1)
-                        ->pluck('customer_id');
-
-        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $secretariat_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                    ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
-                    ->distinct('customer_id') // Ensure unique customer_id counts
-                    ->count('customer_id'); // Count distinct customer_id values
-          
-        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $secretariat_percentage_vss_respo = 0;
-        if($secretariat_total_respo != 0){
-            $secretariat_percentage_vss_respo =  ($secretariat_total_respo/$secretariat_total_vss_respo) * 100;
-        }
-
+        // Get all units data for all services
+        $all_units_data = $this->getAllUnitsData($request, $user->region_id, $numeric_month);
 
         //get monthly CSI
         $monthly_csi = $this->getAllUnitMonthlyCSI($request, $user->region_id, $numeric_month);
-      
-
-        // Gender and Development(GAD)
-        //---total number of respondents
-        $gad_total_respo = CsfForm::where('region_id',  $user->region_id)
-                ->where('service_id', '1')
-                ->where('unit_id' , 2)
-                ->count();
-
-         // Get customer ids to fetch all customers in the specific unit
-         $customer_ids = CsfForm::where('region_id', $user->region_id)
-                ->where('service_id', 1)
-                ->where('unit_id', 2)
-                ->pluck('customer_id');
-
-        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $gad_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
-                ->distinct('customer_id') // Ensure unique customer_id counts
-                ->count('customer_id'); // Count distinct customer_id values
         
-        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $gad_percentage_vss_respo = 0;
-        if($gad_total_respo != 0){
-            $gad_percentage_vss_respo = ($gad_total_respo/$gad_total_vss_respo) * 100;
-        }
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPS($request, $user->region_id, $numeric_month);
+        $lsr_data = $this->getAllUnitLSR($request, $user->region_id, $numeric_month);
 
-         // Fairness Opinion Board
-        //---total number of respondents
-        $fairness_total_respo = CsfForm::where('region_id',  $user->region_id)
-                ->where('service_id', '1')
-                ->where('unit_id' , 3)
-                ->count();
-         // Get customer ids to fetch all customers in the specific unit
-         $customer_ids = CsfForm::where('region_id', $user->region_id)
-                ->where('service_id', 1)
-                ->where('unit_id', 3)
-                ->pluck('customer_id');
-
-        // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $fairness_total_vss_respo = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
-                ->whereIn('rate_score', [4, 5]) // Check for rate_score 4 or 5
-                ->distinct('customer_id') // Ensure unique customer_id counts
-                ->count('customer_id'); // Count distinct customer_id values
-             
-        // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
-        $fairness_percentage_vss_respo = 0;
-        if($fairness_total_respo != 0){
-            $fairness_percentage_vss_respo = ($fairness_total_respo/$fairness_total_vss_respo) * 100;
-        }
-        
-        
-
-        $ord_total_respondents = [
-            'secretariat_total_respo' => $secretariat_total_respo,
-            'gad_total_respo' => $gad_total_respo,
-            'fairness_total_respo' => $fairness_total_respo,
-        ];
-
-        $ord_total_vss_respondents = [
-            'secretariat_total_vss_respo' => $secretariat_total_vss_respo,
-            'gad_total_vss_respo' => $gad_total_vss_respo,
-            'fairness_total_vss_respo' => $fairness_total_vss_respo,
-        ];
-
-        $ord_percentage_vss_respondents = [
-            'secretariat_percentage_vss_respo' => $secretariat_percentage_vss_respo,
-            'gad_percentage_vss_respo' => $gad_percentage_vss_respo,
-            'fairness_percentage_vss_respo' => $fairness_percentage_vss_respo,
-        ];
-
-        
          //send response to front end
          return Inertia::render('CSI/AllServicesUnits/Index')
                     ->with('services_units', $services_units)
                     ->with('cc_data', $cc_data)
-                    ->with('ord_total_respondents',$ord_total_respondents)
-                    ->with('ord_total_vss_respondents',$ord_total_vss_respondents)
-                    ->with('ord_percentage_vss_respondents', $ord_percentage_vss_respondents)
-                    ->with('csi_total', $monthly_csi);
+                    ->with('all_units_data', $all_units_data)
+                    ->with('csi_total', $monthly_csi)
+                    ->with('nps_total', $nps_data['nps'])
+                    ->with('lsr_total', $lsr_data)
+                    ->with('total_respondents', $all_units_data['grand_total_respondents'])
+                    ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+                    ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+                    ->with('request', $request);
+    }
 
+    /**
+     * Generate CSI All Unit First Quarter Report
+     */
+    public function generateCSIAllUnitFirstQuarter($request)
+    {
+        $user = Auth::user();
 
+        // Define quarter date range (January - March)
+        $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 3, 31)->endOfDay();
+        $numeric_months = [1, 2, 3];
+
+        // Get customer IDs from CSFForm for the region filtered by quarter and year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // CC Data with sex and age_group filtering
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id', $csf_forms)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        $cc_data = $this->calculateCC($cc_query);
+
+        // Get all units data
+        $all_units_data = $this->getAllUnitsDataByQuarter($request, $user->region_id, $numeric_months);
+
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
+        $services_units = ServiceResource::collection($services);
+
+        // Calculate quarterly CSI
+        $quarterly_csi = $this->getAllUnitQuarterlyCSI($request, $user->region_id, $numeric_months);
+        
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPSByQuarter($request, $user->region_id, $numeric_months);
+        $lsr_data = $this->getAllUnitLSRByQuarter($request, $user->region_id, $numeric_months);
+
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('services_units', $services_units)
+            ->with('cc_data', $cc_data)
+            ->with('all_units_data', $all_units_data)
+            ->with('csi_total', $quarterly_csi)
+            ->with('nps_total', $nps_data['nps'])
+            ->with('lsr_total', $lsr_data)
+            ->with('total_respondents', $all_units_data['grand_total_respondents'])
+            ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+            ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+            ->with('request', $request);
+    }
+
+    /**
+     * Generate CSI All Unit Second Quarter Report
+     */
+    public function generateCSIAllUnitSecondQuarter($request)
+    {
+        $user = Auth::user();
+
+        // Define quarter date range (April - June)
+        $startDate = Carbon::create($request->selected_year, 4, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 6, 31)->endOfDay();
+        $numeric_months = [4, 5, 6];
+
+        // Get customer IDs from CSFForm for the region filtered by quarter and year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // CC Data with sex and age_group filtering
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id', $csf_forms)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        $cc_data = $this->calculateCC($cc_query);
+
+        // Get all units data
+        $all_units_data = $this->getAllUnitsDataByQuarter($request, $user->region_id, $numeric_months);
+
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
+        $services_units = ServiceResource::collection($services);
+
+        // Calculate quarterly CSI
+        $quarterly_csi = $this->getAllUnitQuarterlyCSI($request, $user->region_id, $numeric_months);
+        
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPSByQuarter($request, $user->region_id, $numeric_months);
+        $lsr_data = $this->getAllUnitLSRByQuarter($request, $user->region_id, $numeric_months);
+
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('services_units', $services_units)
+            ->with('cc_data', $cc_data)
+            ->with('all_units_data', $all_units_data)
+            ->with('csi_total', $quarterly_csi)
+            ->with('nps_total', $nps_data['nps'])
+            ->with('lsr_total', $lsr_data)
+            ->with('total_respondents', $all_units_data['grand_total_respondents'])
+            ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+            ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+            ->with('request', $request);
+    }
+
+    /**
+     * Generate CSI All Unit Third Quarter Report
+     */
+    public function generateCSIAllUnitThirdQuarter($request)
+    {
+        $user = Auth::user();
+
+        // Define quarter date range (July - September)
+        $startDate = Carbon::create($request->selected_year, 7, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 9, 30)->endOfDay();
+        $numeric_months = [7, 8, 9];
+
+        // Get customer IDs from CSFForm for the region filtered by quarter and year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // CC Data with sex and age_group filtering
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id', $csf_forms)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        $cc_data = $this->calculateCC($cc_query);
+
+        // Get all units data
+        $all_units_data = $this->getAllUnitsDataByQuarter($request, $user->region_id, $numeric_months);
+
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
+        $services_units = ServiceResource::collection($services);
+
+        // Calculate quarterly CSI
+        $quarterly_csi = $this->getAllUnitQuarterlyCSI($request, $user->region_id, $numeric_months);
+        
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPSByQuarter($request, $user->region_id, $numeric_months);
+        $lsr_data = $this->getAllUnitLSRByQuarter($request, $user->region_id, $numeric_months);
+
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('services_units', $services_units)
+            ->with('cc_data', $cc_data)
+            ->with('all_units_data', $all_units_data)
+            ->with('csi_total', $quarterly_csi)
+            ->with('nps_total', $nps_data['nps'])
+            ->with('lsr_total', $lsr_data)
+            ->with('total_respondents', $all_units_data['grand_total_respondents'])
+            ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+            ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+            ->with('request', $request);
+    }
+
+    /**
+     * Generate CSI All Unit Fourth Quarter Report
+     */
+    public function generateCSIAllUnitFourthQuarter($request)
+    {
+        $user = Auth::user();
+
+        // Define quarter date range (October - December)
+        $startDate = Carbon::create($request->selected_year, 10, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+        $numeric_months = [10, 11, 12];
+
+        // Get customer IDs from CSFForm for the region filtered by quarter and year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // CC Data with sex and age_group filtering
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id', $csf_forms)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        $cc_data = $this->calculateCC($cc_query);
+
+        // Get all units data
+        $all_units_data = $this->getAllUnitsDataByQuarter($request, $user->region_id, $numeric_months);
+
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
+        $services_units = ServiceResource::collection($services);
+
+        // Calculate quarterly CSI
+        $quarterly_csi = $this->getAllUnitQuarterlyCSI($request, $user->region_id, $numeric_months);
+        
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPSByQuarter($request, $user->region_id, $numeric_months);
+        $lsr_data = $this->getAllUnitLSRByQuarter($request, $user->region_id, $numeric_months);
+
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('services_units', $services_units)
+            ->with('cc_data', $cc_data)
+            ->with('all_units_data', $all_units_data)
+            ->with('csi_total', $quarterly_csi)
+            ->with('nps_total', $nps_data['nps'])
+            ->with('lsr_total', $lsr_data)
+            ->with('total_respondents', $all_units_data['grand_total_respondents'])
+            ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+            ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+            ->with('request', $request);
+    }
+
+    /**
+     * Generate CSI All Unit Yearly Report
+     */
+    public function generateCSIAllUnitYearly($request)
+    {
+        $user = Auth::user();
+
+        // Define year date range
+        $startDate = Carbon::create($request->selected_year, 1, 1)->startOfDay();
+        $endDate = Carbon::create($request->selected_year, 12, 31)->endOfDay();
+        $numeric_months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+        // Get customer IDs from CSFForm for the region filtered by year
+        $csf_forms = CSFForm::where('region_id', $user->region_id)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // CC Data with sex and age_group filtering
+        $cc_query = CustomerCCRating::whereBetween('created_at', [$startDate, $endDate])
+            ->whereYear('created_at', $request->selected_year)
+            ->whereIn('customer_id', $csf_forms)
+            ->when($request->sex, function ($query, $sex) {
+                $query->whereHas('customer', function ($query) use ($sex) {
+                    $query->where('sex', $sex);
+                });
+            })
+            ->when($request->age_group, function ($query, $age_group) {
+                $query->whereHas('customer', function ($query) use ($age_group) {
+                    $query->where('age_group', $age_group);
+                });
+            });
+        $cc_data = $this->calculateCC($cc_query);
+
+        // Get all units data
+        $all_units_data = $this->getAllUnitsDataByQuarter($request, $user->region_id, $numeric_months);
+
+        $services = Services::with(['units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units', 'units.sub_units.pstos' => function($query) {
+            $query->where('region_id', 10);
+        }, 'units.sub_units.sub_unit_types'])->get();
+        $services_units = ServiceResource::collection($services);
+
+        // Calculate yearly CSI (average of all months)
+        $yearly_csi = $this->getAllUnitQuarterlyCSI($request, $user->region_id, $numeric_months);
+        
+        // Get NPS and LSR data
+        $nps_data = $this->getAllUnitNPSByQuarter($request, $user->region_id, $numeric_months);
+        $lsr_data = $this->getAllUnitLSRByQuarter($request, $user->region_id, $numeric_months);
+
+        return Inertia::render('CSI/AllServicesUnits/Index')
+            ->with('services_units', $services_units)
+            ->with('cc_data', $cc_data)
+            ->with('all_units_data', $all_units_data)
+            ->with('csi_total', $yearly_csi)
+            ->with('nps_total', $nps_data['nps'])
+            ->with('lsr_total', $lsr_data)
+            ->with('total_respondents', $all_units_data['grand_total_respondents'])
+            ->with('total_vss_respondents', $all_units_data['grand_total_vss_respondents'])
+            ->with('percentage_vss_respondents', $all_units_data['grand_percentage_vss_respondents'])
+            ->with('request', $request);
+    }
+
+    /**
+     * Get all units data by quarter (for quarterly and yearly reports)
+     */
+    private function getAllUnitsDataByQuarter($request, $region_id, $numeric_months)
+    {
+        $services = Services::all();
+        $units_data = [];
+        $grand_total_respondents = 0;
+        $grand_total_vss_respondents = 0;
+        $grand_total_promoters = 0;
+        $grand_total_detractors = 0;
+        
+        // Grand totals for rating percentages
+        $grand_strongly_agree_count = 0;
+        $grand_agree_count = 0;
+        $grand_neither_count = 0;
+        $grand_disagree_count = 0;
+        $grand_strongly_disagree_count = 0;
+        $grand_na_count = 0;
+        
+        // Grand CC totals
+        $grand_cc1_ans1 = 0;
+        $grand_cc1_ans2 = 0;
+        $grand_cc1_ans3 = 0;
+        $grand_cc1_ans4 = 0;
+        $grand_cc2_ans1 = 0;
+        $grand_cc2_ans2 = 0;
+        $grand_cc2_ans3 = 0;
+        $grand_cc2_ans4 = 0;
+        $grand_cc2_ans5 = 0;
+        $grand_cc3_ans1 = 0;
+        $grand_cc3_ans2 = 0;
+        $grand_cc3_ans3 = 0;
+        $grand_cc3_ans4 = 0;
+        
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
+
+        foreach ($services as $service) {
+            $service_units = Unit::where('services_id', $service->id)->get();
+            
+            foreach ($service_units as $unit) {
+                // Get customer IDs for this unit filtered by months and year
+                $customer_ids = CsfForm::where('region_id', $region_id)
+                    ->where('service_id', $service->id)
+                    ->where('unit_id', $unit->id)
+                    ->whereIn(DB::raw('MONTH(created_at)'), $numeric_months)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->pluck('customer_id');
+
+                // Total number of respondents (unique customers)
+                $total_respo = $customer_ids->count();
+
+                // Get attribute ratings for this unit
+                $attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                    ->whereIn(DB::raw('MONTH(created_at)'), $numeric_months)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->get();
+
+                // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+                $total_vss_respo = $attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+                $percentage_vss_respo = 0;
+                if ($total_respo > 0 && $total_vss_respo > 0) {
+                    $percentage_vss_respo = ($total_vss_respo / $total_respo) * 100;
+                }
+
+                // Get recommendation ratings for NPS calculation
+                $recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                    ->whereIn(DB::raw('MONTH(created_at)'), $numeric_months)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->get();
+
+                // Calculate NPS per unit
+                $promoters = $recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
+                $detractors = $recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
+                
+                $nps = 0;
+                if ($total_respo > 0) {
+                    $percentage_promoters = ($promoters / $total_respo) * 100;
+                    $percentage_detractors = ($detractors / $total_respo) * 100;
+                    $nps = $percentage_promoters - $percentage_detractors;
+                }
+
+                // Calculate LSR per unit (Likert Scale Rating)
+                $lsr = 0;
+                if ($attribute_ratings->count() > 0) {
+                    $total_score = $attribute_ratings->sum('rate_score');
+                    $total_responses = $attribute_ratings->count();
+                    $lsr = $total_score / $total_responses;
+                }
+
+                // Calculate CSI per unit using Weighted Sum method
+                $unit_csi = $this->calculateUnitCSI($attribute_ratings, $total_respo, $dimension_count);
+
+                // Calculate percentage breakdown for each rating
+                $strongly_agree_count = $attribute_ratings->where('rate_score', 5)->count();
+                $agree_count = $attribute_ratings->where('rate_score', 4)->count();
+                $neither_count = $attribute_ratings->where('rate_score', 3)->count();
+                $disagree_count = $attribute_ratings->where('rate_score', 2)->count();
+                $strongly_disagree_count = $attribute_ratings->where('rate_score', 1)->count();
+                $na_count = $attribute_ratings->where('rate_score', 6)->count();
+                
+                // Total count for percentage calculation
+                $total_ratings = $strongly_agree_count + $agree_count + $neither_count + $disagree_count + $strongly_disagree_count + $na_count;
+
+                // Calculate percentages
+                $pct_strongly_agree = $total_ratings > 0 ? ($strongly_agree_count / $total_ratings) * 100 : 0;
+                $pct_agree = $total_ratings > 0 ? ($agree_count / $total_ratings) * 100 : 0;
+                $pct_neither = $total_ratings > 0 ? ($neither_count / $total_ratings) * 100 : 0;
+                $pct_disagree = $total_ratings > 0 ? ($disagree_count / $total_ratings) * 100 : 0;
+                $pct_strongly_disagree = $total_ratings > 0 ? ($strongly_disagree_count / $total_ratings) * 100 : 0;
+                $pct_na = $total_ratings > 0 ? ($na_count / $total_ratings) * 100 : 0;
+
+                // Get CC data for this unit with sex and age_group filtering
+                $cc_ratings = CustomerCCRating::whereIn('customer_id', $customer_ids)
+                    ->whereIn(DB::raw('MONTH(created_at)'), $numeric_months)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->when($request->sex, function ($query, $sex) {
+                        $query->whereHas('customer', function ($query) use ($sex) {
+                            $query->where('sex', $sex);
+                        });
+                    })
+                    ->when($request->age_group, function ($query, $age_group) {
+                        $query->whereHas('customer', function ($query) use ($age_group) {
+                            $query->where('age_group', $age_group);
+                        });
+                    })
+                    ->get();
+
+                $cc1_ans1 = $cc_ratings->where('cc_id', 1)->where('answer', 1)->count();
+                $cc1_ans2 = $cc_ratings->where('cc_id', 1)->where('answer', 2)->count();
+                $cc1_ans3 = $cc_ratings->where('cc_id', 1)->where('answer', 3)->count();
+                $cc1_ans4 = $cc_ratings->where('cc_id', 1)->where('answer', 4)->count();
+                $cc2_ans1 = $cc_ratings->where('cc_id', 2)->where('answer', 1)->count();
+                $cc2_ans2 = $cc_ratings->where('cc_id', 2)->where('answer', 2)->count();
+                $cc2_ans3 = $cc_ratings->where('cc_id', 2)->where('answer', 3)->count();
+                $cc2_ans4 = $cc_ratings->where('cc_id', 2)->where('answer', 4)->count();
+                $cc2_ans5 = $cc_ratings->where('cc_id', 2)->where('answer', 5)->count();
+                $cc3_ans1 = $cc_ratings->where('cc_id', 3)->where('answer', 1)->count();
+                $cc3_ans2 = $cc_ratings->where('cc_id', 3)->where('answer', 2)->count();
+                $cc3_ans3 = $cc_ratings->where('cc_id', 3)->where('answer', 3)->count();
+                $cc3_ans4 = $cc_ratings->where('cc_id', 3)->where('answer', 4)->count();
+
+                // Get sub-units for this unit (simplified for quarterly/yearly - no sub-unit data)
+                $sub_units_data = [];
+
+                $units_data[$service->id][$unit->id] = [
+                    'unit_name' => $unit->unit_name,
+                    'total_respo' => $total_respo,
+                    'sub_units_data' => $sub_units_data,
+                    'unit_pstos_data' => [],
+                    'total_vss_respo' => $total_vss_respo,
+                    'percentage_vss_respo' => number_format($percentage_vss_respo, 2),
+                    'csi' => number_format($unit_csi, 2),
+                    'nps' => number_format($nps, 2),
+                    'lsr' => number_format($lsr, 2),
+                    'strongly_agree_count' => $strongly_agree_count,
+                    'agree_count' => $agree_count,
+                    'neither_count' => $neither_count,
+                    'disagree_count' => $disagree_count,
+                    'strongly_disagree_count' => $strongly_disagree_count,
+                    'na_count' => $na_count,
+                    'pct_strongly_agree' => number_format($pct_strongly_agree, 2),
+                    'pct_agree' => number_format($pct_agree, 2),
+                    'pct_neither' => number_format($pct_neither, 2),
+                    'pct_disagree' => number_format($pct_disagree, 2),
+                    'pct_strongly_disagree' => number_format($pct_strongly_disagree, 2),
+                    'pct_na' => number_format($pct_na, 2),
+                    'cc_data' => [
+                        'cc1_ans1' => $cc1_ans1,
+                        'cc1_ans2' => $cc1_ans2,
+                        'cc1_ans3' => $cc1_ans3,
+                        'cc1_ans4' => $cc1_ans4,
+                        'cc2_ans1' => $cc2_ans1,
+                        'cc2_ans2' => $cc2_ans2,
+                        'cc2_ans3' => $cc2_ans3,
+                        'cc2_ans4' => $cc2_ans4,
+                        'cc2_ans5' => $cc2_ans5,
+                        'cc3_ans1' => $cc3_ans1,
+                        'cc3_ans2' => $cc3_ans2,
+                        'cc3_ans3' => $cc3_ans3,
+                        'cc3_ans4' => $cc3_ans4,
+                    ],
+                ];
+
+                $grand_cc1_ans1 += $cc1_ans1;
+                $grand_cc1_ans2 += $cc1_ans2;
+                $grand_cc1_ans3 += $cc1_ans3;
+                $grand_cc1_ans4 += $cc1_ans4;
+                $grand_cc2_ans1 += $cc2_ans1;
+                $grand_cc2_ans2 += $cc2_ans2;
+                $grand_cc2_ans3 += $cc2_ans3;
+                $grand_cc2_ans4 += $cc2_ans4;
+                $grand_cc2_ans5 += $cc2_ans5;
+                $grand_cc3_ans1 += $cc3_ans1;
+                $grand_cc3_ans2 += $cc3_ans2;
+                $grand_cc3_ans3 += $cc3_ans3;
+                $grand_cc3_ans4 += $cc3_ans4;
+                
+                $grand_total_respondents += $total_respo;
+                $grand_total_vss_respondents += $total_vss_respo;
+                $grand_total_promoters += $promoters;
+                $grand_total_detractors += $detractors;
+                
+                $grand_strongly_agree_count += $strongly_agree_count;
+                $grand_agree_count += $agree_count;
+                $grand_neither_count += $neither_count;
+                $grand_disagree_count += $disagree_count;
+                $grand_strongly_disagree_count += $strongly_disagree_count;
+                $grand_na_count += $na_count;
+            }
+        }
+
+        // Grand percentage for VSS
+        $grand_percentage_vss_respondents = 0;
+        if ($grand_total_respondents > 0 && $grand_total_vss_respondents > 0) {
+            $grand_percentage_vss_respondents = ($grand_total_vss_respondents / $grand_total_respondents) * 100;
+        }
+
+        // Grand NPS
+        $grand_nps = 0;
+        if ($grand_total_respondents > 0) {
+            $grand_percentage_promoters = ($grand_total_promoters / $grand_total_respondents) * 100;
+            $grand_percentage_detractors = ($grand_total_detractors / $grand_total_respondents) * 100;
+            $grand_nps = $grand_percentage_promoters - $grand_percentage_detractors;
+        }
+
+        // Grand CC totals
+        $grand_cc1_total = $grand_cc1_ans1 + $grand_cc1_ans2 + $grand_cc1_ans3 + $grand_cc1_ans4;
+        $grand_cc2_total = $grand_cc2_ans1 + $grand_cc2_ans2 + $grand_cc2_ans3 + $grand_cc2_ans4 + $grand_cc2_ans5;
+        $grand_cc3_total = $grand_cc3_ans1 + $grand_cc3_ans2 + $grand_cc3_ans3 + $grand_cc3_ans4;
+
+        // Grand total ratings for percentage calculation
+        $grand_total_ratings = $grand_strongly_agree_count + $grand_agree_count + $grand_neither_count + $grand_disagree_count + $grand_strongly_disagree_count + $grand_na_count;
+        
+        // Grand percentages for rating categories
+        $grand_pct_strongly_agree = $grand_total_ratings > 0 ? ($grand_strongly_agree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_agree = $grand_total_ratings > 0 ? ($grand_agree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_neither = $grand_total_ratings > 0 ? ($grand_neither_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_disagree = $grand_total_ratings > 0 ? ($grand_disagree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_strongly_disagree = $grand_total_ratings > 0 ? ($grand_strongly_disagree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_na = $grand_total_ratings > 0 ? ($grand_na_count / $grand_total_ratings) * 100 : 0;
+
+        return [
+            'units_data' => $units_data,
+            'grand_total_respondents' => $grand_total_respondents,
+            'grand_total_vss_respondents' => $grand_total_vss_respondents,
+            'grand_percentage_vss_respondents' => number_format($grand_percentage_vss_respondents, 2),
+            'grand_nps' => number_format($grand_nps, 2),
+            'grand_pct_strongly_agree' => number_format($grand_pct_strongly_agree, 2),
+            'grand_pct_agree' => number_format($grand_pct_agree, 2),
+            'grand_pct_neither' => number_format($grand_pct_neither, 2),
+            'grand_pct_disagree' => number_format($grand_pct_disagree, 2),
+            'grand_pct_strongly_disagree' => number_format($grand_pct_strongly_disagree, 2),
+            'grand_pct_na' => number_format($grand_pct_na, 2),
+            'grand_cc_data' => [
+                'cc1_ans1' => $grand_cc1_ans1,
+                'cc1_ans2' => $grand_cc1_ans2,
+                'cc1_ans3' => $grand_cc1_ans3,
+                'cc1_ans4' => $grand_cc1_ans4,
+                'cc1_total' => $grand_cc1_total,
+                'cc2_ans1' => $grand_cc2_ans1,
+                'cc2_ans2' => $grand_cc2_ans2,
+                'cc2_ans3' => $grand_cc2_ans3,
+                'cc2_ans4' => $grand_cc2_ans4,
+                'cc2_ans5' => $grand_cc2_ans5,
+                'cc2_total' => $grand_cc2_total,
+                'cc3_ans1' => $grand_cc3_ans1,
+                'cc3_ans2' => $grand_cc3_ans2,
+                'cc3_ans3' => $grand_cc3_ans3,
+                'cc3_ans4' => $grand_cc3_ans4,
+                'cc3_total' => $grand_cc3_total,
+            ],
+        ];
+    }
+
+    /**
+     * Get quarterly/yearly CSI for all units
+     */
+    private function getAllUnitQuarterlyCSI($request, $region_id, $numeric_months)
+    {
+        $total_csi = 0;
+        $count = 0;
+        
+        foreach ($numeric_months as $month) {
+            $csi = $this->getAllUnitMonthlyCSI($request, $region_id, $month);
+            if ($csi > 0) {
+                $total_csi += $csi;
+                $count++;
+            }
+        }
+        
+        return $count > 0 ? $total_csi / $count : 0;
+    }
+
+    /**
+     * Get quarterly/yearly NPS for all units
+     */
+    private function getAllUnitNPSByQuarter($request, $region_id, $numeric_months)
+    {
+        $total_promoters = 0;
+        $total_detractors = 0;
+        $total_respondents = 0;
+        
+        foreach ($numeric_months as $month) {
+            $customer_ids = CsfForm::where('region_id', $region_id)
+                ->whereMonth('created_at', $month)
+                ->whereYear('created_at', $request->selected_year)
+                ->pluck('customer_id');
+
+            $recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                ->whereMonth('created_at', $month)
+                ->whereYear('created_at', $request->selected_year)
+                ->get();
+
+            $month_respondents = $recommendation_ratings->groupBy('customer_id')->count();
+            $month_promoters = $recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
+            $month_detractors = $recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
+            
+            $total_respondents += $month_respondents;
+            $total_promoters += $month_promoters;
+            $total_detractors += $month_detractors;
+        }
+        
+        $percentage_promoters = $total_respondents > 0 ? ($total_promoters / $total_respondents) * 100 : 0;
+        $percentage_detractors = $total_respondents > 0 ? ($total_detractors / $total_respondents) * 100 : 0;
+        $nps = $percentage_promoters - $percentage_detractors;
+
+        return [
+            'nps' => number_format($nps, 2),
+            'percentage_promoters' => number_format($percentage_promoters, 2),
+            'percentage_detractors' => number_format($percentage_detractors, 2),
+            'total_respondents' => $total_respondents,
+            'promoters' => $total_promoters,
+            'detractors' => $total_detractors,
+        ];
+    }
+
+    /**
+     * Get quarterly/yearly LSR for all units
+     */
+    private function getAllUnitLSRByQuarter($request, $region_id, $numeric_months)
+    {
+        $grand_total_score = 0;
+        $grand_total_responses = 0;
+
+        foreach ($numeric_months as $month) {
+            $customer_ids = CsfForm::where('region_id', $region_id)
+                ->whereMonth('created_at', $month)
+                ->whereYear('created_at', $request->selected_year)
+                ->pluck('customer_id');
+
+            $attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                ->whereMonth('created_at', $month)
+                ->whereYear('created_at', $request->selected_year)
+                ->get();
+
+            $grand_total_score += $attribute_ratings->sum('rate_score');
+            $grand_total_responses += $attribute_ratings->count();
+        }
+
+        $lsr = $grand_total_responses > 0 ? $grand_total_score / $grand_total_responses : 0;
+        return number_format($lsr, 2);
+    }
+
+    /**
+     * Get all units data for all services with per-unit calculations
+     */
+    private function getAllUnitsData($request, $region_id, $numeric_month)
+    {
+        $services = Services::all();
+        $units_data = [];
+        $grand_total_respondents = 0;
+        $grand_total_vss_respondents = 0;
+        $grand_total_promoters = 0;
+        $grand_total_detractors = 0;
+        
+        // Grand totals for rating percentages
+        $grand_strongly_agree_count = 0;
+        $grand_agree_count = 0;
+        $grand_neither_count = 0;
+        $grand_disagree_count = 0;
+        $grand_strongly_disagree_count = 0;
+        $grand_na_count = 0;
+        
+        // Grand CC totals
+        $grand_cc1_ans1 = 0;
+        $grand_cc1_ans2 = 0;
+        $grand_cc1_ans3 = 0;
+        $grand_cc1_ans4 = 0;
+        $grand_cc2_ans1 = 0;
+        $grand_cc2_ans2 = 0;
+        $grand_cc2_ans3 = 0;
+        $grand_cc2_ans4 = 0;
+        $grand_cc2_ans5 = 0;
+        $grand_cc3_ans1 = 0;
+        $grand_cc3_ans2 = 0;
+        $grand_cc3_ans3 = 0;
+        $grand_cc3_ans4 = 0;
+        
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
+
+        foreach ($services as $service) {
+            $service_units = Unit::where('services_id', $service->id)->get();
+            
+            foreach ($service_units as $unit) {
+                // Get customer IDs for this unit filtered by month and year
+                $customer_ids = CsfForm::where('region_id', $region_id)
+                    ->where('service_id', $service->id)
+                    ->where('unit_id', $unit->id)
+                    ->whereMonth('created_at', $numeric_month)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->pluck('customer_id');
+
+                // Total number of respondents (unique customers)
+                $total_respo = $customer_ids->count();
+
+                // Get attribute ratings for this unit
+                $attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                    ->whereMonth('created_at', $numeric_month)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->get();
+
+                // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+                $total_vss_respo = $attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                // Percentage of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+                $percentage_vss_respo = 0;
+                if ($total_respo > 0 && $total_vss_respo > 0) {
+                    $percentage_vss_respo = ($total_vss_respo / $total_respo) * 100;
+                }
+
+                // Get recommendation ratings for NPS calculation
+                $recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+                    ->whereMonth('created_at', $numeric_month)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->get();
+
+                // Calculate NPS per unit
+                $promoters = $recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
+                $detractors = $recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
+                
+                $nps = 0;
+                if ($total_respo > 0) {
+                    $percentage_promoters = ($promoters / $total_respo) * 100;
+                    $percentage_detractors = ($detractors / $total_respo) * 100;
+                    $nps = $percentage_promoters - $percentage_detractors;
+                }
+
+                // Calculate LSR per unit (Likert Scale Rating)
+                $lsr = 0;
+                if ($attribute_ratings->count() > 0) {
+                    $total_score = $attribute_ratings->sum('rate_score');
+                    $total_responses = $attribute_ratings->count();
+                    $lsr = $total_score / $total_responses;
+                }
+
+                // Calculate CSI per unit using Weighted Sum method
+                $unit_csi = $this->calculateUnitCSI($attribute_ratings, $total_respo, $dimension_count);
+
+                // Calculate percentage breakdown for each rating (based on total responses)
+                // Count all ratings (not unique customers) so percentages add up to 100%
+                $strongly_agree_count = $attribute_ratings->where('rate_score', 5)->count();
+                $agree_count = $attribute_ratings->where('rate_score', 4)->count();
+                $neither_count = $attribute_ratings->where('rate_score', 3)->count();
+                $disagree_count = $attribute_ratings->where('rate_score', 2)->count();
+                $strongly_disagree_count = $attribute_ratings->where('rate_score', 1)->count();
+                $na_count = $attribute_ratings->where('rate_score', 6)->count();
+                
+                // Total count for percentage calculation
+                $total_ratings = $strongly_agree_count + $agree_count + $neither_count + $disagree_count + $strongly_disagree_count + $na_count;
+
+                // Calculate percentages based on total ratings (so they add up to 100%)
+                $pct_strongly_agree = $total_ratings > 0 ? ($strongly_agree_count / $total_ratings) * 100 : 0;
+                $pct_agree = $total_ratings > 0 ? ($agree_count / $total_ratings) * 100 : 0;
+                $pct_neither = $total_ratings > 0 ? ($neither_count / $total_ratings) * 100 : 0;
+                $pct_disagree = $total_ratings > 0 ? ($disagree_count / $total_ratings) * 100 : 0;
+                $pct_strongly_disagree = $total_ratings > 0 ? ($strongly_disagree_count / $total_ratings) * 100 : 0;
+                $pct_na = $total_ratings > 0 ? ($na_count / $total_ratings) * 100 : 0;
+
+                // Get CC data for this unit
+                $cc_ratings = CustomerCCRating::whereIn('customer_id', $customer_ids)
+                    ->whereMonth('created_at', $numeric_month)
+                    ->whereYear('created_at', $request->selected_year)
+                    ->when($request->sex, function ($query, $sex) {
+                        $query->whereHas('customer', function ($query) use ($sex) {
+                            $query->where('sex', $sex);
+                        });
+                    })
+                    ->when($request->age_group, function ($query, $age_group) {
+                        $query->whereHas('customer', function ($query) use ($age_group) {
+                            $query->where('age_group', $age_group);
+                        });
+                    })
+                    ->get();
+
+                $cc1_ans1 = $cc_ratings->where('cc_id', 1)->where('answer', 1)->count();
+                $cc1_ans2 = $cc_ratings->where('cc_id', 1)->where('answer', 2)->count();
+                $cc1_ans3 = $cc_ratings->where('cc_id', 1)->where('answer', 3)->count();
+                $cc1_ans4 = $cc_ratings->where('cc_id', 1)->where('answer', 4)->count();
+                $cc2_ans1 = $cc_ratings->where('cc_id', 2)->where('answer', 1)->count();
+                $cc2_ans2 = $cc_ratings->where('cc_id', 2)->where('answer', 2)->count();
+                $cc2_ans3 = $cc_ratings->where('cc_id', 2)->where('answer', 3)->count();
+                $cc2_ans4 = $cc_ratings->where('cc_id', 2)->where('answer', 4)->count();
+                $cc2_ans5 = $cc_ratings->where('cc_id', 2)->where('answer', 5)->count();
+                $cc3_ans1 = $cc_ratings->where('cc_id', 3)->where('answer', 1)->count();
+                $cc3_ans2 = $cc_ratings->where('cc_id', 3)->where('answer', 2)->count();
+                $cc3_ans3 = $cc_ratings->where('cc_id', 3)->where('answer', 3)->count();
+                $cc3_ans4 = $cc_ratings->where('cc_id', 3)->where('answer', 4)->count();
+
+                // Get sub-units for this unit
+                $sub_units = SubUnit::where('unit_id', $unit->id)->get();
+                $sub_units_data = [];
+                
+                foreach ($sub_units as $sub_unit) {
+                    // Get customer IDs for this sub-unit filtered by month and year
+                    $sub_customer_ids = CsfForm::where('region_id', $region_id)
+                        ->where('service_id', $service->id)
+                        ->where('unit_id', $unit->id)
+                        ->where('sub_unit_id', $sub_unit->id)
+                        ->whereMonth('created_at', $numeric_month)
+                        ->whereYear('created_at', $request->selected_year)
+                        ->pluck('customer_id');
+
+                    // Total number of respondents for sub-unit
+                    $sub_total_respo = $sub_customer_ids->count();
+
+                    // Get attribute ratings for this sub-unit
+                    $sub_attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $sub_customer_ids)
+                        ->whereMonth('created_at', $numeric_month)
+                        ->whereYear('created_at', $request->selected_year)
+                        ->get();
+
+                    // Total number of respondents who rated 5 or 4 (Very Satisfied or Satisfied)
+                    $sub_total_vss_respo = $sub_attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                    // Percentage of respondents who rated 5 or 4
+                    $sub_percentage_vss_respo = 0;
+                    if ($sub_total_respo > 0 && $sub_total_vss_respo > 0) {
+                        $sub_percentage_vss_respo = ($sub_total_vss_respo / $sub_total_respo) * 100;
+                    }
+
+                    // Calculate percentage breakdown for each rating
+                    $sub_strongly_agree_count = $sub_attribute_ratings->where('rate_score', 5)->count();
+                    $sub_agree_count = $sub_attribute_ratings->where('rate_score', 4)->count();
+                    $sub_neither_count = $sub_attribute_ratings->where('rate_score', 3)->count();
+                    $sub_disagree_count = $sub_attribute_ratings->where('rate_score', 2)->count();
+                    $sub_strongly_disagree_count = $sub_attribute_ratings->where('rate_score', 1)->count();
+                    $sub_na_count = $sub_attribute_ratings->where('rate_score', 6)->count();
+                    
+                    // Total count for percentage calculation
+                    $sub_total_ratings = $sub_strongly_agree_count + $sub_agree_count + $sub_neither_count + $sub_disagree_count + $sub_strongly_disagree_count + $sub_na_count;
+
+                    // Calculate percentages
+                    $sub_pct_strongly_agree = $sub_total_ratings > 0 ? ($sub_strongly_agree_count / $sub_total_ratings) * 100 : 0;
+                    $sub_pct_agree = $sub_total_ratings > 0 ? ($sub_agree_count / $sub_total_ratings) * 100 : 0;
+                    $sub_pct_neither = $sub_total_ratings > 0 ? ($sub_neither_count / $sub_total_ratings) * 100 : 0;
+                    $sub_pct_disagree = $sub_total_ratings > 0 ? ($sub_disagree_count / $sub_total_ratings) * 100 : 0;
+                    $sub_pct_strongly_disagree = $sub_total_ratings > 0 ? ($sub_strongly_disagree_count / $sub_total_ratings) * 100 : 0;
+                    $sub_pct_na = $sub_total_ratings > 0 ? ($sub_na_count / $sub_total_ratings) * 100 : 0;
+
+                    // Get sub-unit types for this sub-unit
+                    $sub_unit_types = SubUnitType::where('sub_unit_id', $sub_unit->id)->get();
+                    $sub_unit_types_data = [];
+                    
+                    foreach ($sub_unit_types as $sub_unit_type) {
+                        // Get customer IDs for this sub-unit type filtered by month and year
+                        $sub_type_customer_ids = CsfForm::where('region_id', $region_id)
+                            ->where('service_id', $service->id)
+                            ->where('unit_id', $unit->id)
+                            ->where('sub_unit_id', $sub_unit->id)
+                            ->where('sub_unit_type', $sub_unit_type->type_name)
+                            ->whereMonth('created_at', $numeric_month)
+                            ->whereYear('created_at', $request->selected_year)
+                            ->pluck('customer_id');
+
+                        // Total number of respondents for sub-unit type
+                        $sub_type_total_respo = $sub_type_customer_ids->count();
+
+                        // Get attribute ratings for this sub-unit type
+                        $sub_type_attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $sub_type_customer_ids)
+                            ->whereMonth('created_at', $numeric_month)
+                            ->whereYear('created_at', $request->selected_year)
+                            ->get();
+
+                        // Total number of respondents who rated 5 or 4
+                        $sub_type_total_vss_respo = $sub_type_attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                        // Percentage of respondents who rated 5 or 4
+                        $sub_type_percentage_vss_respo = 0;
+                        if ($sub_type_total_respo > 0 && $sub_type_total_vss_respo > 0) {
+                            $sub_type_percentage_vss_respo = ($sub_type_total_vss_respo / $sub_type_total_respo) * 100;
+                        }
+
+                        // Calculate percentage breakdown for each rating
+                        $sub_type_strongly_agree_count = $sub_type_attribute_ratings->where('rate_score', 5)->count();
+                        $sub_type_agree_count = $sub_type_attribute_ratings->where('rate_score', 4)->count();
+                        $sub_type_neither_count = $sub_type_attribute_ratings->where('rate_score', 3)->count();
+                        $sub_type_disagree_count = $sub_type_attribute_ratings->where('rate_score', 2)->count();
+                        $sub_type_strongly_disagree_count = $sub_type_attribute_ratings->where('rate_score', 1)->count();
+                        $sub_type_na_count = $sub_type_attribute_ratings->where('rate_score', 6)->count();
+                        
+                        // Total count for percentage calculation
+                        $sub_type_total_ratings = $sub_type_strongly_agree_count + $sub_type_agree_count + $sub_type_neither_count + $sub_type_disagree_count + $sub_type_strongly_disagree_count + $sub_type_na_count;
+
+                        // Calculate percentages
+                        $sub_type_pct_strongly_agree = $sub_type_total_ratings > 0 ? ($sub_type_strongly_agree_count / $sub_type_total_ratings) * 100 : 0;
+                        $sub_type_pct_agree = $sub_type_total_ratings > 0 ? ($sub_type_agree_count / $sub_type_total_ratings) * 100 : 0;
+                        $sub_type_pct_neither = $sub_type_total_ratings > 0 ? ($sub_type_neither_count / $sub_type_total_ratings) * 100 : 0;
+                        $sub_type_pct_disagree = $sub_type_total_ratings > 0 ? ($sub_type_disagree_count / $sub_type_total_ratings) * 100 : 0;
+                        $sub_type_pct_strongly_disagree = $sub_type_total_ratings > 0 ? ($sub_type_strongly_disagree_count / $sub_type_total_ratings) * 100 : 0;
+                        $sub_type_pct_na = $sub_type_total_ratings > 0 ? ($sub_type_na_count / $sub_type_total_ratings) * 100 : 0;
+
+                        $sub_unit_types_data[$sub_unit_type->id] = [
+                            'type_name' => $sub_unit_type->type_name,
+                            'total_respo' => $sub_type_total_respo,
+                            'total_vss_respo' => $sub_type_total_vss_respo,
+                            'percentage_vss_respo' => number_format($sub_type_percentage_vss_respo, 2),
+                            // Rating percentages
+                            'pct_strongly_agree' => number_format($sub_type_pct_strongly_agree, 2),
+                            'pct_agree' => number_format($sub_type_pct_agree, 2),
+                            'pct_neither' => number_format($sub_type_pct_neither, 2),
+                            'pct_disagree' => number_format($sub_type_pct_disagree, 2),
+                            'pct_strongly_disagree' => number_format($sub_type_pct_strongly_disagree, 2),
+                            'pct_na' => number_format($sub_type_pct_na, 2),
+                        ];
+                    }
+
+                    $sub_units_data[$sub_unit->id] = [
+                        'sub_unit_name' => $sub_unit->sub_unit_name,
+                        'total_respo' => $sub_total_respo,
+                        'total_vss_respo' => $sub_total_vss_respo,
+                        'percentage_vss_respo' => number_format($sub_percentage_vss_respo, 2),
+                        // Rating percentages
+                        'pct_strongly_agree' => number_format($sub_pct_strongly_agree, 2),
+                        'pct_agree' => number_format($sub_pct_agree, 2),
+                        'pct_neither' => number_format($sub_pct_neither, 2),
+                        'pct_disagree' => number_format($sub_pct_disagree, 2),
+                        'pct_strongly_disagree' => number_format($sub_pct_strongly_disagree, 2),
+                        'pct_na' => number_format($sub_pct_na, 2),
+                        // Include sub-unit types data
+                        'sub_unit_types_data' => $sub_unit_types_data,
+                    ];
+
+                    // Add PSTO-specific calculations for sub_units filtered by region_id = 10
+                    $pstos_data = [];
+                    if ($sub_unit->sub_unit_pstos) {
+                        foreach ($sub_unit->sub_unit_pstos as $sub_psto) {
+                            // Get PSTO-specific CSF forms filtered by region_id = 10
+                            $psto_forms = CsfForm::where('region_id', 10)
+                                ->where('service_id', $service->id)
+                                ->where('unit_id', $unit->id)
+                                ->where('sub_unit_id', $sub_unit->id)
+                                ->where('psto_id', $sub_psto->id)
+                                ->whereMonth('created_at', $numeric_month)
+                                ->whereYear('created_at', $request->selected_year)
+                                ->get();
+
+                            $psto_customer_ids = $psto_forms->pluck('customer_id');
+                            $psto_total_respo = $psto_customer_ids->count();
+
+                            // Get attribute ratings for PSTO using customer_id
+                            $psto_attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $psto_customer_ids)
+                                ->whereMonth('created_at', $numeric_month)
+                                ->whereYear('created_at', $request->selected_year)
+                                ->get();
+
+                            // Calculate VSS (Very Satisfied + Satisfied) for PSTO using rate_score
+                            $psto_vss_respondents = $psto_attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                            $psto_percentage_vss_respo = $psto_total_respo > 0 ? ($psto_vss_respondents / $psto_total_respo) * 100 : 0;
+
+                            // Calculate rating percentages for PSTO using rate_score
+                            $psto_strongly_agree_count = $psto_attribute_ratings->where('rate_score', 5)->count();
+                            $psto_agree_count = $psto_attribute_ratings->where('rate_score', 4)->count();
+                            $psto_neither_count = $psto_attribute_ratings->where('rate_score', 3)->count();
+                            $psto_disagree_count = $psto_attribute_ratings->where('rate_score', 2)->count();
+                            $psto_strongly_disagree_count = $psto_attribute_ratings->where('rate_score', 1)->count();
+                            $psto_na_count = $psto_attribute_ratings->where('rate_score', 6)->count();
+
+                            $psto_total_ratings = $psto_strongly_agree_count + $psto_agree_count + $psto_neither_count + $psto_disagree_count + $psto_strongly_disagree_count + $psto_na_count;
+
+                            $psto_pct_strongly_agree = $psto_total_ratings > 0 ? ($psto_strongly_agree_count / $psto_total_ratings) * 100 : 0;
+                            $psto_pct_agree = $psto_total_ratings > 0 ? ($psto_agree_count / $psto_total_ratings) * 100 : 0;
+                            $psto_pct_neither = $psto_total_ratings > 0 ? ($psto_neither_count / $psto_total_ratings) * 100 : 0;
+                            $psto_pct_disagree = $psto_total_ratings > 0 ? ($psto_disagree_count / $psto_total_ratings) * 100 : 0;
+                            $psto_pct_strongly_disagree = $psto_total_ratings > 0 ? ($psto_strongly_disagree_count / $psto_total_ratings) * 100 : 0;
+                            $psto_pct_na = $psto_total_ratings > 0 ? ($psto_na_count / $psto_total_ratings) * 100 : 0;
+
+                            $pstos_data[$sub_psto->id] = [
+                                'psto_name' => $sub_psto->psto_name,
+                                'total_respo' => $psto_total_respo,
+                                'total_vss_respo' => $psto_vss_respondents,
+                                'percentage_vss_respo' => number_format($psto_percentage_vss_respo, 2),
+                                'pct_strongly_agree' => number_format($psto_pct_strongly_agree, 2),
+                                'pct_agree' => number_format($psto_pct_agree, 2),
+                                'pct_neither' => number_format($psto_pct_neither, 2),
+                                'pct_disagree' => number_format($psto_pct_disagree, 2),
+                                'pct_strongly_disagree' => number_format($psto_pct_strongly_disagree, 2),
+                                'pct_na' => number_format($psto_pct_na, 2),
+                            ];
+                        }
+                    }
+                    $sub_units_data[$sub_unit->id]['pstos_data'] = $pstos_data;
+                }
+
+                $units_data[$service->id][$unit->id] = [
+                    'unit_name' => $unit->unit_name,
+                    'total_respo' => $total_respo,
+                    'sub_units_data' => $sub_units_data,
+                    // Add unit-level PSTO data (region_id = 10)
+                    'unit_pstos_data' => [],
+                    'total_vss_respo' => $total_vss_respo,
+                    'percentage_vss_respo' => number_format($percentage_vss_respo, 2),
+                    'csi' => number_format($unit_csi, 2),
+                    'nps' => number_format($nps, 2),
+                    'lsr' => number_format($lsr, 2),
+                    // Rating percentages
+                    'strongly_agree_count' => $strongly_agree_count,
+                    'agree_count' => $agree_count,
+                    'neither_count' => $neither_count,
+                    'disagree_count' => $disagree_count,
+                    'strongly_disagree_count' => $strongly_disagree_count,
+                    'na_count' => $na_count,
+                    'pct_strongly_agree' => number_format($pct_strongly_agree, 2),
+                    'pct_agree' => number_format($pct_agree, 2),
+                    'pct_neither' => number_format($pct_neither, 2),
+                    'pct_disagree' => number_format($pct_disagree, 2),
+                    'pct_strongly_disagree' => number_format($pct_strongly_disagree, 2),
+                    'pct_na' => number_format($pct_na, 2),
+                    'cc_data' => [
+                        'cc1_ans1' => $cc1_ans1,
+                        'cc1_ans2' => $cc1_ans2,
+                        'cc1_ans3' => $cc1_ans3,
+                        'cc1_ans4' => $cc1_ans4,
+                        'cc2_ans1' => $cc2_ans1,
+                        'cc2_ans2' => $cc2_ans2,
+                        'cc2_ans3' => $cc2_ans3,
+                        'cc2_ans4' => $cc2_ans4,
+                        'cc2_ans5' => $cc2_ans5,
+                        'cc3_ans1' => $cc3_ans1,
+                        'cc3_ans2' => $cc3_ans2,
+                        'cc3_ans3' => $cc3_ans3,
+                        'cc3_ans4' => $cc3_ans4,
+                    ],
+                ];
+
+                $grand_cc1_ans1 += $cc1_ans1;
+                $grand_cc1_ans2 += $cc1_ans2;
+                $grand_cc1_ans3 += $cc1_ans3;
+                $grand_cc1_ans4 += $cc1_ans4;
+                $grand_cc2_ans1 += $cc2_ans1;
+                $grand_cc2_ans2 += $cc2_ans2;
+                $grand_cc2_ans3 += $cc2_ans3;
+                $grand_cc2_ans4 += $cc2_ans4;
+                $grand_cc2_ans5 += $cc2_ans5;
+                $grand_cc3_ans1 += $cc3_ans1;
+                $grand_cc3_ans2 += $cc3_ans2;
+                $grand_cc3_ans3 += $cc3_ans3;
+                $grand_cc3_ans4 += $cc3_ans4;
+                
+                // Calculate unit-level PSTO data (region_id = 10)
+                $unit_pstos_data = [];
+                if ($unit->pstos && $unit->pstos->count() > 0) {
+                    foreach ($unit->pstos as $unit_psto) {
+                        // Get PSTO-specific CSF forms filtered by region_id = 10
+                        $unit_psto_forms = CsfForm::where('region_id', 10)
+                            ->where('service_id', $service->id)
+                            ->where('unit_id', $unit->id)
+                            ->where('psto_id', $unit_psto->id)
+                            ->whereMonth('created_at', $numeric_month)
+                            ->whereYear('created_at', $request->selected_year)
+                            ->get();
+
+                        $unit_psto_customer_ids = $unit_psto_forms->pluck('customer_id');
+                        $unit_psto_total_respo = $unit_psto_customer_ids->count();
+
+                        // Get attribute ratings for unit PSTO using customer_id
+                        $unit_psto_attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $unit_psto_customer_ids)
+                            ->whereMonth('created_at', $numeric_month)
+                            ->whereYear('created_at', $request->selected_year)
+                            ->get();
+
+                        // Calculate VSS (Very Satisfied + Satisfied) for unit PSTO using rate_score
+                        $unit_psto_vss_respondents = $unit_psto_attribute_ratings->whereIn('rate_score', [4, 5])->groupBy('customer_id')->count();
+
+                        $unit_psto_percentage_vss_respo = $unit_psto_total_respo > 0 ? ($unit_psto_vss_respondents / $unit_psto_total_respo) * 100 : 0;
+
+                        // Calculate rating percentages for unit PSTO using rate_score
+                        $unit_psto_strongly_agree_count = $unit_psto_attribute_ratings->where('rate_score', 5)->count();
+                        $unit_psto_agree_count = $unit_psto_attribute_ratings->where('rate_score', 4)->count();
+                        $unit_psto_neither_count = $unit_psto_attribute_ratings->where('rate_score', 3)->count();
+                        $unit_psto_disagree_count = $unit_psto_attribute_ratings->where('rate_score', 2)->count();
+                        $unit_psto_strongly_disagree_count = $unit_psto_attribute_ratings->where('rate_score', 1)->count();
+                        $unit_psto_na_count = $unit_psto_attribute_ratings->where('rate_score', 6)->count();
+
+                        $unit_psto_total_ratings = $unit_psto_strongly_agree_count + $unit_psto_agree_count + $unit_psto_neither_count + $unit_psto_disagree_count + $unit_psto_strongly_disagree_count + $unit_psto_na_count;
+
+                        $unit_psto_pct_strongly_agree = $unit_psto_total_ratings > 0 ? ($unit_psto_strongly_agree_count / $unit_psto_total_ratings) * 100 : 0;
+                        $unit_psto_pct_agree = $unit_psto_total_ratings > 0 ? ($unit_psto_agree_count / $unit_psto_total_ratings) * 100 : 0;
+                        $unit_psto_pct_neither = $unit_psto_total_ratings > 0 ? ($unit_psto_neither_count / $unit_psto_total_ratings) * 100 : 0;
+                        $unit_psto_pct_disagree = $unit_psto_total_ratings > 0 ? ($unit_psto_disagree_count / $unit_psto_total_ratings) * 100 : 0;
+                        $unit_psto_pct_strongly_disagree = $unit_psto_total_ratings > 0 ? ($unit_psto_strongly_disagree_count / $unit_psto_total_ratings) * 100 : 0;
+                        $unit_psto_pct_na = $unit_psto_total_ratings > 0 ? ($unit_psto_na_count / $unit_psto_total_ratings) * 100 : 0;
+
+                        $unit_pstos_data[$unit_psto->id] = [
+                            'psto_name' => $unit_psto->psto_name,
+                            'total_respo' => $unit_psto_total_respo,
+                            'total_vss_respo' => $unit_psto_vss_respondents,
+                            'percentage_vss_respo' => number_format($unit_psto_percentage_vss_respo, 2),
+                            'pct_strongly_agree' => number_format($unit_psto_pct_strongly_agree, 2),
+                            'pct_agree' => number_format($unit_psto_pct_agree, 2),
+                            'pct_neither' => number_format($unit_psto_pct_neither, 2),
+                            'pct_disagree' => number_format($unit_psto_pct_disagree, 2),
+                            'pct_strongly_disagree' => number_format($unit_psto_pct_strongly_disagree, 2),
+                            'pct_na' => number_format($unit_psto_pct_na, 2),
+                        ];
+                    }
+                }
+                
+                // Update units_data with unit PSTO data
+                $units_data[$service->id][$unit->id]['unit_pstos_data'] = $unit_pstos_data;
+
+                $grand_total_respondents += $total_respo;
+                $grand_total_vss_respondents += $total_vss_respo;
+                $grand_total_promoters += $promoters;
+                $grand_total_detractors += $detractors;
+                
+                // Accumulate grand totals for rating percentages
+                $grand_strongly_agree_count += $strongly_agree_count;
+                $grand_agree_count += $agree_count;
+                $grand_neither_count += $neither_count;
+                $grand_disagree_count += $disagree_count;
+                $grand_strongly_disagree_count += $strongly_disagree_count;
+                $grand_na_count += $na_count;
+            }
+        }
+
+        // Grand percentage for VSS
+        $grand_percentage_vss_respondents = 0;
+        if ($grand_total_respondents > 0 && $grand_total_vss_respondents > 0) {
+            $grand_percentage_vss_respondents = ($grand_total_vss_respondents / $grand_total_respondents) * 100;
+        }
+
+        // Grand NPS
+        $grand_nps = 0;
+        if ($grand_total_respondents > 0) {
+            $grand_percentage_promoters = ($grand_total_promoters / $grand_total_respondents) * 100;
+            $grand_percentage_detractors = ($grand_total_detractors / $grand_total_respondents) * 100;
+            $grand_nps = $grand_percentage_promoters - $grand_percentage_detractors;
+        }
+
+        // Grand CC totals
+        $grand_cc1_total = $grand_cc1_ans1 + $grand_cc1_ans2 + $grand_cc1_ans3 + $grand_cc1_ans4;
+        $grand_cc2_total = $grand_cc2_ans1 + $grand_cc2_ans2 + $grand_cc2_ans3 + $grand_cc2_ans4 + $grand_cc2_ans5;
+        $grand_cc3_total = $grand_cc3_ans1 + $grand_cc3_ans2 + $grand_cc3_ans3 + $grand_cc3_ans4;
+
+        // Calculate grand total ratings for percentage calculation
+        $grand_total_ratings = $grand_strongly_agree_count + $grand_agree_count + $grand_neither_count + $grand_disagree_count + $grand_strongly_disagree_count + $grand_na_count;
+        
+        // Calculate grand percentages for rating categories (based on total ratings so they add up to 100%)
+        $grand_pct_strongly_agree = $grand_total_ratings > 0 ? ($grand_strongly_agree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_agree = $grand_total_ratings > 0 ? ($grand_agree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_neither = $grand_total_ratings > 0 ? ($grand_neither_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_disagree = $grand_total_ratings > 0 ? ($grand_disagree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_strongly_disagree = $grand_total_ratings > 0 ? ($grand_strongly_disagree_count / $grand_total_ratings) * 100 : 0;
+        $grand_pct_na = $grand_total_ratings > 0 ? ($grand_na_count / $grand_total_ratings) * 100 : 0;
+
+        return [
+            'units_data' => $units_data,
+            'grand_total_respondents' => $grand_total_respondents,
+            'grand_total_vss_respondents' => $grand_total_vss_respondents,
+            'grand_percentage_vss_respondents' => number_format($grand_percentage_vss_respondents, 2),
+            'grand_nps' => number_format($grand_nps, 2),
+            // Grand rating percentages for summary table
+            'grand_pct_strongly_agree' => number_format($grand_pct_strongly_agree, 2),
+            'grand_pct_agree' => number_format($grand_pct_agree, 2),
+            'grand_pct_neither' => number_format($grand_pct_neither, 2),
+            'grand_pct_disagree' => number_format($grand_pct_disagree, 2),
+            'grand_pct_strongly_disagree' => number_format($grand_pct_strongly_disagree, 2),
+            'grand_pct_na' => number_format($grand_pct_na, 2),
+            'grand_cc_data' => [
+                'cc1_ans1' => $grand_cc1_ans1,
+                'cc1_ans2' => $grand_cc1_ans2,
+                'cc1_ans3' => $grand_cc1_ans3,
+                'cc1_ans4' => $grand_cc1_ans4,
+                'cc1_total' => $grand_cc1_total,
+                'cc2_ans1' => $grand_cc2_ans1,
+                'cc2_ans2' => $grand_cc2_ans2,
+                'cc2_ans3' => $grand_cc2_ans3,
+                'cc2_ans4' => $grand_cc2_ans4,
+                'cc2_ans5' => $grand_cc2_ans5,
+                'cc2_total' => $grand_cc2_total,
+                'cc3_ans1' => $grand_cc3_ans1,
+                'cc3_ans2' => $grand_cc3_ans2,
+                'cc3_ans3' => $grand_cc3_ans3,
+                'cc3_ans4' => $grand_cc3_ans4,
+                'cc3_total' => $grand_cc3_total,
+            ],
+        ];
+    }
+
+    /**
+     * Calculate CSI for a single unit using Weighted Sum method
+     */
+    private function calculateUnitCSI($attribute_ratings, $total_respondents, $dimension_count)
+    {
+        if ($total_respondents == 0 || $attribute_ratings->count() == 0) {
+            return 0;
+        }
+
+        $ilsr_grand_total = 0;
+        $ws_grand_total = 0;
+
+        // Calculate importance and service quality ratings for each dimension
+        for ($dimensionId = 1; $dimensionId <= $dimension_count; $dimensionId++) {
+            // Importance ratings
+            $vi_total = $attribute_ratings->where('importance_rate_score', 5)->where('dimension_id', $dimensionId)->count();
+            $i_total = $attribute_ratings->where('importance_rate_score', 4)->where('dimension_id', $dimensionId)->count();
+            $mi_total = $attribute_ratings->where('importance_rate_score', 3)->where('dimension_id', $dimensionId)->count();
+            $li_total = $attribute_ratings->where('importance_rate_score', 2)->where('dimension_id', $dimensionId)->count();
+            $nai_total = $attribute_ratings->where('importance_rate_score', 1)->where('dimension_id', $dimensionId)->count();
+
+            $x_vi_total = $vi_total * 5; 
+            $x_i_total = $i_total * 4; 
+            $x_mi_total = $mi_total * 3; 
+            $x_li_total = $li_total * 2; 
+            $x_nai_total = $nai_total * 1;
+            $x_importance_total = $x_vi_total + $x_i_total + $x_mi_total + $x_li_total + $x_nai_total;
+
+            // Importance Likert Scale Rating 
+            $ilsr = 0;
+            if ($x_importance_total != 0) {
+                $ilsr = $x_importance_total / $total_respondents;
+                $ilsr_grand_total += $ilsr;
+            }
+
+            // Service quality ratings
+            $vs_total = $attribute_ratings->where('rate_score', 5)->where('dimension_id', $dimensionId)->count();
+            $s_total = $attribute_ratings->where('rate_score', 4)->where('dimension_id', $dimensionId)->count();
+            $n_total = $attribute_ratings->where('rate_score', 3)->where('dimension_id', $dimensionId)->count();
+            $d_total = $attribute_ratings->where('rate_score', 2)->where('dimension_id', $dimensionId)->count();
+            $vd_total = $attribute_ratings->where('rate_score', 1)->where('dimension_id', $dimensionId)->count();
+
+            $x_vs_total = $vs_total * 5; 
+            $x_s_total = $s_total * 4; 
+            $x_n_total = $n_total * 3; 
+            $x_d_total = $d_total * 2; 
+            $x_vd_total = $vd_total * 1; 
+            $x_respondents_total = $vs_total + $s_total + $n_total + $d_total + $vd_total;
+            $x_grand_total = $x_vs_total + $x_s_total + $x_n_total + $x_d_total + $x_vd_total;
+
+            // Likert Scale Rating (Service Satisfaction)
+            $lsr = 0;
+            if ($x_grand_total != 0) {
+                if ($dimensionId == 6) {
+                    $lsr = $x_grand_total / $x_respondents_total;
+                } else {
+                    $lsr = $x_grand_total / $total_respondents;
+                }
+            }
+
+            // Weighted Factor
+            $wf = 0;
+            if ($ilsr_grand_total > 0) {
+                $wf = ($ilsr / $ilsr_grand_total) * 100;
+            }
+
+            // Weighted Score
+            $ws = ($lsr * $wf) / 100;
+            $ws_grand_total += $ws;
+        }
+
+        // CSI = (WS grand total / 5) * 100
+        $csi = 0;
+        if ($ws_grand_total > 0) {
+            $csi = ($ws_grand_total / 5) * 100;
+        }
+
+        if ($csi > 100) {
+            $csi = 100;
+        }
+
+        return $csi;
+    }
+
+    /**
+     * Get NPS for all units
+     */
+    private function getAllUnitNPS($request, $region_id, $numeric_month)
+    {
+        // Get all customer IDs for the region filtered by month and year
+        $customer_ids = CsfForm::where('region_id', $region_id)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
+        // Get recommendation ratings for the month filtered by month and year
+        $recommendation_ratings = CustomerRecommendationRating::whereIn('customer_id', $customer_ids)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->get();
+
+        $total_respondents = $recommendation_ratings->groupBy('customer_id')->count();
+        
+        // Promoters: 7-10, Detractors: 0-6
+        $promoters = $recommendation_ratings->whereBetween('recommend_rate_score', [7, 10])->groupBy('customer_id')->count();
+        $detractors = $recommendation_ratings->whereBetween('recommend_rate_score', [0, 6])->groupBy('customer_id')->count();
+
+        $percentage_promoters = 0;
+        $percentage_detractors = 0;
+        $nps = 0;
+
+        if ($total_respondents > 0) {
+            $percentage_promoters = ($promoters / $total_respondents) * 100;
+            $percentage_detractors = ($detractors / $total_respondents) * 100;
+            $nps = $percentage_promoters - $percentage_detractors;
+        }
+
+        return [
+            'nps' => number_format($nps, 2),
+            'percentage_promoters' => number_format($percentage_promoters, 2),
+            'percentage_detractors' => number_format($percentage_detractors, 2),
+            'total_respondents' => $total_respondents,
+            'promoters' => $promoters,
+            'detractors' => $detractors,
+        ];
+    }
+
+    /**
+     * Get Likert Scale Rating for all units
+     */
+    private function getAllUnitLSR($request, $region_id, $numeric_month)
+    {
+        // Get all customer IDs for the region
+        $customer_ids = CsfForm::where('region_id', $region_id)
+            ->pluck('customer_id');
+
+        // Get attribute ratings for the month
+        $attribute_ratings = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->get();
+
+        $dimensions = Dimension::all();
+        $dimension_count = $dimensions->count();
+
+        $grand_total_score = 0;
+        $grand_total_responses = 0;
+
+        foreach ($dimensions as $dimension) {
+            $dimension_ratings = $attribute_ratings->where('dimension_id', $dimension->id);
+            
+            foreach ($dimension_ratings as $rating) {
+                $grand_total_score += $rating->rate_score;
+                $grand_total_responses++;
+            }
+        }
+
+        $lsr = 0;
+        if ($grand_total_responses > 0) {
+            $lsr = $grand_total_score / $grand_total_responses;
+        }
+
+        return number_format($lsr, 2);
     }
 
     public function getAllUnitMonthlyCSI($request, $region_id, $numeric_month)
     {        
+        // Get all customer IDs for the region filtered by month and year
+        $customer_ids = CsfForm::where('region_id', $region_id)
+            ->whereMonth('created_at', $numeric_month)
+            ->whereYear('created_at', $request->selected_year)
+            ->pluck('customer_id');
+
         // Dimensions or attributes
         $dimensions = Dimension::all();
         $dimension_count = $dimensions->count();
 
-        $date_range = CustomerAttributeRating::whereMonth('created_at', $numeric_month)
-                                             ->whereYear('created_at', $request->selected_year);
+        $date_range = CustomerAttributeRating::whereIn('customer_id', $customer_ids)
+                                             ->whereMonth('created_at', $numeric_month)
+                                             ->whereYear('created_at', $request->selected_year)
+                                             ->get();
 
-        // total number of respondents/customer
-        $total_respondents = $date_range->count();
+        // total number of respondents/customer (unique customers)
+        $total_respondents = $date_range->groupBy('customer_id')->count();
 
         // total number of respondents/customer who rated VS/S
         $total_vss_respondents = $date_range->where('rate_score', '>','3')->groupBy('customer_id')->count();
@@ -3444,12 +4765,39 @@ class ReportController extends Controller
         $cc_query = clone $cc_query_clone;
         $cc3_ans1 = $cc_query->where('cc_id', 3)->where('answer', 1)->count();
 
-        // cc 1-3 data
+        // Calculate total counts for percentage calculation
+        $cc1_total = $cc1_ans1 + $cc1_ans2 + $cc1_ans3 + $cc1_ans4;
+        $cc2_total = $cc2_ans1 + $cc2_ans2 + $cc2_ans3 + $cc2_ans4 + $cc2_ans5;
+        $cc3_total = $cc3_ans1 + $cc3_ans2 + $cc3_ans3 + $cc3_ans4;
+
+        // Calculate percentages
+        $cc1_ans1_pct = $cc1_total > 0 ? number_format(($cc1_ans1 / $cc1_total) * 100, 2) : 0;
+        $cc1_ans2_pct = $cc1_total > 0 ? number_format(($cc1_ans2 / $cc1_total) * 100, 2) : 0;
+        $cc1_ans3_pct = $cc1_total > 0 ? number_format(($cc1_ans3 / $cc1_total) * 100, 2) : 0;
+        $cc1_ans4_pct = $cc1_total > 0 ? number_format(($cc1_ans4 / $cc1_total) * 100, 2) : 0;
+
+        $cc2_ans1_pct = $cc2_total > 0 ? number_format(($cc2_ans1 / $cc2_total) * 100, 2) : 0;
+        $cc2_ans2_pct = $cc2_total > 0 ? number_format(($cc2_ans2 / $cc2_total) * 100, 2) : 0;
+        $cc2_ans3_pct = $cc2_total > 0 ? number_format(($cc2_ans3 / $cc2_total) * 100, 2) : 0;
+        $cc2_ans4_pct = $cc2_total > 0 ? number_format(($cc2_ans4 / $cc2_total) * 100, 2) : 0;
+        $cc2_ans5_pct = $cc2_total > 0 ? number_format(($cc2_ans5 / $cc2_total) * 100, 2) : 0; // N/A
+
+        $cc3_ans1_pct = $cc3_total > 0 ? number_format(($cc3_ans1 / $cc3_total) * 100, 2) : 0;
+        $cc3_ans2_pct = $cc3_total > 0 ? number_format(($cc3_ans2 / $cc3_total) * 100, 2) : 0;
+        $cc3_ans3_pct = $cc3_total > 0 ? number_format(($cc3_ans3 / $cc3_total) * 100, 2) : 0;
+        $cc3_ans4_pct = $cc3_total > 0 ? number_format(($cc3_ans4 / $cc3_total) * 100, 2) : 0;
+
+        // cc 1-3 data with counts and percentages
         $cc1_data = [
             'cc1_ans4' => $cc1_ans4,
             'cc1_ans3' => $cc1_ans3,
             'cc1_ans2' => $cc1_ans2,
             'cc1_ans1' => $cc1_ans1,
+            'cc1_ans4_pct' => $cc1_ans4_pct,
+            'cc1_ans3_pct' => $cc1_ans3_pct,
+            'cc1_ans2_pct' => $cc1_ans2_pct,
+            'cc1_ans1_pct' => $cc1_ans1_pct,
+            'cc1_total' => $cc1_total,
         ];
 
         $cc2_data = [
@@ -3458,6 +4806,12 @@ class ReportController extends Controller
             'cc2_ans3' => $cc2_ans3,
             'cc2_ans2' => $cc2_ans2,
             'cc2_ans1' => $cc2_ans1,
+            'cc2_ans5_pct' => $cc2_ans5_pct,
+            'cc2_ans4_pct' => $cc2_ans4_pct,
+            'cc2_ans3_pct' => $cc2_ans3_pct,
+            'cc2_ans2_pct' => $cc2_ans2_pct,
+            'cc2_ans1_pct' => $cc2_ans1_pct,
+            'cc2_total' => $cc2_total,
         ];
 
         $cc3_data = [
@@ -3465,6 +4819,11 @@ class ReportController extends Controller
             'cc3_ans3' => $cc3_ans3,
             'cc3_ans2' => $cc3_ans2,
             'cc3_ans1' => $cc3_ans1,
+            'cc3_ans4_pct' => $cc3_ans4_pct,
+            'cc3_ans3_pct' => $cc3_ans3_pct,
+            'cc3_ans2_pct' => $cc3_ans2_pct,
+            'cc3_ans1_pct' => $cc3_ans1_pct,
+            'cc3_total' => $cc3_total,
         ];
 
         //cc data all in one

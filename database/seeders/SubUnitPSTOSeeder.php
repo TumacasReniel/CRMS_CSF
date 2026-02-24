@@ -14,7 +14,93 @@ class SubUnitPSTOSeeder extends Seeder
     public function run(): void
     {
         $unit_pstos = [
-            // REGION I
+            // REGION I - For sub_units 1-5 (Unit 7 - Administrative Support Services)
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 1,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 2,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 3,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 4,
+            ],
+            //
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 1,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 2,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 3,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 4,
+            ],
+            //
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 1,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 2,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 3,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 4,
+            ],
+            //
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 1,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 2,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 3,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 4,
+            ],
+            //
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 1,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 2,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 3,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 4,
+            ],
+
+            // REGION I - sub_units 6-14
             [
                 'sub_unit_id' => 6,
                 'psto_id' => 1,
@@ -1829,8 +1915,90 @@ class SubUnitPSTOSeeder extends Seeder
                 'psto_id' => 47,
             ], 
 
-             // REGION IX
-             [
+            // REGION IX - For sub_units 1-5 (Unit 7)
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 48,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 49,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 50,
+            ],
+            [
+                'sub_unit_id' => 1,
+                'psto_id' => 51,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 48,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 49,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 50,
+            ],
+            [
+                'sub_unit_id' => 2,
+                'psto_id' => 51,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 48,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 49,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 50,
+            ],
+            [
+                'sub_unit_id' => 3,
+                'psto_id' => 51,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 48,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 49,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 50,
+            ],
+            [
+                'sub_unit_id' => 4,
+                'psto_id' => 51,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 48,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 49,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 50,
+            ],
+            [
+                'sub_unit_id' => 5,
+                'psto_id' => 51,
+            ],
+
+            // REGION IX - sub_units 6-14
+            [
                 'sub_unit_id' => 6,
                 'psto_id' => 48,
             ],
@@ -1867,135 +2035,6 @@ class SubUnitPSTOSeeder extends Seeder
             ],  
 
             //
-            [
-                'sub_unit_id' => 8,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 8,
-                'psto_id' => 49,
-            ], 
-            [
-                'sub_unit_id' => 8,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 8,
-                'psto_id' => 51,
-            ],  
-    
-            //
-            [
-                'sub_unit_id' => 9,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 9,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 9,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 9,
-                'psto_id' => 51,
-            ],  
- 
-
-            //
-            [
-                'sub_unit_id' => 10,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 10,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 10,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 10,
-                'psto_id' => 51,
-            ],  
-
-
-            //
-            [
-                'sub_unit_id' => 11,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 11,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 11,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 11,
-                'psto_id' => 51,
-            ],  
-
-
-            //
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 12,
-                'psto_id' => 51,
-            ], 
-
-
-            //
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 13,
-                'psto_id' => 51,
-            ], 
-
-
-            //
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 48,
-            ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 49,
-            ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 50,
-            ],  
-            [
-                'sub_unit_id' => 14,
-                'psto_id' => 51,
-            ], 
  
             // REGION X
             [

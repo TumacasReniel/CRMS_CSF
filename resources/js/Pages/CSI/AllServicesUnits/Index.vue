@@ -13,10 +13,14 @@ AOS.init();
 const props = defineProps({
   services_units: Object,
   cc_data: Object,
-  ord_total_respondents: Object,
-  ord_total_vss_respondents: Object,
-  ord_percentage_vss_respondents: Object,
-  csi_total: Number, 
+  all_units_data: Object,
+  csi_total: Number,
+  nps_total: Number,
+  lsr_total: Number,
+  total_respondents: Number,
+  total_vss_respondents: Number,
+  percentage_vss_respondents: Number,
+  request: Object,
 });
 
 
@@ -25,6 +29,7 @@ const form = reactive({
   date_to: null,
   csi_type: null,
   selected_month: null,
+  selected_year: null,
   selected_quarter: null,
   comments_complaints: null,
   analysis: null,
@@ -152,114 +157,83 @@ const generateCSIReport = async () => {
     <AppLayout title="Customer Satisfaction Index">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Customer Satisfaction Index
+                Customer Satisfaction Index - All Services Units
             </h2>
         </template>
 
         <div class="container-fluid py-5">
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-10">
-                    <div class="card shadow-lg border-0" data-aos="fade-up">
+                    <!-- Filters Card -->
+                    <div class="card shadow-lg border-0 mb-4" data-aos="fade-up">
                         <div class="card-header bg-primary text-white">
                             <h4 class="card-title mb-0">
-                                <i class="ri-bar-chart-line me-2"></i>
-                                All Services Units
+                                <i class="ri-filter-3-line me-2"></i>
+                                Generate Report
                             </h4>
                         </div>
-                        <!-- <div class="card-body">
-                            <div class="alert alert-info border-0 shadow-sm" role="alert" data-aos="fade-in" data-aos-delay="200">
-                                <div class="d-flex align-items-center">
-                                    <i class="ri-information-line fs-4 me-3 text-info"></i>
-                                    <div>
-                                        <h6 class="alert-heading mb-2 fw-bold">Manual Excel Reporting Required</h6>
-                                        <p class="mb-0">Please generate traditional manual reports on Excel for all units reports:</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row g-4 mt-3">
-                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                                    <div class="card h-100 border-primary border-2">
-                                        <div class="card-body text-center">
-                                            <i class="ri-calendar-line text-primary fs-1 mb-3"></i>
-                                            <h5 class="card-title fw-bold">Monthly Reports</h5>
-                                            <p class="card-text text-muted">Generate reports by specific months</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
-                                    <div class="card h-100 border-success border-2">
-                                        <div class="card-body text-center">
-                                            <i class="ri-time-line text-success fs-1 mb-3"></i>
-                                            <h5 class="card-title fw-bold">Quarterly Reports</h5>
-                                            <p class="card-text text-muted">First, Second, Third, and Fourth Quarter reports</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
-                                    <div class="card h-100 border-warning border-2">
-                                        <div class="card-body text-center">
-                                            <i class="ri-calendar-todo-line text-warning fs-1 mb-3"></i>
-                                            <h5 class="card-title fw-bold">Annual Reports</h5>
-                                            <p class="card-text text-muted">Complete yearly/annual reports</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 p-3 bg-light rounded" data-aos="fade-in" data-aos-delay="600">
-                                <h6 class="fw-bold text-primary mb-3">
-                                    <i class="ri-file-excel-line me-2"></i>
-                                    Report Types Available:
-                                </h6>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="list-unstyled">
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Monthly</li>
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By First Quarter</li>
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Second Quarter</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <ul class="list-unstyled">
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Third Quarter</li>
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Fourth Quarter</li>
-                                            <li class="mb-2"><i class="ri-check-line text-success me-2"></i>By Yearly/Annual</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="text-center mt-3">
-                                    <span class="badge bg-primary fs-6 px-3 py-2">
-                                        <i class="ri-heart-line me-1"></i>
-                                        THANK YOU!
-                                    </span>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="card-body">
-
-                        
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Report Type</label>
+                                    <select v-model="form.csi_type" class="form-select">
+                                        <option value="">Select Report Type</option>
+                                        <option value="By Month">By Month</option>
+                                        <option value="By Quarter">By Quarter</option>
+                                        <option value="By Year/Annual">By Year/Annual</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4" v-if="form.csi_type == 'By Month'">
+                                    <label class="form-label fw-bold">Month</label>
+                                    <select v-model="form.selected_month" class="form-select">
+                                        <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4" v-if="form.csi_type == 'By Quarter'">
+                                    <label class="form-label fw-bold">Quarter</label>
+                                    <select v-model="form.selected_quarter" class="form-select">
+                                        <option value="">Select Quarter</option>
+                                        <option value="FIRST QUARTER">First Quarter</option>
+                                        <option value="SECOND QUARTER">Second Quarter</option>
+                                        <option value="THIRD QUARTER">Third Quarter</option>
+                                        <option value="FOURTH QUARTER">Fourth Quarter</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4" v-if="form.csi_type">
+                                    <label class="form-label fw-bold">Year</label>
+                                    <select v-model="form.selected_year" class="form-select">
+                                        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 d-flex align-items-end">
+                                    <button @click="generateCSIReport" class="btn btn-primary w-100">
+                                        <i class="ri-file-chart-line me-2"></i>
+                                        Generate Report
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Content Preview Card -->
-                    <!-- <div v-if="form.csi_type == 'By Month' && generated == true" class="card mt-4 shadow" data-aos="fade-in">
-                        <div class="card-header bg-secondary text-white">
+                    <div v-if="form.csi_type == 'By Month' && generated == true" class="card mt-4 shadow" data-aos="fade-in">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">
                                 <i class="ri-file-chart-line me-2"></i>
-                                Report Preview
+                                Report Preview - {{ form.selected_month }} {{ form.selected_year }}
                             </h5>
+                            <button @click="printCSIReport" class="btn btn-light">
+                                <i class="ri-printer-line me-2"></i>
+                                Print
+                            </button>
                         </div>
                         <div class="card-body print-id">
                             <MonthlyContent :form="form" :data="props" />
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
     </AppLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
-
-
-

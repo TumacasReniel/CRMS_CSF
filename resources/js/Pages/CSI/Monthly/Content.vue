@@ -35,12 +35,12 @@
                         <tr>
                             <td>1</td>
                             <td class="text-left">I know what a CC is and I saw this office's CC</td>
-                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans1 > 0">{{data.cc_data.cc1_data.cc1_ans1}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans1">{{data.cc_data.cc1_data.cc1_ans1}}</td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td class="text-left">I know what a CC is but I did NOT see this office's CC</td>
-                            <td class="text-center" v-if="data.cc_data?.cc1_data?.cc1_ans2 > 0">{{data.cc_data.cc1_data.cc1_ans2}}</td>
+                            <td class="text-center" v-if="data.cc_data?.cc1_data.cc1_ans2 ">{{data.cc_data.cc1_data.cc1_ans2}}</td>
                         </tr>
                         <tr>
                             <td>3</td>

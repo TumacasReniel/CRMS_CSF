@@ -13,7 +13,7 @@ class Unit extends Model
         'unit_name',
     ];
     public function service(){
-        return $this->belongsTo(Services::class);
+        return $this->belongsTo(Services::class, 'services_id');
     }
 
     public function sub_units(){
